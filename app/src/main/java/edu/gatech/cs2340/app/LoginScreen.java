@@ -306,6 +306,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
 
         private final String mUsername;
         private final String mPassword;
+        private boolean userFound = false;
 
         UserLoginTask(String username, String password) {
             mUsername = username;
@@ -327,10 +328,11 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mUsername)) {
                     // Account exists, return true if the password matches.
+                    userFound = true;
                     return pieces[1].equals(mPassword);
                 }
             }
-            return true;
+            return false;
         }
 
         @Override
@@ -342,8 +344,13 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
                 Intent mainClass =  new Intent(LoginScreen.this, MainActivity.class);
                 startActivity(mainClass);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                if (userFound) {
+                    mPasswordView.setError(getString(R.string.error_incorrect_password));
+                    mPasswordView.requestFocus();
+                } else {
+                    mUsernameView.setError("This username is not registered");
+                    mUsernameView.requestFocus();
+                }
             }
         }
 
