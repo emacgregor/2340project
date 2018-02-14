@@ -8,7 +8,7 @@
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
@@ -20,7 +20,28 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_welcome_screen" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_welcome_screen"
+        app:layout_behavior="@string/action_sign_in" />
+
+    <Button
+        android:id="@+id/reg_btn"
+        android:layout_width="196dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/Register"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="left|center" />
+
+    <Button
+        android:id="@+id/log_in_btn"
+        android:layout_width="192dp"
+        android:layout_height="wrap_content"
+        android:text="@string/action_sign_in_short"
+        app:layout_anchor="@+id/include"
+        app:layout_anchorGravity="right|center"
+        tools:layout_editor_absoluteX="192dp" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
