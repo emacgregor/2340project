@@ -61,9 +61,9 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_screen);
+        setContentView(R.layout.activity_registration_screen);
         // Set up the login form.
-        mUsernameView = findViewById(R.id.username);
+        mUsernameView = findViewById(R.id.email);
         populateAutoComplete();
 
         mPasswordView = findViewById(R.id.password);
@@ -77,8 +77,8 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
                 return false;
             }
         });
-        Button mSignInButton = findViewById(R.id.sign_in_button);
-        mSignInButton.setOnClickListener(new OnClickListener() {
+        Button mRegistrationButton = findViewById(R.id.reg_button);
+        mRegistrationButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
