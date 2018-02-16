@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.app;
+package edu.gatech.cs2340.app.controller;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -32,6 +32,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.model.Model;
+
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
@@ -44,7 +47,6 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    //TODO: Add real sign-in system.
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -75,7 +77,6 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
                 return false;
             }
         });
-
         Button mSignInButton = findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -317,8 +318,8 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
                 return false;
             }
 
-            // TODO: register the new account here.
-            return true;
+            Model model = Model.getInstance();
+            return model.addUser(mUsername + ":" + mPassword);
         }
 
         @Override
@@ -330,8 +331,8 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
                 Intent mainClass =  new Intent(RegistrationScreen.this, MainActivity.class);
                 startActivity(mainClass);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mUsernameView.setError("Username is already registered.");
+                mUsernameView.requestFocus();
             }
         }
 

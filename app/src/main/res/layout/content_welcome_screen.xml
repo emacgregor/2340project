@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="edu.gatech.cs2340.app.WelcomeScreen"
+    tools:context="edu.gatech.cs2340.app.controller.WelcomeScreen"
     tools:showIn="@layout/activity_welcome_screen">
 
 </android.support.constraint.ConstraintLayout>
