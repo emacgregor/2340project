@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +56,7 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
     // UI references.
     private AutoCompleteTextView mUsernameView;
     private EditText mPasswordView;
+    private Spinner adminSpinner;
     private View mProgressView;
     private View mLoginFormView;
 
@@ -77,6 +79,12 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
                 return false;
             }
         });
+
+        adminSpinner = findViewById(R.id.spinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, new String[]{"User", "Admin"});
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adminSpinner.setAdapter(adapter);
+
         Button mRegistrationButton = findViewById(R.id.reg_button);
         mRegistrationButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -319,7 +327,7 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
             }
 
             Model model = Model.getInstance();
-            return model.addUser(mUsername + ":" + mPassword);
+            return model.addUser(mUsername, mPassword, (String) adminSpinner.getSelectedItem());
         }
 
         @Override

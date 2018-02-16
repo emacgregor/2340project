@@ -18,4 +18,5 @@
     <string name="title_activity_registration_screen">Register</string>
     <string name="Register">Register</string>
     <string name="username">Username</string>
+    <string name="UserString">User type:</string>
 </resources>

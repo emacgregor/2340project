@@ -9,30 +9,31 @@ import java.util.ArrayList;
 public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
-    private ArrayList<String> credentials = new ArrayList<String>();
+    private ArrayList<User> userDatabase = new ArrayList<User>();
 
     /**
      * Adds a new user to the database.
-     * @param newUser The user that will be added to the credential list. Username + password
-     *                separated by ":"
+     * @param username The username of the new user.
+     * @param password The password of the new user.
+     * @param userType The user type of the new user (admin, user).
      * @return Whether the user got added (whether that username was already registered.)
      */
-    public boolean addUser(String newUser) {
-        if (userExists(newUser.split(":")[0])) {
+    public boolean addUser(String username, String password, String userType) {
+        if (userExists(username)) {
             return false;
         }
-        credentials.add(newUser);
+        userDatabase.add(new User(username, password, userType));
         return true;
     }
 
     /**
      * Checks to see if the username was registered.
-     * @param checkUser The username we're looking for
+     * @param username The username we're looking for
      * @return Whether this username is registered.
      */
-    public boolean userExists(String checkUser) {
-        for (String credential : credentials) {
-            if (checkUser.equals(credential.split(":")[0])) {
+    public boolean userExists(String username) {
+        for (User user : userDatabase) {
+            if (username.equals(user.getUsername())) {
                 return true;
             }
         }
@@ -41,10 +42,16 @@ public class Model {
 
     /**
      * Checks if the username and password match.
-     * @param checkUser The username + password combo we're looking for separated by ":"
+     * @param username The username that must be matched.
+     * @param password The password that must be matched.
      * @return Whether or not the username and password match.
      */
-    public boolean correctUser(String checkUser) {
-        return credentials.contains(checkUser);
+    public boolean checkCredentials(String username, String password) {
+        for (User user : userDatabase) {
+            if (username.equals(user.getUsername())) {
+                return user.checkPassword(password);
+            }
+        }
+        return false;
     }
 }

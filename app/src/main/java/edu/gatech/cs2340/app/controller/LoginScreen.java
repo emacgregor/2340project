@@ -322,7 +322,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
 
             Model model = Model.getInstance();
             userFound = model.userExists(mUsername);
-            return model.correctUser(mUsername + ":" + mPassword);
+            return model.checkCredentials(mUsername, mPassword);
         }
 
         @Override
