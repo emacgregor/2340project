@@ -11,9 +11,6 @@ public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
     private ArrayList<User> userDatabase = new ArrayList<User>();
-<<<<<<< HEAD
-    public static ArrayList<Shelter> shelterDatabase = new ArrayList<>();
-=======
     private ArrayList<Shelter> shelterArrayList = new ArrayList<>();
 
     /**
@@ -28,7 +25,6 @@ public class Model {
         return shelterArrayList;
     }
 
->>>>>>> origin/master
     /**
      * Adds a new user to the database.
      * @param username The username of the new user.
