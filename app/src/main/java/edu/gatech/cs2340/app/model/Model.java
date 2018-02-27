@@ -1,6 +1,7 @@
 package edu.gatech.cs2340.app.model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ethan_7416xi5 on 2/16/2018.
@@ -10,6 +11,19 @@ public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
     private ArrayList<User> userDatabase = new ArrayList<User>();
+    private ArrayList<Shelter> shelterArrayList = new ArrayList<>();
+
+    /**
+     * Adds a shelter to an the array list of shelters
+     * @param someShelter
+     */
+    public void addShelter(Shelter someShelter) {
+        shelterArrayList.add(someShelter);
+    }
+
+    public List<Shelter> getShelters() {
+        return shelterArrayList;
+    }
 
     /**
      * Adds a new user to the database.
