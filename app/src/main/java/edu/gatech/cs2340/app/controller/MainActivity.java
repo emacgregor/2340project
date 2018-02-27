@@ -39,15 +39,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-<<<<<<< HEAD
+
         sheltersBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
                 startActivity(shelterScreen);
             }
         });
-=======
->>>>>>> origin/master
+
     }
 
 
