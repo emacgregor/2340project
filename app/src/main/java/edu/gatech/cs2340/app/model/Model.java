@@ -11,18 +11,25 @@ public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
     private ArrayList<User> userDatabase = new ArrayList<User>();
-    private ArrayList<Shelter> shelterArrayList = new ArrayList<>();
+    private ArrayList<Shelter> shelterDatabase = new ArrayList<>();
+
+    /**
+     * singleton pattern!
+     */
+    private Model() {
+
+    }
 
     /**
      * Adds a shelter to an the array list of shelters
      * @param someShelter
      */
     public void addShelter(Shelter someShelter) {
-        shelterArrayList.add(someShelter);
+        shelterDatabase.add(someShelter);
     }
 
     public List<Shelter> getShelters() {
-        return shelterArrayList;
+        return shelterDatabase;
     }
 
     /**

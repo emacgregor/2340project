@@ -68,7 +68,7 @@ public class ShelterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, Model.shelterDatabase, mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, Model.getInstance().getShelters(), mTwoPane));
     }
 
     public static class SimpleItemRecyclerViewAdapter

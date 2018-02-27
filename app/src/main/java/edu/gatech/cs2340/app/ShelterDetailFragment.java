@@ -28,7 +28,7 @@ public class ShelterDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private Shelter mItem = Model.shelterDatabase.get(Integer.valueOf(ARG_ITEM_ID));
+    private Shelter mItem = Model.getInstance().getShelters().get(Integer.valueOf(ARG_ITEM_ID));
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
