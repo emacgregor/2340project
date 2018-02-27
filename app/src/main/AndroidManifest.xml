@@ -33,7 +33,20 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".controller.RegistrationScreen"
-            android:label="Register"></activity>
+            android:label="Register" />
+        <activity
+            android:name=".ShelterListActivity"
+            android:label="@string/title_shelter_list"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".ShelterDetailActivity"
+            android:label="@string/title_shelter_detail"
+            android:parentActivityName=".ShelterListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.gatech.cs2340.app.ShelterListActivity" />
+        </activity>
     </application>
 
 </manifest>

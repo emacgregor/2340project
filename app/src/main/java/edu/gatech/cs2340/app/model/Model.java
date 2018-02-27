@@ -10,7 +10,7 @@ public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
     private ArrayList<User> userDatabase = new ArrayList<User>();
-
+    public static ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     /**
      * Adds a new user to the database.
      * @param username The username of the new user.

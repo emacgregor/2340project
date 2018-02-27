@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.ShelterListActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Button logOutBtn = (Button) findViewById(R.id.button);
+        Button sheltersBtn = (Button) findViewById(R.id.button2);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -34,6 +36,13 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent welcomeScreen = new Intent(MainActivity.this, WelcomeScreen.class);
                 startActivity(welcomeScreen);
+            }
+        });
+
+        sheltersBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
+                startActivity(shelterScreen);
             }
         });
     }
