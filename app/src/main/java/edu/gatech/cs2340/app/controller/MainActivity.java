@@ -52,8 +52,10 @@ public class MainActivity extends AppCompatActivity {
 
         sheltersBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                readSDFile();
                 Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
                 startActivity(shelterScreen);
+
             }
         });
 

@@ -1,5 +1,7 @@
 package edu.gatech.cs2340.app.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +34,13 @@ public class Model {
         return shelterDatabase;
     }
 
+
+    public Shelter findItemById(int id) {
+        for (Shelter d : shelterDatabase) {
+            if (d.getUniqueKey() == id) return d;
+        }
+        return null;
+    }
     /**
      * Adds a new user to the database.
      * @param username The username of the new user.

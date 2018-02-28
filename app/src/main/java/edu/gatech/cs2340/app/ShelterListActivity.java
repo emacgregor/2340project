@@ -68,39 +68,17 @@ public class ShelterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, Model.getInstance().getShelters(), mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Model.getInstance().getShelters(), mTwoPane));
     }
 
-    public static class SimpleItemRecyclerViewAdapter
+    public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 
         //private final ItemListActivity mParentActivity;
         private final List<Shelter> mValues;
         private final boolean mTwoPane;
-        private final View.OnClickListener mOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Shelter item = (Shelter) view.getTag();
-                if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(ShelterDetailFragment.ARG_ITEM_ID, String.valueOf(item.getUniqueKey()));
-                    ShelterDetailFragment fragment = new ShelterDetailFragment();
-                    fragment.setArguments(arguments);
-                    /*mParentActivity.getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.shelter_detail_container, fragment)
-                            .commit();
-                            */
-                } else {
-                    Context context = view.getContext();
-                    Intent intent = new Intent(context, ShelterDetailActivity.class);
-                    intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, item.getUniqueKey());
 
-                    context.startActivity(intent);
-                }
-            }
-        };
-
-        SimpleItemRecyclerViewAdapter(ShelterListActivity parent,
+        SimpleItemRecyclerViewAdapter(
                                       List<Shelter> items,
                                       boolean twoPane) {
             mValues = items;
@@ -117,11 +95,32 @@ public class ShelterListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
+            holder.mItem = mValues.get(position);
+
             holder.mIdView.setText(mValues.get(position).getUniqueKey());
             holder.mContentView.setText(mValues.get(position).getName());
 
             holder.itemView.setTag(mValues.get(position));
-            holder.itemView.setOnClickListener(mOnClickListener);
+            holder.mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mTwoPane) {
+                        Bundle arguments = new Bundle();
+                        arguments.putInt(ShelterDetailFragment.ARG_ITEM_ID, holder.mItem.getUniqueKey());
+                        ShelterDetailFragment fragment = new ShelterDetailFragment();
+                        fragment.setArguments(arguments);
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.shelter_detail_container, fragment)
+                                .commit();
+                    } else {
+                        Context context = v.getContext();
+                        Intent intent = new Intent(context, ShelterDetailActivity.class);
+                        intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, holder.mItem.getUniqueKey());
+
+                        context.startActivity(intent);
+                    }
+                }
+            });
         }
 
         @Override
@@ -130,11 +129,13 @@ public class ShelterListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
+            public final View mView;
             final TextView mIdView;
             final TextView mContentView;
-
+            public Shelter mItem;
             ViewHolder(View view) {
                 super(view);
+                mView = view;
                 mIdView = (TextView) view.findViewById(R.id.id_text);
                 mContentView = (TextView) view.findViewById(R.id.content);
             }
