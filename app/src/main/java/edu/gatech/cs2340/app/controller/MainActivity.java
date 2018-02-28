@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         sheltersBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                readSDFile();
                 Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
                 startActivity(shelterScreen);
             }
@@ -76,7 +77,10 @@ public class MainActivity extends AppCompatActivity {
                 String[] tokens = line.split(",");
                 int uniqueKey = Integer.parseInt(tokens[0]);
                 String shelterName = tokens[1];
-                int capacity = Integer.parseInt(tokens[2]);
+                int capacity = -1;
+                if (!tokens[2].equals("")) {
+                    capacity = Integer.parseInt(tokens[2]);
+                }
                 String restrictions = tokens[3];
                 Double latitutude = Double.parseDouble(tokens[4]);
                 Double longitude = Double.parseDouble(tokens[5]);

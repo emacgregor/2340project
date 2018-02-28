@@ -117,7 +117,7 @@ public class ShelterListActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mIdView.setText(mValues.get(position).getUniqueKey());
+            holder.mIdView.setText(String.valueOf(mValues.get(position).getUniqueKey()));
             holder.mContentView.setText(mValues.get(position).getName());
 
             holder.itemView.setTag(mValues.get(position));
