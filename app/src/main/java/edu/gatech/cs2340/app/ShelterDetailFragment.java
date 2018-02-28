@@ -28,7 +28,7 @@ public class ShelterDetailFragment extends Fragment {
     /**
      * The dummy content this fragment is presenting.
      */
-    private Shelter mItem = Model.getInstance().getShelters().get(Integer.valueOf(ARG_ITEM_ID));
+    private Shelter mItem;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -45,7 +45,8 @@ public class ShelterDetailFragment extends Fragment {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
-
+            int item_id = getArguments().getInt(ARG_ITEM_ID);
+            mItem = Model.getInstance().findItemById(item_id);
             Activity activity = this.getActivity();
             CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
@@ -61,7 +62,7 @@ public class ShelterDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.shelter_detail)).setText(mItem.getAddress());
+            ((TextView) rootView.findViewById(R.id.shelter_detail)).setText(mItem.getRestrictions());
         }
 
         return rootView;
