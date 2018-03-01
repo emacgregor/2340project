@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.app;
+package edu.gatech.cs2340.app.controller;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Shelter;
 import edu.gatech.cs2340.app.model.Model;
 

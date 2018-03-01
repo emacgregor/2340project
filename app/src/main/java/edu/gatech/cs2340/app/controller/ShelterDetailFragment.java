@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.app;
+package edu.gatech.cs2340.app.controller;
 
 import android.app.Activity;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Shelter;
 
@@ -53,6 +54,7 @@ public class ShelterDetailFragment extends Fragment {
                 appBarLayout.setTitle(mItem.getName());
             }
         }
+
     }
 
     @Override
@@ -62,7 +64,11 @@ public class ShelterDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.shelter_detail)).setText(mItem.getRestrictions());
+            ((TextView) rootView.findViewById(R.id.shelter_detail)).setText("Capacity: "
+                    + mItem.getCapacity() +"\n\n" + mItem.getRestrictions() + "\n\n"
+                    + mItem.getLatitude() + "° N, " + mItem.getLongitude() + "° W\n\n"
+                    + mItem.getAddress() + "\n\n" + mItem.getPhoneNumber() + "\n\nNote: "
+                    + mItem.getNotes());
         }
 
         return rootView;

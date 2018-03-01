@@ -1,4 +1,4 @@
-package edu.gatech.cs2340.app;
+package edu.gatech.cs2340.app.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+
+import edu.gatech.cs2340.app.R;
 
 /**
  * An activity representing a single Shelter detail screen. This

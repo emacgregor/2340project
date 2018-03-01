@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
 import edu.gatech.cs2340.app.R;
-import edu.gatech.cs2340.app.ShelterListActivity;
 import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Shelter;
 
@@ -83,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                     capacity = Integer.parseInt(tokens[2]);
                 }
                 String restrictions = tokens[3];
-                Double latitutude = Double.parseDouble(tokens[4]);
+                Double latitude = Double.parseDouble(tokens[4]);
                 Double longitude = Double.parseDouble(tokens[5]);
                 String address = tokens[6];
                 String specialNotes = tokens[7];
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 model.addShelter(new Shelter(uniqueKey, shelterName, capacity,
-                        restrictions, latitutude, longitude, address, specialNotes, phoneNumber));
+                        restrictions, latitude, longitude, address, specialNotes, phoneNumber));
             }
             br.close();
         } catch (IOException e) {

@@ -38,6 +38,10 @@ public class Shelter {
     public String getAddress() { return address; }
     public String getPhoneNumber() { return phoneNumber; }
     public String getRestrictions() { return restrictions; }
+    public int getCapacity() { return capacity; }
+    public Double getLatitude() {return latitude; }
+    public Double getLongitude() {return longitude;}
+    public String getNotes() { return specialNotes; }
 }
 
 
