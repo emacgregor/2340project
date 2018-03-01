@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Model;
@@ -73,14 +75,22 @@ public class MainActivity extends AppCompatActivity {
         CSVReader reader = new CSVReader(br);
         String [] nextLine;
         try {
-            Log.d("I here lol", "lol");
             reader.readNext(); //Throw away first line
             while ((nextLine = reader.readNext()) != null) {
                 int uniqueKey = Integer.parseInt(nextLine[0]);
                 String shelterName = nextLine[1];
-                int capacity = -1; //TODO: Fix so that this can work for the 32 for families line
-                if (!nextLine[2].equals("")) {
-                    capacity = Integer.parseInt(nextLine[2]);
+                ArrayList<Integer> capacity = new ArrayList<Integer>();
+                Scanner sc = new Scanner(nextLine[2]);
+                while (sc.hasNext()) {
+                    while (sc.hasNextInt()) {
+                        capacity.add(sc.nextInt());
+                    }
+                    if (sc.hasNext()) {
+                        sc.next();
+                    }
+                }
+                if (capacity.isEmpty()) {
+                    capacity.add(-1);
                 }
                 String restrictions = nextLine[3];
                 Double latitude = Double.parseDouble(nextLine[4]);
@@ -89,47 +99,12 @@ public class MainActivity extends AppCompatActivity {
                 String specialNotes = nextLine[7];
                 String phoneNumber = nextLine[8];
 
-
                 model.addShelter(new Shelter(uniqueKey, shelterName, capacity,
                         restrictions, latitude, longitude, address, specialNotes, phoneNumber));
             }
-        } catch (IOException e) {
-
-        }
-
-        /*try {
-            //Open a stream on the raw file
-            InputStream is = getResources().openRawResource(R.raw.homelessdb);
-            //From here we probably should call a model method and pass the InputStream
-            //Wrap it in a BufferedReader so that we get the readLine() method
-            BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-
-            String line;
-            br.readLine(); //get rid of header line
-            while ((line = br.readLine()) != null) {
-                Log.d(MainActivity.TAG, line);
-                String[] tokens = line.split(",");
-                int uniqueKey = Integer.parseInt(tokens[0]);
-                String shelterName = tokens[1];
-                int capacity = -1;
-                if (!tokens[2].equals("")) {
-                    capacity = Integer.parseInt(tokens[2]);
-                }
-                String restrictions = tokens[3];
-                Double latitude = Double.parseDouble(tokens[4]);
-                Double longitude = Double.parseDouble(tokens[5]);
-                String address = tokens[6];
-                String specialNotes = tokens[7];
-                String phoneNumber = tokens[8];
-
-
-                model.addShelter(new Shelter(uniqueKey, shelterName, capacity,
-                        restrictions, latitude, longitude, address, specialNotes, phoneNumber));
-            }
-            br.close();
         } catch (IOException e) {
             Log.e(MainActivity.TAG, "error reading assets", e);
-        }*/
+        }
     }
 }
 
