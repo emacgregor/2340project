@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Button logOutBtn = (Button) findViewById(R.id.button);
         Button sheltersBtn = (Button) findViewById(R.id.button2);
+        Button searchBtn = (Button) findViewById(R.id.button3);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -53,58 +54,20 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
         sheltersBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                readSDFile();
                 Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
                 startActivity(shelterScreen);
 
             }
         });
 
-    }
-
-    private void readSDFile() {
-        Model model = Model.getInstance();
-
-        InputStream is = getResources().openRawResource(R.raw.homelessdb);
-        //From here we probably should call a model method and pass the InputStream
-        //Wrap it in a BufferedReader so that we get the readLine() method
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        CSVReader reader = new CSVReader(br);
-        String [] nextLine;
-        try {
-            reader.readNext(); //Throw away first line
-            while ((nextLine = reader.readNext()) != null) {
-                int uniqueKey = Integer.parseInt(nextLine[0]);
-                String shelterName = nextLine[1];
-                ArrayList<Integer> capacity = new ArrayList<Integer>();
-                Scanner sc = new Scanner(nextLine[2]);
-                while (sc.hasNext()) {
-                    while (sc.hasNextInt()) {
-                        capacity.add(sc.nextInt());
-                    }
-                    if (sc.hasNext()) {
-                        sc.next();
-                    }
-                }
-                if (capacity.isEmpty()) {
-                    capacity.add(-1);
-                }
-                String restrictions = nextLine[3];
-                Double latitude = Double.parseDouble(nextLine[4]);
-                Double longitude = Double.parseDouble(nextLine[5]);
-                String address = nextLine[6];
-                String specialNotes = nextLine[7];
-                String phoneNumber = nextLine[8];
-
-                model.addShelter(new Shelter(uniqueKey, shelterName, capacity,
-                        restrictions, latitude, longitude, address, specialNotes, phoneNumber));
+        searchBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent searchScreen = new Intent(MainActivity.this, SearchActivity.class);
+                startActivity(searchScreen);
             }
-        } catch (IOException e) {
-            Log.e(MainActivity.TAG, "error reading assets", e);
-        }
+        });
     }
 }
 

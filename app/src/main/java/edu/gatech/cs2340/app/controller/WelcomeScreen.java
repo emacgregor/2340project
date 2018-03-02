@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.model.Model;
 
 public class WelcomeScreen extends AppCompatActivity {
 
@@ -44,6 +45,7 @@ public class WelcomeScreen extends AppCompatActivity {
                 startActivity(registrationScreen);
             }
         });
+        Model.getInstance().readSDFile(getResources().openRawResource(R.raw.homelessdb));
     }
 
 }

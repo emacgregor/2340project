@@ -66,11 +66,10 @@ public class ShelterDetailFragment extends Fragment {
 
         // Show the dummy content as text in a TextView.
         if (mItem != null) {
-            ((TextView) rootView.findViewById(R.id.shelter_detail)).setText("Capacity: "
-                    + mItem.getCapacityString() +"\n\n" + mItem.getRestrictions() + "\n\n"
-                    + mItem.getLatitude() + "° N, " + mItem.getLongitude() + "° W\n\n"
-                    + mItem.getAddress() + "\n\n" + mItem.getPhoneNumber() + "\n\nNote: "
-                    + mItem.getNotes());
+            String info = "Capacity: " + mItem.getCapacityString() +"\n\n" + mItem.getRestrictions()
+                    + "\n\n" + mItem.getLongLatString() + "\n\n" + mItem.getAddress() + "\n\n"
+                    + mItem.getPhoneNumber() + "\n\nNote: " + mItem.getNotes();
+            ((TextView) rootView.findViewById(R.id.shelter_detail)).setText(info);
         }
 
         return rootView;

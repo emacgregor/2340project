@@ -21,4 +21,6 @@
     <string name="UserString">User type:</string>
     <string name="title_shelter_list">Shelters</string>
     <string name="title_shelter_detail">Shelter Detail</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_list_view_items">list_view_items</string>
 </resources>

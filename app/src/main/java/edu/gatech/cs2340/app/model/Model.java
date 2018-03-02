@@ -2,18 +2,26 @@ package edu.gatech.cs2340.app.model;
 
 import android.util.Log;
 
+import com.opencsv.CSVReader;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
-/**
- * Created by ethan_7416xi5 on 2/16/2018.
- */
+import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.controller.MainActivity;
 
 public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
     private ArrayList<User> userDatabase = new ArrayList<User>();
     private ArrayList<Shelter> shelterDatabase = new ArrayList<>();
+    private boolean readSDFile = false;
 
     /**
      * singleton pattern!
@@ -30,7 +38,7 @@ public class Model {
         shelterDatabase.add(someShelter);
     }
 
-    public List<Shelter> getShelters() {
+    public ArrayList<Shelter> getShelters() {
         return shelterDatabase;
     }
 
@@ -83,5 +91,49 @@ public class Model {
             }
         }
         return false;
+    }
+    public void readSDFile(InputStream is) {
+        if (readSDFile) {
+            return; //lol no thanks
+        }
+        Model model = Model.getInstance();
+
+        //From here we probably should call a model method and pass the InputStream
+        //Wrap it in a BufferedReader so that we get the readLine() method
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+        CSVReader reader = new CSVReader(br);
+        String [] nextLine;
+        try {
+            reader.readNext(); //Throw away first line
+            while ((nextLine = reader.readNext()) != null) {
+                int uniqueKey = Integer.parseInt(nextLine[0]);
+                String shelterName = nextLine[1];
+                ArrayList<Integer> capacity = new ArrayList<Integer>();
+                Scanner sc = new Scanner(nextLine[2]);
+                while (sc.hasNext()) {
+                    while (sc.hasNextInt()) {
+                        capacity.add(sc.nextInt());
+                    }
+                    if (sc.hasNext()) {
+                        sc.next();
+                    }
+                }
+                if (capacity.isEmpty()) {
+                    capacity.add(-1);
+                }
+                String restrictions = nextLine[3];
+                Double latitude = Double.parseDouble(nextLine[4]);
+                Double longitude = Double.parseDouble(nextLine[5]);
+                String address = nextLine[6];
+                String specialNotes = nextLine[7];
+                String phoneNumber = nextLine[8];
+
+                model.addShelter(new Shelter(uniqueKey, shelterName, capacity,
+                        restrictions, latitude, longitude, address, specialNotes, phoneNumber));
+            }
+        } catch (IOException e) {
+            Log.e(MainActivity.TAG, "error reading assets", e);
+        }
+        readSDFile = true;
     }
 }

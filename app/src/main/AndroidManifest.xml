@@ -37,7 +37,7 @@
         <activity
             android:name=".controller.ShelterListActivity"
             android:label="@string/title_shelter_list"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".controller.ShelterDetailActivity"
             android:label="@string/title_shelter_detail"
@@ -47,6 +47,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="edu.gatech.cs2340.app.controller.ShelterListActivity" />
         </activity>
+        <activity
+            android:name=".controller.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".list_view_items"
+            android:label="@string/title_activity_list_view_items"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
