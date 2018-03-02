@@ -51,10 +51,6 @@
             android:name=".controller.SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".list_view_items"
-            android:label="@string/title_activity_list_view_items"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
