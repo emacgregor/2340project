@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,6 +59,10 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+
+    private static int wrongAttempts;
+    private static CountDownTimer lockoutTimer;
+    private static boolean lockedOut = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +199,13 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
         }
     }
     public void cancel() {
+        if (lockedOut) {
+            Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+                    "You are locked out. You cannot leave this screen.",
+                    Snackbar.LENGTH_SHORT);
+            waitBar.show();
+            return;
+        }
         Intent welcomeScreen =  new Intent(LoginScreen.this, WelcomeScreen.class);
         startActivity(welcomeScreen);
     }
@@ -330,6 +343,14 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
             mAuthTask = null;
             showProgress(false);
 
+            if (lockedOut) {
+                Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+                        "You are locked out.",
+                        Snackbar.LENGTH_SHORT);
+                waitBar.show();
+                return;
+            }
+
             if (success) {
                 Intent mainClass =  new Intent(LoginScreen.this, MainActivity.class);
                 startActivity(mainClass);
@@ -341,6 +362,32 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
                     mUsernameView.setError("This username is not registered");
                     mUsernameView.requestFocus();
                 }
+                wrongAttempts++;
+                Log.d("I am here", "" + wrongAttempts);
+                if(wrongAttempts > 2) {
+                    wrongAttempts = 0;
+                    lockedOut = true;
+                    lockoutTimer = new CountDownTimer(60000, 10000) {
+                        int secondsLeft = 60;
+                        @Override
+                        public void onTick(long l) {
+                            Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+                                    "You are locked out for " + secondsLeft + " seconds.",
+                                    Snackbar.LENGTH_SHORT);
+                            secondsLeft -= 10;
+                            waitBar.show();
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+                                    "You are no longer locked out.",
+                                    Snackbar.LENGTH_SHORT);
+                            waitBar.show();
+                            lockedOut = false;
+                        }
+                    }.start();
+                }
             }
         }
 
@@ -348,6 +395,18 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
         protected void onCancelled() {
             mAuthTask = null;
             showProgress(false);
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        if(!lockedOut) {
+            super.onBackPressed();
+        } else {
+            Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+                    "You are locked out. You cannot leave this screen.",
+                    Snackbar.LENGTH_SHORT);
+            waitBar.show();
+            return;
         }
     }
 }
