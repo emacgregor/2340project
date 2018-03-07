@@ -14,16 +14,16 @@ public class Shelter {
     private String phoneNumber;
     private String capacityString;
     private String longLatString;
-    private boolean men = false;
-    private boolean women = false;
-    private boolean nonBinary = false;
-    private boolean families = false;
-    private boolean famNewborn = false;
-    private boolean famChildren = false;
-    private boolean children = false;
-    private boolean youngAdults = false;
-    private boolean veterans = false;
-    private boolean anyone= false;
+    private boolean men;
+    private boolean women;
+    private boolean nonBinary;
+    private boolean families;
+    private boolean famNewborn;
+    private boolean famChildren;
+    private boolean children;
+    private boolean youngAdults;
+    private boolean veterans;
+    private boolean anyone;
     private String searchRestrictions = "Unspecified";
 
     public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, String restrictions, Double longitude,
