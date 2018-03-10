@@ -2,7 +2,6 @@ package edu.gatech.cs2340.app.model;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,15 @@ import java.util.Locale;
 import edu.gatech.cs2340.app.R;
 
 public class ShelterAdapter extends BaseAdapter {
-    LayoutInflater inflater;
-    ArrayList<Shelter> shelterList;
-    ArrayList<Shelter> searchList = null;
-    Context mContext;
+
+    private final LayoutInflater inflater;
+    private final ArrayList<Shelter> shelterList;
+    private ArrayList<Shelter> searchList = null;
 
     public ShelterAdapter(Context context, ArrayList<Shelter> shelterList) {
-        this.mContext = context;
+        Context mContext = context;
         this.shelterList = shelterList;
-        this.searchList = new ArrayList<Shelter>(shelterList);
+        this.searchList = new ArrayList<>(shelterList);
         this.inflater = LayoutInflater.from(mContext);
     }
     public class ViewHolder {
@@ -50,8 +49,8 @@ public class ShelterAdapter extends BaseAdapter {
             holder = new ViewHolder();
             view = inflater.inflate(R.layout.activity_list_view_items, null);
             // Locate the TextViews in listview_item.xml
-            holder.name = (TextView) view.findViewById(R.id.name);
-            holder.restrictions = (TextView) view.findViewById(R.id.restrictions);
+            holder.name = view.findViewById(R.id.name);
+            holder.restrictions = view.findViewById(R.id.restrictions);
             view.setTag(holder);
         } else {
             holder = (ViewHolder) view.getTag();

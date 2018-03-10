@@ -3,15 +3,15 @@ package edu.gatech.cs2340.app.model;
 import java.util.ArrayList;
 
 public class Shelter {
-    private int uniqueKey;
-    private String name;
-    private ArrayList<Integer> capacity;
-    private String restrictions;
-    private Double longitude;
-    private Double latitude;
-    private String address;
-    private String specialNotes;
-    private String phoneNumber;
+    private final int uniqueKey;
+    private final String name;
+    private final ArrayList<Integer> capacity;
+    private final String restrictions;
+    private final Double longitude;
+    private final Double latitude;
+    private final String address;
+    private final String specialNotes;
+    private final String phoneNumber;
     private String capacityString;
     private String longLatString;
     private boolean men;

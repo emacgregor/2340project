@@ -18,12 +18,12 @@ public class WelcomeScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_screen);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Button loginBtn = (Button) findViewById(R.id.log_in_btn);
-        Button regBtn = (Button) findViewById(R.id.reg_btn);
+        Button loginBtn = findViewById(R.id.log_in_btn);
+        Button regBtn = findViewById(R.id.reg_btn);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

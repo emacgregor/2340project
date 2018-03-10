@@ -1,13 +1,14 @@
 package edu.gatech.cs2340.app.model;
 
 /**
+ * default user class
  * Created by Ethan on 2/16/2018.
  */
 
-public class User {
-    private String username;
-    private String password;
-    private boolean isAdmin;
+class User {
+    private final String username;
+    private final String password;
+    private final boolean isAdmin;
     public User(String username, String password, String userType) {
         this.username = username;
         this.password = password;

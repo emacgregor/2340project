@@ -199,7 +199,7 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
             mAuthTask.execute((Void) null);
         }
     }
-    public void cancel() {
+    private void cancel() {
         Intent welcomeScreen =  new Intent(RegistrationScreen.this, WelcomeScreen.class);
         startActivity(welcomeScreen);
     }

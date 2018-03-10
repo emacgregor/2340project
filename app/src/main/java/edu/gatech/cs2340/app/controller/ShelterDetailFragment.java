@@ -9,8 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Shelter;
@@ -51,7 +49,7 @@ public class ShelterDetailFragment extends Fragment {
             int item_id = getArguments().getInt(ARG_ITEM_ID);
             mItem = Model.getInstance().findItemById(item_id);
             Activity activity = this.getActivity();
-            CollapsingToolbarLayout appBarLayout = (CollapsingToolbarLayout) activity.findViewById(R.id.toolbar_layout);
+            CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.getName());
             }

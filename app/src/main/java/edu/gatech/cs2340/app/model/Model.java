@@ -10,17 +10,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
-import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.controller.MainActivity;
 
 public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
-    private ArrayList<User> userDatabase = new ArrayList<User>();
-    private ArrayList<Shelter> shelterDatabase = new ArrayList<>();
+    private final ArrayList<User> userDatabase = new ArrayList<>();
+    private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private boolean readSDFile = false;
 
     /**
@@ -34,7 +32,7 @@ public class Model {
      * Adds a shelter to an the array list of shelters
      * @param someShelter
      */
-    public void addShelter(Shelter someShelter) {
+    private void addShelter(Shelter someShelter) {
         shelterDatabase.add(someShelter);
     }
 
@@ -108,7 +106,7 @@ public class Model {
             while ((nextLine = reader.readNext()) != null) {
                 int uniqueKey = Integer.parseInt(nextLine[0]);
                 String shelterName = nextLine[1];
-                ArrayList<Integer> capacity = new ArrayList<Integer>();
+                ArrayList<Integer> capacity = new ArrayList<>();
                 Scanner sc = new Scanner(nextLine[2]);
                 while (sc.hasNext()) {
                     while (sc.hasNextInt()) {

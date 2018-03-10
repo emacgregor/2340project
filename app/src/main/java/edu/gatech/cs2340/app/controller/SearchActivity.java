@@ -20,21 +20,18 @@ import edu.gatech.cs2340.app.model.ShelterAdapter;
 
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
-    ListView searchList;
-    SearchView editSearch;
-    ShelterAdapter adapter;
-    ArrayList<Shelter> shelterList;
+    private ShelterAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        shelterList = Model.getInstance().getShelters();
-        searchList = (ListView) findViewById(R.id.listview);
+        ArrayList<Shelter> shelterList = Model.getInstance().getShelters();
+        ListView searchList = findViewById(R.id.listview);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -54,7 +51,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         adapter = new ShelterAdapter(this, shelterList);
 
         searchList.setAdapter(adapter);
-        editSearch = (SearchView) findViewById(R.id.search);
+        SearchView editSearch = findViewById(R.id.search);
         editSearch.setOnQueryTextListener(this);
 
     }

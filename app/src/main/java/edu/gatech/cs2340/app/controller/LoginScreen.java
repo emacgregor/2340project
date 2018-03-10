@@ -61,7 +61,6 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
     private View mLoginFormView;
 
     private static int wrongAttempts;
-    private static CountDownTimer lockoutTimer;
     private static boolean lockedOut = false;
 
     @Override
@@ -198,7 +197,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
             mAuthTask.execute((Void) null);
         }
     }
-    public void cancel() {
+    private void cancel() {
         if (lockedOut) {
             Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
                     "You are locked out. You cannot leave this screen.",
@@ -367,8 +366,9 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
                 if(wrongAttempts > 2) {
                     wrongAttempts = 0;
                     lockedOut = true;
-                    lockoutTimer = new CountDownTimer(60000, 10000) {
+                    CountDownTimer lockoutTimer = new CountDownTimer(60000, 10000) {
                         int secondsLeft = 60;
+
                         @Override
                         public void onTick(long l) {
                             Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
@@ -406,7 +406,6 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
                     "You are locked out. You cannot leave this screen.",
                     Snackbar.LENGTH_SHORT);
             waitBar.show();
-            return;
         }
     }
 }
