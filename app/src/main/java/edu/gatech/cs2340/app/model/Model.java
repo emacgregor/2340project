@@ -14,6 +14,22 @@ import java.util.Scanner;
 
 import edu.gatech.cs2340.app.controller.MainActivity;
 
+//Database Stuff
+
+import android.os.AsyncTask;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+
+
+
 public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
@@ -133,5 +149,46 @@ public class Model {
             Log.e(MainActivity.TAG, "error reading assets", e);
         }
         readSDFile = true;
+    }
+
+    public void getSheltersFromDB() {
+
+        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
+            @Override
+            protected Void doInBackground(Integer... movieIds) {
+
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .url("http://crossoutcancer.org/db_connect.php")
+                        .build();
+                try {
+                    Response response = client.newCall(request).execute();
+
+                    JSONArray array = new JSONArray(response.body().string());
+
+                    for (int i = 0; i < array.length(); i++) {
+
+                        JSONObject object = array.getJSONObject(i);
+                        int cap = object.getInt("bedCapacity");
+                        ArrayList<Integer> capArray = new ArrayList<>(1);
+                        capArray.add(cap);
+                        Shelter shelter = new Shelter(object.getInt("id"), object.getString("name"), capArray
+                                , object.getString("restrictions"), object.getDouble("longit"), object.getDouble("lat"), object.getString("address"), object.getString("specialNotes"), object.getString("phoneNumber"));
+
+                        Model.getInstance().addShelter(shelter);
+                        Log.d("Shelter", object.getString("name"));
+                    }
+
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
+        asyncTask.execute();
     }
 }

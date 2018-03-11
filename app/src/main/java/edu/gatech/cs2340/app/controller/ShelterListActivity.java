@@ -2,6 +2,7 @@ package edu.gatech.cs2340.app.controller;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -15,11 +16,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Shelter;
 import edu.gatech.cs2340.app.model.Model;
+import edu.gatech.cs2340.app.model.ShelterAdapter;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * An activity representing a list of Shelters. This activity
@@ -36,6 +47,7 @@ public class ShelterListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +57,7 @@ public class ShelterListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(getTitle());
+        //adapter = new ShelterAdapter(this, shelters);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -63,9 +76,9 @@ public class ShelterListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.shelter_list);
+        recyclerView = findViewById(R.id.shelter_list);
         assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        setupRecyclerView(recyclerView);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -142,4 +155,6 @@ public class ShelterListActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }
