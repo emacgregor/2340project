@@ -152,7 +152,9 @@ public class Model {
     }
 
     public void getSheltersFromDB() {
-
+        if (readSDFile) {
+            return; //lol no thanks
+        }
         AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
             @Override
             protected Void doInBackground(Integer... movieIds) {
@@ -190,5 +192,6 @@ public class Model {
         };
 
         asyncTask.execute();
+        readSDFile = true;
     }
 }
