@@ -194,4 +194,8 @@ public class Model {
         asyncTask.execute();
         readSDFile = true;
     }
+
+    public void updateShelterBeds() {
+
+    }
 }
