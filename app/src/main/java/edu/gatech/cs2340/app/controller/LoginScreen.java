@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.model.AppDatabase;
 import edu.gatech.cs2340.app.model.Model;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -62,6 +63,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
 
     private static int wrongAttempts;
     private static boolean lockedOut = false;
+    private static AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        db = AppDatabase.getAppDatabase(getApplicationContext());
     }
 
     private void populateAutoComplete() {
@@ -333,8 +336,8 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
             }
 
             Model model = Model.getInstance();
-            userFound = model.userExists(mUsername);
-            return model.checkCredentials(mUsername, mPassword);
+            userFound = model.userExists(mUsername, db);
+            return model.checkCredentials(mUsername, mPassword, db);
         }
 
         @Override

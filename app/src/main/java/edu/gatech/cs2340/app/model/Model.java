@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import edu.gatech.cs2340.app.controller.MainActivity;
@@ -71,11 +72,10 @@ public class Model {
      * @return Whether the user got added (whether that username was already registered.)
      */
     public boolean addUser(String username, String password, String userType, AppDatabase db) {
-        if (userExists(username)) {
+        if (userExists(username, db)) {
             return false;
         }
         User nUser = new User(username, password, userType);
-        userDatabase.add(nUser);
         db.userDao().insertAll(nUser);
         return true;
     }
@@ -85,9 +85,10 @@ public class Model {
      * @param username The username we're looking for
      * @return Whether this username is registered.
      */
-    public boolean userExists(String username) {
-        for (User user : userDatabase) {
-            if (username.equals(user.getUsername())) {
+    public boolean userExists(String username, AppDatabase db) {
+        List<String> userNames = db.userDao().getAllUsername();
+        for (String s : userNames) {
+            if (username.equals(s)) {
                 return true;
             }
         }
@@ -100,8 +101,9 @@ public class Model {
      * @param password The password that must be matched.
      * @return Whether or not the username and password match.
      */
-    public boolean checkCredentials(String username, String password) {
-        for (User user : userDatabase) {
+    public boolean checkCredentials(String username, String password, AppDatabase db) {
+        List<User> users = db.userDao().getAllUsers();
+        for (User user : users) {
             if (username.equals(user.getUsername())) {
                 return user.checkPassword(password);
             }

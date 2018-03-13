@@ -14,9 +14,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Entity
 public class User {
 
-    private static final AtomicInteger counter = new AtomicInteger(0);
-
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private int uid;
 
     @ColumnInfo(name = "username")
@@ -30,7 +28,6 @@ public class User {
 
 
     public User(String username, String password, String userType) {
-        this.uid = counter.incrementAndGet();
         this.username = username;
         this.password = password;
         this.isAdmin = userType.equals("Admin");
