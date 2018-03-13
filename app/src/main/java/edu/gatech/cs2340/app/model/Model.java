@@ -34,7 +34,6 @@ import okhttp3.Response;
 public class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
-    private final ArrayList<User> userDatabase = new ArrayList<>();
     private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private boolean readSDFile = false;
 
