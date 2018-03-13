@@ -36,6 +36,7 @@ public class Model {
     public static Model getInstance() { return _instance; }
     private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private boolean readSDFile = false;
+    private User currentUser;
 
     /**
      * singleton pattern!
@@ -76,6 +77,7 @@ public class Model {
         }
         User nUser = new User(username, password, userType);
         db.userDao().insertAll(nUser);
+        setCurrentUser(nUser);
         return true;
     }
 
@@ -104,7 +106,11 @@ public class Model {
         List<User> users = db.userDao().getAllUsers();
         for (User user : users) {
             if (username.equals(user.getUsername())) {
-                return user.checkPassword(password);
+                if (user.checkPassword(password)) {
+                    setCurrentUser(user);
+                    return true;
+                }
+                return false;
             }
         }
         return false;
@@ -200,5 +206,31 @@ public class Model {
 
     public void updateShelterBeds() {
 
+    }
+    public void setCurrentUser(User user) {
+        currentUser = user;
+    }
+    public User getCurrentUser(User user) {
+        return  currentUser;
+    }
+    public boolean claimBeds(int numBeds, int shelterID) {
+        if (currentUser.canClaimBeds(shelterID)
+                && shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
+            currentUser.claimBeds(numBeds, shelterID);
+            shelterDatabase.get(shelterID).claimBeds(numBeds);
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public boolean releaseBeds(int numBeds, int shelterID) {
+        if (currentUser.canReleaseBeds(numBeds, shelterID)
+                && shelterDatabase.get(shelterID).canReleaseBeds(numBeds)) {
+            currentUser.releaseBeds(numBeds, shelterID);
+            shelterDatabase.get(shelterID).releaseBeds(numBeds);
+            return true;
+        } else {
+            return false;
+        }
     }
 }

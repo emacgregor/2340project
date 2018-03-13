@@ -24,6 +24,8 @@ public class Shelter {
     private boolean youngAdults;
     private boolean veterans;
     private boolean anyone;
+    private int totalCapacity = 0;
+    private int remainingCapacity;
     private String searchRestrictions = "Unspecified";
 
     public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, String restrictions, Double longitude,
@@ -57,6 +59,10 @@ public class Shelter {
             longLatString += ", " + latitude + "° N";
         }
         makeSearchRestrictionsString();
+        for (int i = 0; i < capacity.size(); i++) {
+            totalCapacity += capacity.get(i);
+        }
+        remainingCapacity = totalCapacity;
     }
 
     private void makeSearchRestrictionsString() {
@@ -168,6 +174,30 @@ public class Shelter {
     public boolean allowsYoungAdults() { return youngAdults; }
     public boolean allowsVeterans() { return veterans; }
     public boolean allowsAnyone() { return anyone; }
+    public int getTotalCapacity() { return totalCapacity; }
+
+    public boolean claimBeds(int numBeds) {
+        if (numBeds > remainingCapacity) {
+            return false;
+        } else {
+            remainingCapacity -= numBeds;
+            return true;
+        }
+    }
+    public boolean canClaimBeds(int numBeds) {
+        return !(numBeds > remainingCapacity);
+    }
+    public boolean canReleaseBeds(int numBeds) {
+        return !(numBeds + remainingCapacity > totalCapacity);
+    }
+    public boolean releaseBeds(int numBeds) {
+        if (numBeds + remainingCapacity > totalCapacity) {
+            return false;
+        } else {
+            remainingCapacity += numBeds;
+            return true;
+        }
+    }
 }
 
 
