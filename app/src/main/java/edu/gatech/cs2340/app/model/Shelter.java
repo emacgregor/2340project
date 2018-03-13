@@ -175,6 +175,7 @@ public class Shelter {
     public boolean allowsVeterans() { return veterans; }
     public boolean allowsAnyone() { return anyone; }
     public int getTotalCapacity() { return totalCapacity; }
+    public int getRemainingCapacity() { return remainingCapacity; }
 
     public boolean claimBeds(int numBeds) {
         if (numBeds > remainingCapacity) {
