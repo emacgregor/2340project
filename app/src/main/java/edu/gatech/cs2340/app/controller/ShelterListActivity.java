@@ -131,6 +131,7 @@ public class ShelterListActivity extends AppCompatActivity {
                         Intent intent = new Intent(context, ShelterDetailActivity.class);
                         intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, holder.mItem.getUniqueKey());
 
+                        Model.getInstance().setCurrentShelter(holder.mItem);
                         context.startActivity(intent);
                     }
                 }

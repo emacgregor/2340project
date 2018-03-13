@@ -1,5 +1,7 @@
 package edu.gatech.cs2340.app.model;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 
 public class Shelter {
@@ -186,6 +188,7 @@ public class Shelter {
         }
     }
     public boolean canClaimBeds(int numBeds) {
+        Log.d("Can claim beds?",""+remainingCapacity);
         return !(numBeds > remainingCapacity);
     }
     public boolean canReleaseBeds(int numBeds) {

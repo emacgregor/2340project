@@ -37,7 +37,8 @@
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/shelter_detail_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="340dp"
+        android:layout_weight="0"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <android.support.design.widget.FloatingActionButton
@@ -49,5 +50,42 @@
         app:layout_anchor="@+id/shelter_detail_container"
         app:layout_anchorGravity="top|end"
         app:srcCompat="@android:drawable/stat_notify_chat" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            app:layout_anchorGravity="center|bottom"
+            android:layout_alignParentBottom="true">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Claim or release beds" />
+
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/clmBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Claim" />
+
+            <Button
+                android:id="@+id/relBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Release" />
+        </LinearLayout>
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

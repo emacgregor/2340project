@@ -9,8 +9,13 @@ import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
 
 import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.model.Model;
+import edu.gatech.cs2340.app.model.Shelter;
 
 /**
  * An activity representing a single Shelter detail screen. This
@@ -63,6 +68,47 @@ public class ShelterDetailActivity extends AppCompatActivity {
                     .add(R.id.shelter_detail_container, fragment)
                     .commit();
         }
+
+        final Shelter mItem = Model.getInstance().getCurrentShelter();
+        final Spinner bedSpinner = findViewById(R.id.spinner3);
+        Integer[] bedNums = new Integer[mItem.getTotalCapacity()];
+        for (int i = 0; i < mItem.getTotalCapacity(); i++) {
+            bedNums[i] = i + 1;
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, bedNums);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        bedSpinner.setAdapter(adapter);
+
+        Button claimButton = findViewById(R.id.clmBtn);
+        claimButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Model.getInstance().claimBeds((int)bedSpinner.getSelectedItem(), mItem.getUniqueKey())) {
+                    Intent mainClass =  new Intent(ShelterDetailActivity.this, MainActivity.class);
+                    startActivity(mainClass);
+                } else {
+                    Snackbar waitBar = Snackbar.make(findViewById(R.id.shelter_detail_container),
+                            Model.getInstance().getFailureString(),
+                            Snackbar.LENGTH_SHORT);
+                    waitBar.show();
+                }
+            }
+        });
+        Button releaseButton = findViewById(R.id.relBtn);
+        releaseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Model.getInstance().releaseBeds((int)bedSpinner.getSelectedItem(), mItem.getUniqueKey())) {
+                    Intent mainClass =  new Intent(ShelterDetailActivity.this, MainActivity.class);
+                    startActivity(mainClass);
+                } else {
+                    Snackbar waitBar = Snackbar.make(findViewById(R.id.shelter_detail_container),
+                            Model.getInstance().getFailureString(),
+                            Snackbar.LENGTH_SHORT);
+                    waitBar.show();
+                }
+            }
+        });
     }
 
     @Override

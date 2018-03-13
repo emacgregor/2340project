@@ -37,6 +37,8 @@ public class Model {
     private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private boolean readSDFile = false;
     private User currentUser;
+    private Shelter currentShelter;
+    private String failureString;
 
     /**
      * singleton pattern!
@@ -210,7 +212,7 @@ public class Model {
     public void setCurrentUser(User user) {
         currentUser = user;
     }
-    public User getCurrentUser(User user) {
+    public User getCurrentUser() {
         return  currentUser;
     }
     public boolean claimBeds(int numBeds, int shelterID) {
@@ -220,8 +222,19 @@ public class Model {
             shelterDatabase.get(shelterID).claimBeds(numBeds);
             return true;
         } else {
+            failureString = "You cannot claim these beds.";
+            if (!currentUser.canClaimBeds(shelterID)) {
+                failureString += " You already own beds at "
+                        + shelterDatabase.get(currentUser.getShelterID()).getName() + ".";
+            }
+            if (!shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
+                failureString += " This shelter does not have that many beds to spare.";
+            }
             return false;
         }
+    }
+    public String getFailureString() {
+        return failureString;
     }
     public boolean releaseBeds(int numBeds, int shelterID) {
         if (currentUser.canReleaseBeds(numBeds, shelterID)
@@ -230,7 +243,23 @@ public class Model {
             shelterDatabase.get(shelterID).releaseBeds(numBeds);
             return true;
         } else {
+            failureString = "You cannot release beds at this shelter:";
+            if (currentUser.getShelterID() == -1) {
+                failureString += " You do not own any beds.";
+            } else if (currentUser.getShelterID() != shelterID) {
+                failureString += " Your beds are from "
+                        + shelterDatabase.get(currentUser.getShelterID()).getName() + ".";
+            }
+            if (currentUser.getNumBedsClaimed() < numBeds) {
+                failureString += " You do not have this many beds.";
+            }
             return false;
         }
+    }
+    public void setCurrentShelter(Shelter newShelter) {
+        currentShelter = newShelter;
+    }
+    public Shelter getCurrentShelter() {
+        return currentShelter;
     }
 }

@@ -6,6 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -42,6 +43,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
+                Model.getInstance().setCurrentShelter(Model.getInstance().getShelters().get(position));
+                Log.d("Clicked this", "" + Model.getInstance().getCurrentShelter().getName());
                 Intent intent = new Intent(v.getContext(), ShelterDetailActivity.class);
                 intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, position);
                 v.getContext().startActivity(intent);
