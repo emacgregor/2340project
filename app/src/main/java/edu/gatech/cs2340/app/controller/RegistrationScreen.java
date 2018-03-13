@@ -60,7 +60,7 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
     private Spinner adminSpinner;
     private View mProgressView;
     private View mLoginFormView;
-    public AppDatabase db;
+    private static AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
