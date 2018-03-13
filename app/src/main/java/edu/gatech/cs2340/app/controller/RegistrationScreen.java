@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.model.AppDatabase;
 import edu.gatech.cs2340.app.model.Model;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -59,6 +60,7 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
     private Spinner adminSpinner;
     private View mProgressView;
     private View mLoginFormView;
+    public AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,8 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        db = AppDatabase.getAppDatabase(getApplicationContext());
     }
 
     private void populateAutoComplete() {
@@ -327,7 +331,7 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
             }
 
             Model model = Model.getInstance();
-            return model.addUser(mUsername, mPassword, (String) adminSpinner.getSelectedItem());
+            return model.addUser(mUsername, mPassword, (String) adminSpinner.getSelectedItem(), db);
         }
 
         @Override

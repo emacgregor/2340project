@@ -70,11 +70,13 @@ public class Model {
      * @param userType The user type of the new user (admin, user).
      * @return Whether the user got added (whether that username was already registered.)
      */
-    public boolean addUser(String username, String password, String userType) {
+    public boolean addUser(String username, String password, String userType, AppDatabase db) {
         if (userExists(username)) {
             return false;
         }
-        userDatabase.add(new User(username, password, userType));
+        User nUser = new User(username, password, userType);
+        userDatabase.add(nUser);
+        db.userDao().insertAll(nUser);
         return true;
     }
 
