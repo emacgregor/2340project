@@ -192,7 +192,10 @@ public class Model {
                         ArrayList<Integer> capArray = new ArrayList<>(1);
                         capArray.add(cap);
                         Shelter shelter = new Shelter(object.getInt("id"), object.getString("name"), capArray
-                                , object.getInt("remainingCap"), object.getString("restrictions"), object.getDouble("longit"), object.getDouble("lat"), object.getString("address"), object.getString("specialNotes"), object.getString("phoneNumber"));
+                                , object.getInt("remainingCap"), object.getString("restrictions"),
+                                object.getDouble("longit"), object.getDouble("lat"),
+                                object.getString("address"), object.getString("specialNotes"),
+                                object.getString("phoneNumber"));
 
                         Model.getInstance().addShelter(shelter);
                         Log.d("Shelter", object.getString("name"));
@@ -253,7 +256,7 @@ public class Model {
 
                     HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
                     urlBuilder.addQueryParameter("id", String.valueOf(sid));
-                    urlBuilder.addQueryParameter("beds", String.valueOf(beds));
+                    urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
                     //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
                     String url = urlBuilder.build().toString();
 
@@ -274,6 +277,67 @@ public class Model {
         };
         asyncTask.execute();
     }
+    public void updateCurrentShelterBeds(final int shelterID) {
+        final String url_update = "http://crossoutcancer.org/updateShelter.php";
+        /*List<User> userList = db.userDao().getAllUsers();
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+
+        for (User current: userList) {
+            int id = current.getShelterID();
+            int beds = current.getNumBedsClaimed();
+            if (map.containsKey(id)){
+                beds = map.get(id) + beds;
+                map.put(id, beds);
+            } else {
+                map.put(id, beds);
+            }
+
+        }
+
+        final Map<Integer, Integer> usermap = map;*/
+
+        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
+            /**
+             * Before starting background thread Show Progress Dialog
+             */
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            /**
+             * Saving product
+             */
+            protected Void doInBackground(Integer... integers) {
+                    /*int sid = entry.getKey();
+                    int beds = entry.getValue();*/
+                    int sid = shelterID;
+                    int beds = shelterDatabase.get(shelterID).getRemainingCapacity();
+                    Log.d(""+shelterID, ""+ beds);
+
+                    OkHttpClient client = new OkHttpClient();
+
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
+                    urlBuilder.addQueryParameter("id", String.valueOf(sid));
+                    urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
+                    //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
+                    String url = urlBuilder.build().toString();
+
+
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .build();
+
+                    try {
+                        client.newCall(request).execute();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                return null;
+            }
+        };
+        asyncTask.execute();
+    }
     public void setCurrentUser(User user) {
         currentUser = user;
     }
@@ -285,6 +349,7 @@ public class Model {
                 && shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
             currentUser.claimBeds(numBeds, shelterID);
             shelterDatabase.get(shelterID).claimBeds(numBeds);
+            updateCurrentShelterBeds(shelterID);
             return true;
         } else {
             failureString = "You cannot claim these beds.";
@@ -306,6 +371,7 @@ public class Model {
                 && shelterDatabase.get(shelterID).canReleaseBeds(numBeds)) {
             currentUser.releaseBeds(numBeds, shelterID);
             shelterDatabase.get(shelterID).releaseBeds(numBeds);
+            updateCurrentShelterBeds(shelterID);
             return true;
         } else {
             failureString = "You cannot release beds at this shelter:";
