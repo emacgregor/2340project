@@ -75,7 +75,8 @@ public class ShelterDetailActivity extends AppCompatActivity {
         for (int i = 0; i < mItem.getTotalCapacity(); i++) {
             bedNums[i] = i + 1;
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, bedNums);
+        ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, bedNums);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         bedSpinner.setAdapter(adapter);
 
@@ -83,8 +84,10 @@ public class ShelterDetailActivity extends AppCompatActivity {
         claimButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Model.getInstance().claimBeds((int)bedSpinner.getSelectedItem(), mItem.getUniqueKey())) {
-                    Intent mainClass =  new Intent(ShelterDetailActivity.this, MainActivity.class);
+                if (Model.getInstance().claimBeds((int)bedSpinner.getSelectedItem(),
+                        mItem.getUniqueKey())) {
+                    Intent mainClass =  new Intent(ShelterDetailActivity.this,
+                            MainActivity.class);
                     startActivity(mainClass);
                 } else {
                     Snackbar waitBar = Snackbar.make(findViewById(R.id.shelter_detail_container),
@@ -98,8 +101,10 @@ public class ShelterDetailActivity extends AppCompatActivity {
         releaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Model.getInstance().releaseBeds((int)bedSpinner.getSelectedItem(), mItem.getUniqueKey())) {
-                    Intent mainClass =  new Intent(ShelterDetailActivity.this, MainActivity.class);
+                if (Model.getInstance().releaseBeds((int)bedSpinner.getSelectedItem(),
+                        mItem.getUniqueKey())) {
+                    Intent mainClass =  new Intent(ShelterDetailActivity.this,
+                            MainActivity.class);
                     startActivity(mainClass);
                 } else {
                     Snackbar waitBar = Snackbar.make(findViewById(R.id.shelter_detail_container),

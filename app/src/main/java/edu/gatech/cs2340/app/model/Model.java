@@ -2,20 +2,11 @@ package edu.gatech.cs2340.app.model;
 
 import android.util.Log;
 
-import com.opencsv.CSVReader;
-
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
-
-import edu.gatech.cs2340.app.controller.MainActivity;
 
 //Database Stuff
 
@@ -35,17 +26,14 @@ import okhttp3.Response;
 
 
 
-public class Model {
+public final class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
-    private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
+    private static final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private boolean readSDFile = false;
     private User currentUser;
     private Shelter currentShelter;
     private String failureString;
-
-    private static final String TAG_SUCCESS = "success";
-
     /**
      * singleton pattern!
      */
@@ -55,7 +43,7 @@ public class Model {
 
     /**
      * Adds a shelter to an the array list of shelters
-     * @param someShelter
+     * @param someShelter Shelter to be added.
      */
     private void addShelter(Shelter someShelter) {
         shelterDatabase.add(someShelter);
@@ -68,7 +56,9 @@ public class Model {
 
     public Shelter findItemById(int id) {
         for (Shelter d : shelterDatabase) {
-            if (d.getUniqueKey() == id) return d;
+            if (d.getUniqueKey() == id) {
+                return d;
+            }
         }
         return null;
     }
@@ -123,6 +113,9 @@ public class Model {
         }
         return false;
     }
+
+    /* This is the old CSV reading method.
+
     public void readSDFile(InputStream is) {
         if (readSDFile) {
             return; //lol no thanks
@@ -166,53 +159,92 @@ public class Model {
             Log.e(MainActivity.TAG, "error reading assets", e);
         }
         readSDFile = true;
-    }
+    }*/
 
+    private static class loadingASyncTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... movieIds) {
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://crossoutcancer.org/db_connect.php")
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+
+                JSONArray array = new JSONArray(response.body().string());
+
+                for (int i = 0; i < array.length(); i++) {
+
+                    JSONObject object = array.getJSONObject(i);
+                    int cap = object.getInt("bedCapacity");
+                    ArrayList<Integer> capArray = new ArrayList<>(1);
+                    capArray.add(cap);
+                    Shelter shelter = new Shelter(object.getInt("id"), object.getString("name"), capArray
+                            , object.getInt("remainingCap"), object.getString("restrictions"),
+                            object.getDouble("longit"), object.getDouble("lat"),
+                            object.getString("address"), object.getString("specialNotes"),
+                            object.getString("phoneNumber"));
+
+                    Model.getInstance().addShelter(shelter);
+                    Log.d("Shelter", object.getString("name"));
+                }
+
+
+            } catch (IOException|JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
     public void getSheltersFromDB() {
         if (readSDFile) {
             return; //lol no thanks
         }
-        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
-            @Override
-            protected Void doInBackground(Integer... movieIds) {
+        loadingASyncTask myTask = new loadingASyncTask();
+        myTask.execute();
+        readSDFile = true;
+    }
+
+    private static class updateAsyncTask extends AsyncTask<Integer, Void, Void> {
+        final Map<Integer, Integer> userMap;
+        final String url_update;
+        updateAsyncTask(String url_update, Map<Integer, Integer> map) {
+            userMap = map;
+            this.url_update = url_update;
+        }
+
+        /**
+         * Saving product
+         */
+        protected Void doInBackground(Integer... integers) {
+
+            for (Map.Entry<Integer, Integer> entry : userMap.entrySet()) {
+                int sid = entry.getKey();
+                int beds = entry.getValue();
 
                 OkHttpClient client = new OkHttpClient();
+
+                HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
+                urlBuilder.addQueryParameter("id", String.valueOf(sid));
+                urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
+                //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
+                String url = urlBuilder.build().toString();
+
+
                 Request request = new Request.Builder()
-                        .url("http://crossoutcancer.org/db_connect.php")
+                        .url(url)
                         .build();
+
                 try {
-                    Response response = client.newCall(request).execute();
-
-                    JSONArray array = new JSONArray(response.body().string());
-
-                    for (int i = 0; i < array.length(); i++) {
-
-                        JSONObject object = array.getJSONObject(i);
-                        int cap = object.getInt("bedCapacity");
-                        ArrayList<Integer> capArray = new ArrayList<>(1);
-                        capArray.add(cap);
-                        Shelter shelter = new Shelter(object.getInt("id"), object.getString("name"), capArray
-                                , object.getInt("remainingCap"), object.getString("restrictions"),
-                                object.getDouble("longit"), object.getDouble("lat"),
-                                object.getString("address"), object.getString("specialNotes"),
-                                object.getString("phoneNumber"));
-
-                        Model.getInstance().addShelter(shelter);
-                        Log.d("Shelter", object.getString("name"));
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    client.newCall(request).execute();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
                 }
-                return null;
-            }
-        };
 
-        asyncTask.execute();
-        readSDFile = true;
+            }
+            return null;
+        }
     }
 
     public void updateShelterBeds(AppDatabase db) {
@@ -232,52 +264,50 @@ public class Model {
 
         }
 
-        final Map<Integer, Integer> usermap = map;
-
-        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
-            /**
-             * Before starting background thread Show Progress Dialog
-             */
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            /**
-             * Saving product
-             */
-            protected Void doInBackground(Integer... integers) {
-
-                for (Map.Entry<Integer, Integer> entry : usermap.entrySet()) {
-                    int sid = entry.getKey();
-                    int beds = entry.getValue();
-
-                    OkHttpClient client = new OkHttpClient();
-
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
-                    urlBuilder.addQueryParameter("id", String.valueOf(sid));
-                    urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
-                    //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
-                    String url = urlBuilder.build().toString();
-
-
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
-
-                    try {
-                        client.newCall(request).execute();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-
-                }
-                return null;
-            }
-        };
-        asyncTask.execute();
+        updateAsyncTask updateTask = new updateAsyncTask(url_update, map);
+        updateTask.execute();
     }
-    public void updateCurrentShelterBeds(final int shelterID) {
+    private static class updateAsyncTask1 extends AsyncTask<Integer, Void, Void> {
+        final String url_update;
+        final int shelterID;
+        updateAsyncTask1(String url_update, int shelterID) {
+            this.url_update = url_update;
+            this.shelterID = shelterID;
+        }
+
+        /**
+         * Saving product
+         */
+        protected Void doInBackground(Integer... integers) {
+                    /*int sid = entry.getKey();
+                    int beds = entry.getValue();*/
+            int sid = shelterID;
+            int beds = shelterDatabase.get(shelterID).getRemainingCapacity();
+            Log.d(""+shelterID, ""+ beds);
+
+            OkHttpClient client = new OkHttpClient();
+
+            HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
+            urlBuilder.addQueryParameter("id", String.valueOf(sid));
+            urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
+            //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
+            String url = urlBuilder.build().toString();
+
+
+            Request request = new Request.Builder()
+                    .url(url)
+                    .build();
+
+            try {
+                client.newCall(request).execute();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    private void updateCurrentShelterBeds(final int shelterID) {
         final String url_update = "http://crossoutcancer.org/updateShelter.php";
         /*List<User> userList = db.userDao().getAllUsers();
         Map<Integer, Integer> map = new HashMap<Integer, Integer>();
@@ -296,49 +326,10 @@ public class Model {
 
         final Map<Integer, Integer> usermap = map;*/
 
-        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
-            /**
-             * Before starting background thread Show Progress Dialog
-             */
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            /**
-             * Saving product
-             */
-            protected Void doInBackground(Integer... integers) {
-                    /*int sid = entry.getKey();
-                    int beds = entry.getValue();*/
-                    int sid = shelterID;
-                    int beds = shelterDatabase.get(shelterID).getRemainingCapacity();
-                    Log.d(""+shelterID, ""+ beds);
-
-                    OkHttpClient client = new OkHttpClient();
-
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
-                    urlBuilder.addQueryParameter("id", String.valueOf(sid));
-                    urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
-                    //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
-                    String url = urlBuilder.build().toString();
-
-
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
-
-                    try {
-                        client.newCall(request).execute();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                return null;
-            }
-        };
-        asyncTask.execute();
+        updateAsyncTask1 updateTask = new updateAsyncTask1(url_update, shelterID);
+        updateTask.execute();
     }
-    public void setCurrentUser(User user) {
+    private void setCurrentUser(User user) {
         currentUser = user;
     }
     public User getCurrentUser() {

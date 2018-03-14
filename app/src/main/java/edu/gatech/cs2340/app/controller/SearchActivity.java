@@ -66,8 +66,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        String text = newText;
-        adapter.filterByName(text);
+        adapter.filterByName(newText);
         return false;
     }
 }

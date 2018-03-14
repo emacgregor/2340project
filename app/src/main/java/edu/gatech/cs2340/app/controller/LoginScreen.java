@@ -61,9 +61,9 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
     private View mProgressView;
     private View mLoginFormView;
 
-    private static int wrongAttempts;
-    private static boolean lockedOut = false;
-    private static AppDatabase db;
+    private int wrongAttempts;
+    private boolean lockedOut = false;
+    private AppDatabase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                if ((id == EditorInfo.IME_ACTION_DONE) || (id == EditorInfo.IME_NULL)) {
                     attemptLogin();
                     return true;
                 }
@@ -142,7 +142,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if ((grantResults.length == 1) && (grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
                 populateAutoComplete();
             }
         }
@@ -170,20 +170,9 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
-
         // Check for a valid username address.
         if (TextUtils.isEmpty(username)) {
             mUsernameView.setError(getString(R.string.error_field_required));
-            focusView = mUsernameView;
-            cancel = true;
-        } else if (!isUsernameValid(username)) {
-            mUsernameView.setError("Invalid username.");
             focusView = mUsernameView;
             cancel = true;
         }
@@ -210,13 +199,6 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
         }
         Intent welcomeScreen =  new Intent(LoginScreen.this, WelcomeScreen.class);
         startActivity(welcomeScreen);
-    }
-    private boolean isUsernameValid(String username) {
-        return true;
-    }
-
-    private boolean isPasswordValid(String password) {
-        return true;
     }
 
     /**
@@ -313,7 +295,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    private class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mUsername;
         private final String mPassword;
@@ -326,8 +308,6 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
@@ -369,7 +349,7 @@ public class LoginScreen extends AppCompatActivity implements LoaderCallbacks<Cu
                 if(wrongAttempts > 2) {
                     wrongAttempts = 0;
                     lockedOut = true;
-                    CountDownTimer lockoutTimer = new CountDownTimer(60000, 10000) {
+                    new CountDownTimer(60000, 10000) {
                         int secondsLeft = 60;
 
                         @Override

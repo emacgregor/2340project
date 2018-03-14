@@ -41,7 +41,8 @@ public class WelcomeScreen extends AppCompatActivity {
 
         regBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent registrationScreen = new Intent(WelcomeScreen.this, RegistrationScreen.class);
+                Intent registrationScreen = new Intent(WelcomeScreen.this,
+                        RegistrationScreen.class);
                 startActivity(registrationScreen);
             }
         });

@@ -12,7 +12,6 @@ import android.widget.Button;
 import edu.gatech.cs2340.app.R;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = "CSV_Reader";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

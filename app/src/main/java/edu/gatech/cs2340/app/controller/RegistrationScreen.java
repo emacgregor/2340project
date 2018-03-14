@@ -74,7 +74,7 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
+                if ((id == EditorInfo.IME_ACTION_DONE) || (id == EditorInfo.IME_NULL)) {
                     attemptLogin();
                     return true;
                 }
@@ -83,7 +83,8 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
         });
 
         adminSpinner = findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, new String[]{"User", "Admin"});
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, new String[]{"User", "Admin"});
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adminSpinner.setAdapter(adapter);
 
@@ -145,7 +146,8 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_READ_CONTACTS) {
-            if (grantResults.length == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if ((grantResults.length == 1) && (grantResults[0]
+                    == PackageManager.PERMISSION_GRANTED)) {
                 populateAutoComplete();
             }
         }
@@ -321,8 +323,6 @@ public class RegistrationScreen extends AppCompatActivity implements LoaderCallb
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
             try {
                 // Simulate network access.
                 Thread.sleep(2000);
