@@ -1,8 +1,15 @@
 package edu.gatech.cs2340.app.model;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.opencsv.CSVReader;
+
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -16,20 +23,16 @@ import java.util.Map;
 import java.util.Scanner;
 
 import edu.gatech.cs2340.app.controller.MainActivity;
-
-//Database Stuff
-
-import android.os.AsyncTask;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-
+import java.net.*;
+import java.io.OutputStreamWriter;
+import android.net.Uri;
+import java.io.OutputStream;
+import java.io.BufferedWriter;
 
 
 
@@ -279,24 +282,9 @@ public class Model {
     }
     public void updateCurrentShelterBeds(final int shelterID) {
         final String url_update = "http://crossoutcancer.org/updateShelter.php";
-        /*List<User> userList = db.userDao().getAllUsers();
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 
-        for (User current: userList) {
-            int id = current.getShelterID();
-            int beds = current.getNumBedsClaimed();
-            if (map.containsKey(id)){
-                beds = map.get(id) + beds;
-                map.put(id, beds);
-            } else {
-                map.put(id, beds);
-            }
 
-        }
-
-        final Map<Integer, Integer> usermap = map;*/
-
-        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
             /**
              * Before starting background thread Show Progress Dialog
              */
@@ -311,30 +299,74 @@ public class Model {
             protected Void doInBackground(Integer... integers) {
                     /*int sid = entry.getKey();
                     int beds = entry.getValue();*/
-                    int sid = shelterID;
-                    int beds = shelterDatabase.get(shelterID).getRemainingCapacity();
-                    Log.d(""+shelterID, ""+ beds);
+                int sid = shelterID;
+                int remainingCapacity = shelterDatabase.get(shelterID).getRemainingCapacity();
+                int beds = shelterDatabase.get(shelterID).getTotalCapacity() - remainingCapacity;
 
-                    OkHttpClient client = new OkHttpClient();
+                HttpURLConnection connection = null;
+                OutputStreamWriter request = null;
 
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
-                    urlBuilder.addQueryParameter("id", String.valueOf(sid));
-                    urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
-                    //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
-                    String url = urlBuilder.build().toString();
+                try {
+                    URL url = new URL(url_update);
+                    connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoOutput(true);
+                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    connection.setRequestMethod("POST");
 
 
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
+                    Uri.Builder builder = new Uri.Builder()
+                            .appendQueryParameter("id", String.valueOf(shelterID))
+                            .appendQueryParameter("remainingCap", String.valueOf(remainingCapacity))
+                            .appendQueryParameter("bed", String.valueOf(beds));
+                    String query = builder.build().getEncodedQuery();
+                    Log.d("Query", query);
 
-                    try {
-                        client.newCall(request).execute();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+                    // Open connection for sending data
+                    OutputStream os = connection.getOutputStream();
+                    BufferedWriter writer = new BufferedWriter(
+                            new OutputStreamWriter(os, "UTF-8"));
+                    writer.write(query);
+                    writer.flush();
+                    writer.close();
+                    os.close();
+                    connection.connect();
+
+                } catch (IOException e) {
+                    // Error
+                    Log.d("what happened", "ahhhhhhh");
+                }
+                try {
+
+                    int response_code = connection.getResponseCode();
+
+                    // Check if successful connection made
+                    if (response_code == HttpURLConnection.HTTP_OK) {
+
+                        // Read data sent from server
+                        InputStream input = connection.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                        StringBuilder result = new StringBuilder();
+                        String line;
+
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);
+                        }
+
+                        // Pass data to onPostExecute method
+                        Log.d("Success", "Success");
+
+                    }else{
+                        Log.d("Fail", "Fail");
+
                     }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Log.d("exception", "exception");
+                }
                 return null;
             }
+
         };
         asyncTask.execute();
     }
