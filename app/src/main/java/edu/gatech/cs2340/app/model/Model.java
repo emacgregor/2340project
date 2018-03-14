@@ -10,7 +10,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import edu.gatech.cs2340.app.controller.MainActivity;
@@ -22,11 +24,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+
+
+
 
 
 
@@ -39,6 +43,8 @@ public class Model {
     private User currentUser;
     private Shelter currentShelter;
     private String failureString;
+
+    private static final String TAG_SUCCESS = "success";
 
     /**
      * singleton pattern!
@@ -186,7 +192,7 @@ public class Model {
                         ArrayList<Integer> capArray = new ArrayList<>(1);
                         capArray.add(cap);
                         Shelter shelter = new Shelter(object.getInt("id"), object.getString("name"), capArray
-                                , object.getString("restrictions"), object.getDouble("longit"), object.getDouble("lat"), object.getString("address"), object.getString("specialNotes"), object.getString("phoneNumber"));
+                                , object.getInt("remainingCap"), object.getString("restrictions"), object.getDouble("longit"), object.getDouble("lat"), object.getString("address"), object.getString("specialNotes"), object.getString("phoneNumber"));
 
                         Model.getInstance().addShelter(shelter);
                         Log.d("Shelter", object.getString("name"));
@@ -206,8 +212,67 @@ public class Model {
         readSDFile = true;
     }
 
-    public void updateShelterBeds() {
+    public void updateShelterBeds(AppDatabase db) {
+        final String url_update = "http://crossoutcancer.org/updateShelter.php";
+        List<User> userList = db.userDao().getAllUsers();
+        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
 
+        for (User current: userList) {
+            int id = current.getShelterID();
+            int beds = current.getNumBedsClaimed();
+            if (map.containsKey(id)){
+                beds = map.get(id) + beds;
+                map.put(id, beds);
+            } else {
+                map.put(id, beds);
+            }
+
+        }
+
+        final Map<Integer, Integer> usermap = map;
+
+        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
+            /**
+             * Before starting background thread Show Progress Dialog
+             */
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+            }
+
+            /**
+             * Saving product
+             */
+            protected Void doInBackground(Integer... integers) {
+
+                for (Map.Entry<Integer, Integer> entry : usermap.entrySet()) {
+                    int sid = entry.getKey();
+                    int beds = entry.getValue();
+
+                    OkHttpClient client = new OkHttpClient();
+
+                    HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
+                    urlBuilder.addQueryParameter("id", String.valueOf(sid));
+                    urlBuilder.addQueryParameter("beds", String.valueOf(beds));
+                    //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
+                    String url = urlBuilder.build().toString();
+
+
+                    Request request = new Request.Builder()
+                            .url(url)
+                            .build();
+
+                    try {
+                        client.newCall(request).execute();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+                return null;
+            }
+        };
+        asyncTask.execute();
     }
     public void setCurrentUser(User user) {
         currentUser = user;

@@ -67,6 +67,12 @@ public class Shelter {
         remainingCapacity = totalCapacity;
     }
 
+    public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, int remainingCapacity, String restrictions, Double longitude,
+                   Double latitude, String address, String specialNotes, String phoneNumber) {
+
+        this(uniqueKey, name, capacity, restrictions, longitude, latitude, address, specialNotes, phoneNumber);
+        this.remainingCapacity = remainingCapacity;
+    }
     private void makeSearchRestrictionsString() {
         if (restrictions.toLowerCase().contains("women")) {
             women = true;
