@@ -256,7 +256,7 @@ public class Model {
 
                     HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
                     urlBuilder.addQueryParameter("id", String.valueOf(sid));
-                    urlBuilder.addQueryParameter("remainingCap", String.valueOf(beds));
+                    urlBuilder.addQueryParameter("beds", String.valueOf(beds));
                     //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
                     String url = urlBuilder.build().toString();
 
