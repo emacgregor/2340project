@@ -4,8 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * default user class
  * Created by Ethan on 2/16/2018.
@@ -80,7 +78,6 @@ public class User {
             if (numBedsClaimed == 0) {
                 this.shelterID = -1;
             }
-            return;
         }
     }
     public int getShelterID() {

@@ -74,7 +74,8 @@ public final class Model {
             return false;
         }
         User nUser = new User(username, password, userType);
-        db.userDao().insertAll(nUser);
+        UserDao userDao = db.userDao();
+        userDao.insertAll(nUser);
         setCurrentUser(nUser);
         return true;
     }
@@ -85,7 +86,8 @@ public final class Model {
      * @return Whether this username is registered.
      */
     public boolean userExists(String username, AppDatabase db) {
-        List<String> userNames = db.userDao().getAllUsername();
+        UserDao userDao = db.userDao();
+        List<String> userNames = userDao.getAllUsername();
         for (String s : userNames) {
             if (username.equals(s)) {
                 return true;
@@ -101,7 +103,8 @@ public final class Model {
      * @return Whether or not the username and password match.
      */
     public boolean checkCredentials(String username, String password, AppDatabase db) {
-        List<User> users = db.userDao().getAllUsers();
+        UserDao userDao = db.userDao();
+        List<User> users = userDao.getAllUsers();
         for (User user : users) {
             if (username.equals(user.getUsername())) {
                 if (user.checkPassword(password)) {
@@ -180,10 +183,13 @@ public final class Model {
                     int cap = object.getInt("bedCapacity");
                     ArrayList<Integer> capArray = new ArrayList<>(1);
                     capArray.add(cap);
-                    Shelter shelter = new Shelter(object.getInt("id"), object.getString("name"), capArray
-                            , object.getInt("remainingCap"), object.getString("restrictions"),
+                    Shelter shelter = new Shelter(object.getInt("id"),
+                            object.getString("name"), capArray,
+                            object.getInt("remainingCap"),
+                            object.getString("restrictions"),
                             object.getDouble("longit"), object.getDouble("lat"),
-                            object.getString("address"), object.getString("specialNotes"),
+                            object.getString("address"),
+                            object.getString("specialNotes"),
                             object.getString("phoneNumber"));
 
                     Model.getInstance().addShelter(shelter);
@@ -217,6 +223,7 @@ public final class Model {
         /**
          * Saving product
          */
+        @Override
         protected Void doInBackground(Integer... integers) {
 
             for (Map.Entry<Integer, Integer> entry : userMap.entrySet()) {
@@ -249,8 +256,9 @@ public final class Model {
 
     public void updateShelterBeds(AppDatabase db) {
         final String url_update = "http://crossoutcancer.org/updateShelter.php";
-        List<User> userList = db.userDao().getAllUsers();
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
+        UserDao userDao = db.userDao();
+        List<User> userList = userDao.getAllUsers();
+        Map<Integer, Integer> map = new HashMap<>();
 
         for (User current: userList) {
             int id = current.getShelterID();
@@ -278,12 +286,14 @@ public final class Model {
         /**
          * Saving product
          */
+        @Override
         protected Void doInBackground(Integer... integers) {
                     /*int sid = entry.getKey();
                     int beds = entry.getValue();*/
             int sid = shelterID;
-            int beds = shelterDatabase.get(shelterID).getRemainingCapacity();
-            Log.d(""+shelterID, ""+ beds);
+            Shelter updateShelter = shelterDatabase.get(shelterID);
+            int beds = updateShelter.getRemainingCapacity();
+            Log.d("" + shelterID, "" + beds);
 
             OkHttpClient client = new OkHttpClient();
 
@@ -336,19 +346,20 @@ public final class Model {
         return  currentUser;
     }
     public boolean claimBeds(int numBeds, int shelterID) {
+        Shelter updateShelter = shelterDatabase.get(shelterID);
         if (currentUser.canClaimBeds(shelterID)
-                && shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
+                && updateShelter.canClaimBeds(numBeds)) {
             currentUser.claimBeds(numBeds, shelterID);
-            shelterDatabase.get(shelterID).claimBeds(numBeds);
+            updateShelter.claimBeds(numBeds);
             updateCurrentShelterBeds(shelterID);
             return true;
         } else {
             failureString = "You cannot claim these beds.";
             if (!currentUser.canClaimBeds(shelterID)) {
-                failureString += " You already own beds at "
-                        + shelterDatabase.get(currentUser.getShelterID()).getName() + ".";
+                Shelter userShelter = shelterDatabase.get(currentUser.getShelterID());
+                failureString += " You already own beds at " + userShelter.getName() + ".";
             }
-            if (!shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
+            if (!updateShelter.canClaimBeds(numBeds)) {
                 failureString += " This shelter does not have that many beds to spare.";
             }
             return false;
@@ -358,10 +369,11 @@ public final class Model {
         return failureString;
     }
     public boolean releaseBeds(int numBeds, int shelterID) {
+        Shelter updateShelter = shelterDatabase.get(shelterID);
         if (currentUser.canReleaseBeds(numBeds, shelterID)
-                && shelterDatabase.get(shelterID).canReleaseBeds(numBeds)) {
+                && updateShelter.canReleaseBeds(numBeds)) {
             currentUser.releaseBeds(numBeds, shelterID);
-            shelterDatabase.get(shelterID).releaseBeds(numBeds);
+            updateShelter.releaseBeds(numBeds);
             updateCurrentShelterBeds(shelterID);
             return true;
         } else {
@@ -369,8 +381,8 @@ public final class Model {
             if (currentUser.getShelterID() == -1) {
                 failureString += " You do not own any beds.";
             } else if (currentUser.getShelterID() != shelterID) {
-                failureString += " Your beds are from "
-                        + shelterDatabase.get(currentUser.getShelterID()).getName() + ".";
+                Shelter userShelter = shelterDatabase.get(currentUser.getShelterID());
+                failureString += " Your beds are from " + userShelter.getName() + ".";
             }
             if (currentUser.getNumBedsClaimed() < numBeds) {
                 failureString += " You do not have this many beds.";

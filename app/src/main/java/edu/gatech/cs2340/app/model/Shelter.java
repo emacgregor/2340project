@@ -1,7 +1,5 @@
 package edu.gatech.cs2340.app.model;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 
 public class Shelter {
@@ -46,11 +44,22 @@ public class Shelter {
         if (capacity.get(0) == -1) {
             capacityString += "Unspecified";
         } else {
+            StringBuilder sb = new StringBuilder(capacityString);
             for (int i = 0; i < (capacity.size() - 1); i++) {
-                capacityString = capacityString + capacity.get(i) + ", ";
+                sb.append(new StringBuilder(capacity.get(i)).append(", "));
             }
-            capacityString += capacity.get(capacity.size() - 1);
+            sb.append(capacity.get(capacity.size() - 1));
+            capacityString = sb.toString();
         }
+        makeLongLat(longitude, latitude);
+        makeSearchRestrictionsString();
+        for (int i = 0; i < capacity.size(); i++) {
+            totalCapacity += capacity.get(i);
+        }
+        remainingCapacity = totalCapacity;
+    }
+
+    private void makeLongLat(double longitude, double latitude) {
         if (longitude < 0) {
             longLatString = "" + longitude * -1 + "° W";
         } else {
@@ -61,11 +70,6 @@ public class Shelter {
         } else {
             longLatString += ", " + latitude + "° N";
         }
-        makeSearchRestrictionsString();
-        for (int i = 0; i < capacity.size(); i++) {
-            totalCapacity += capacity.get(i);
-        }
-        remainingCapacity = totalCapacity;
     }
 
     public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, int remainingCapacity,
@@ -77,7 +81,8 @@ public class Shelter {
         this.remainingCapacity = remainingCapacity;
     }
     private void makeSearchRestrictionsString() {
-        if (restrictions.toLowerCase().contains("women")) {
+        String lcRestrictions = restrictions.toLowerCase();
+        if (lcRestrictions.contains("women")) {
             women = true;
             if(!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", women";
@@ -85,7 +90,7 @@ public class Shelter {
                 searchRestrictions = "Women";
             }
         }
-        else if (restrictions.toLowerCase().contains("men")) {
+        else if (lcRestrictions.contains("men")) {
             men = true;
             if(!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", men";
@@ -93,8 +98,8 @@ public class Shelter {
                 searchRestrictions = "Men";
             }
         }
-        if (restrictions.toLowerCase().contains("non-binary")
-                || restrictions.toLowerCase().contains("nonbinary")) {
+        if (lcRestrictions.contains("non-binary")
+                || lcRestrictions.contains("nonbinary")) {
             nonBinary = true;
             if(!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", non-binary";
@@ -102,8 +107,8 @@ public class Shelter {
                 searchRestrictions = "Non-binary";
             }
         }
-        if (restrictions.toLowerCase().contains("families w/ children")
-                || restrictions.toLowerCase().contains("families with children")) {
+        if (lcRestrictions.contains("families w/ children")
+                || lcRestrictions.contains("families with children")) {
             famChildren = true;
             if (!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", families with children";
@@ -111,7 +116,7 @@ public class Shelter {
                 searchRestrictions = "Families with children";
             }
         }
-        if (restrictions.toLowerCase().contains("newborn")) {
+        if (lcRestrictions.contains("newborn")) {
             famNewborn = true;
             if (!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", families with newborns";
@@ -119,7 +124,7 @@ public class Shelter {
                 searchRestrictions = "Families with newborns";
             }
         }
-        if (restrictions.toLowerCase().contains("famil") && !famChildren && !famNewborn) {
+        if (lcRestrictions.contains("famil") && !famChildren && !famNewborn) {
             families = true;
             if (!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", families";
@@ -127,7 +132,7 @@ public class Shelter {
                 searchRestrictions = "Families";
             }
         }
-        if (restrictions.toLowerCase().contains("children") && !famChildren) {
+        if (lcRestrictions.contains("children") && !famChildren) {
             children = true;
             if(!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", children";
@@ -135,7 +140,7 @@ public class Shelter {
                 searchRestrictions = "Children";
             }
         }
-        if (restrictions.toLowerCase().contains("young adult")) {
+        if (lcRestrictions.contains("young adult")) {
             youngAdults = true;
             if(!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", young adults";
@@ -143,7 +148,7 @@ public class Shelter {
                 searchRestrictions = "Young adults";
             }
         }
-        if (restrictions.toLowerCase().contains("veteran")) {
+        if (lcRestrictions.contains("veteran")) {
             veterans = true;
             if(!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", veterans";
@@ -151,7 +156,7 @@ public class Shelter {
                 searchRestrictions = "Veterans";
             }
         }
-        if (restrictions.toLowerCase().contains("anyone")) {
+        if (lcRestrictions.contains("anyone")) {
             anyone = true;
             if(!"Unspecified".equals(searchRestrictions)) {
                 searchRestrictions += ", anyone";
@@ -193,9 +198,7 @@ public class Shelter {
         return !(numBeds > remainingCapacity);
     }
     public void claimBeds(int numBeds) {
-        if (canClaimBeds(numBeds)) {
-            return;
-        } else {
+        if (!canClaimBeds(numBeds)) {
             remainingCapacity -= numBeds;
         }
     }
@@ -204,9 +207,7 @@ public class Shelter {
         return canRelease;
     }
     public void releaseBeds(int numBeds) {
-        if (canReleaseBeds(numBeds)) {
-            return;
-        } else {
+        if (!canReleaseBeds(numBeds)) {
             remainingCapacity += numBeds;
         }
     }

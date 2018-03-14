@@ -39,7 +39,8 @@ public class ShelterAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return searchList.get(position).getUniqueKey();
+        Shelter shelter = searchList.get(position);
+        return shelter.getUniqueKey();
     }
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
@@ -56,8 +57,9 @@ public class ShelterAdapter extends BaseAdapter {
             holder = (ViewHolder) mView.getTag();
         }
         // Set the results into TextViews
-        holder.name.setText(searchList.get(position).getName());
-        holder.restrictions.setText(searchList.get(position).getSearchRestrictions());
+        Shelter shelter = searchList.get(position);
+        holder.name.setText(shelter.getName());
+        holder.restrictions.setText(shelter.getSearchRestrictions());
         return mView;
     }
     public void filterByName(String charText) {
@@ -67,8 +69,13 @@ public class ShelterAdapter extends BaseAdapter {
             searchList.addAll(shelterList);
         } else {
             for (Shelter shelter : shelterList) {
-                if ((shelter.getName().toLowerCase(Locale.getDefault()).contains(lowerCaseCharText)
-                        || shelter.getSearchRestrictions().toLowerCase(Locale.getDefault()).
+                String shelterName = shelter.getName();
+                String shelterRestrictions = shelter.getSearchRestrictions();
+                String lowerCaseShelterName = shelterName.toLowerCase(Locale.getDefault());
+                String lowerCaseShelterRestrictions
+                        = shelterRestrictions.toLowerCase(Locale.getDefault());
+                if ((lowerCaseShelterName.contains(lowerCaseCharText)
+                        || lowerCaseShelterRestrictions.
                         contains(lowerCaseCharText))) {
                     if ("men".equals(lowerCaseCharText)) {
                         //this is so all the women shelters don't show up when "men" is searched for

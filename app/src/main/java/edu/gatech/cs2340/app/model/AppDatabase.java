@@ -5,10 +5,6 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-/**
- * Created by Hyland on 3/13/2018.
- */
-
 @Database(entities = {User.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -18,9 +14,9 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
-            INSTANCE =
-                    Room.databaseBuilder(context.getApplicationContext(),
-                            AppDatabase.class, "user-database") .build();
+            Builder<AppDatabase> instanceBuilder = Room.databaseBuilder(
+                    context.getApplicationContext(), AppDatabase.class, "user-database");
+            INSTANCE = instanceBuilder.build();
         }
         return INSTANCE;
     }
