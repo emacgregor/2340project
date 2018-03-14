@@ -126,6 +126,7 @@ public class Model {
         }
         return false;
     }
+    /*
     public void readSDFile(InputStream is) {
         if (readSDFile) {
             return; //lol no thanks
@@ -169,7 +170,7 @@ public class Model {
             Log.e(MainActivity.TAG, "error reading assets", e);
         }
         readSDFile = true;
-    }
+    }*/
 
     public void getSheltersFromDB() {
         if (readSDFile) {
