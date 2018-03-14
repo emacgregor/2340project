@@ -2,7 +2,6 @@ package edu.gatech.cs2340.app.controller;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -14,23 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Shelter;
 import edu.gatech.cs2340.app.model.Model;
-import edu.gatech.cs2340.app.model.ShelterAdapter;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 /**
  * An activity representing a list of Shelters. This activity
@@ -47,10 +34,10 @@ public class ShelterListActivity extends AppCompatActivity {
      * device.
      */
     private boolean mTwoPane;
-    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        RecyclerView recyclerView;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shelter_list);
 
@@ -82,7 +69,8 @@ public class ShelterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Model.getInstance().getShelters(), mTwoPane));
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Model.getInstance().getShelters(),
+                mTwoPane));
     }
 
     public class SimpleItemRecyclerViewAdapter
@@ -92,9 +80,7 @@ public class ShelterListActivity extends AppCompatActivity {
         private final List<Shelter> mValues;
         private final boolean mTwoPane;
 
-        SimpleItemRecyclerViewAdapter(
-                                      List<Shelter> items,
-                                      boolean twoPane) {
+        SimpleItemRecyclerViewAdapter(List<Shelter> items, boolean twoPane) {
             mValues = items;
             //mParentActivity = parent;
             mTwoPane = twoPane;
@@ -110,7 +96,6 @@ public class ShelterListActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            System.out.println(String.valueOf(holder.mItem.getUniqueKey()));
             holder.mIdView.setText(String.valueOf(mValues.get(position).getUniqueKey()));
             holder.mContentView.setText(mValues.get(position).getName());
 
@@ -120,7 +105,8 @@ public class ShelterListActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
-                        arguments.putInt(ShelterDetailFragment.ARG_ITEM_ID, holder.mItem.getUniqueKey());
+                        arguments.putInt(ShelterDetailFragment.ARG_ITEM_ID,
+                                holder.mItem.getUniqueKey());
                         ShelterDetailFragment fragment = new ShelterDetailFragment();
                         fragment.setArguments(arguments);
                         getSupportFragmentManager().beginTransaction()
@@ -129,7 +115,8 @@ public class ShelterListActivity extends AppCompatActivity {
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ShelterDetailActivity.class);
-                        intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, holder.mItem.getUniqueKey());
+                        intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID,
+                                holder.mItem.getUniqueKey());
 
                         Model.getInstance().setCurrentShelter(holder.mItem);
                         context.startActivity(intent);
@@ -144,10 +131,10 @@ public class ShelterListActivity extends AppCompatActivity {
         }
 
         class ViewHolder extends RecyclerView.ViewHolder {
-            public final View mView;
+            final View mView;
             final TextView mIdView;
             final TextView mContentView;
-            public Shelter mItem;
+            Shelter mItem;
             ViewHolder(View view) {
                 super(view);
                 mView = view;

@@ -1,12 +1,10 @@
 package edu.gatech.cs2340.app.controller;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -29,25 +27,20 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         setContentView(R.layout.activity_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ArrayList<Shelter> shelterList = Model.getInstance().getShelters();
+        Model model = Model.getInstance();
+        ArrayList<Shelter> shelterList = model.getShelters();
         ListView searchList = findViewById(R.id.listview);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
-                Model.getInstance().setCurrentShelter(Model.getInstance().getShelters().get(position));
-                Log.d("Clicked this", "" + Model.getInstance().getCurrentShelter().getName());
+                Model model = Model.getInstance();
+                ArrayList<Shelter> shelters = model.getShelters();
+                model.setCurrentShelter(shelters.get(position));
                 Intent intent = new Intent(v.getContext(), ShelterDetailActivity.class);
                 intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, position);
-                v.getContext().startActivity(intent);
+                Context viewContext = v.getContext();
+                viewContext.startActivity(intent);
             }
         });
 
@@ -66,8 +59,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        String text = newText;
-        adapter.filterByName(text);
+        adapter.filterByName(newText);
         return false;
     }
 }

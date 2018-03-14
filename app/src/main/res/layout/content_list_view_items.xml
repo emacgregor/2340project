@@ -13,7 +13,7 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/nameLabel" />
+        android:layout_toEndOf="@+id/nameLabel" />
 
     <TextView
         android:id="@+id/restrictionsLabel"
@@ -25,7 +25,7 @@
         android:id="@+id/restrictions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/restrictionsLabel"
+        android:layout_toEndOf="@+id/restrictionsLabel"
         android:layout_below="@id/name"/>
 
 </RelativeLayout>

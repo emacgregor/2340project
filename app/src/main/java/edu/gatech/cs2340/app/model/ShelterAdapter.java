@@ -20,10 +20,9 @@ public class ShelterAdapter extends BaseAdapter {
     private ArrayList<Shelter> searchList = null;
 
     public ShelterAdapter(Context context, ArrayList<Shelter> shelterList) {
-        Context mContext = context;
         this.shelterList = shelterList;
         this.searchList = new ArrayList<>(shelterList);
-        this.inflater = LayoutInflater.from(mContext);
+        this.inflater = LayoutInflater.from(context);
     }
     public class ViewHolder {
         TextView name;
@@ -40,36 +39,46 @@ public class ShelterAdapter extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return searchList.get(position).getUniqueKey();
+        Shelter shelter = searchList.get(position);
+        return shelter.getUniqueKey();
     }
     @Override
     public View getView(final int position, View view, ViewGroup parent) {
         final ViewHolder holder;
-        if (view == null) {
+        View mView = view;
+        if (mView == null) {
             holder = new ViewHolder();
-            view = inflater.inflate(R.layout.activity_list_view_items, null);
+            mView = inflater.inflate(R.layout.activity_list_view_items, null);
             // Locate the TextViews in listview_item.xml
-            holder.name = view.findViewById(R.id.name);
-            holder.restrictions = view.findViewById(R.id.restrictions);
-            view.setTag(holder);
+            holder.name = mView.findViewById(R.id.name);
+            holder.restrictions = mView.findViewById(R.id.restrictions);
+            mView.setTag(holder);
         } else {
-            holder = (ViewHolder) view.getTag();
+            holder = (ViewHolder) mView.getTag();
         }
         // Set the results into TextViews
-        holder.name.setText(searchList.get(position).getName());
-        holder.restrictions.setText(searchList.get(position).getSearchRestrictions());
-        return view;
+        Shelter shelter = searchList.get(position);
+        holder.name.setText(shelter.getName());
+        holder.restrictions.setText(shelter.getSearchRestrictions());
+        return mView;
     }
     public void filterByName(String charText) {
-        charText = charText.toLowerCase(Locale.getDefault());
+        String lowerCaseCharText = charText.toLowerCase(Locale.getDefault());
         searchList.clear();
-        if (charText.length() == 0) {
+        if (lowerCaseCharText.isEmpty()) {
             searchList.addAll(shelterList);
         } else {
             for (Shelter shelter : shelterList) {
-                if ((shelter.getName().toLowerCase(Locale.getDefault()).contains(charText)
-                        || shelter.getSearchRestrictions().toLowerCase(Locale.getDefault()).contains(charText))) {
-                    if (charText.equals("men")) { //this is so all the women shelters don't show up when "men" is searched for
+                String shelterName = shelter.getName();
+                String shelterRestrictions = shelter.getSearchRestrictions();
+                String lowerCaseShelterName = shelterName.toLowerCase(Locale.getDefault());
+                String lowerCaseShelterRestrictions
+                        = shelterRestrictions.toLowerCase(Locale.getDefault());
+                if ((lowerCaseShelterName.contains(lowerCaseCharText)
+                        || lowerCaseShelterRestrictions.
+                        contains(lowerCaseCharText))) {
+                    if ("men".equals(lowerCaseCharText)) {
+                        //this is so all the women shelters don't show up when "men" is searched for
                         if (shelter.allowsMen()) {
                             searchList.add(shelter);
                         }

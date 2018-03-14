@@ -4,8 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 /**
  * default user class
  * Created by Ethan on 2/16/2018.
@@ -35,7 +33,7 @@ public class User {
     public User(String username, String password, String userType) {
         this.username = username;
         this.password = password;
-        this.isAdmin = userType.equals("Admin");
+        this.isAdmin = "Admin".equals(userType);
         this.shelterID = -1;
         this.numBedsClaimed = 0;
     }
@@ -61,29 +59,25 @@ public class User {
     public boolean checkPassword(String password) {
         return this.password.equals(password);
     }
-    public boolean claimBeds(int numBeds, int shelterID) {
-        if (this.shelterID != - 1 && this.shelterID != shelterID) {
-            return false;
+    public boolean canClaimBeds(int shelterID) {
+        return ((this.shelterID == -1) || (this.shelterID == shelterID));
+    }
+    public void claimBeds(int numBeds, int shelterID) {
+        if (canClaimBeds(numBeds)) {
+            return;
         }
         this.shelterID = shelterID;
         numBedsClaimed += numBeds;
-        return true;
-    }
-    public boolean canClaimBeds(int shelterID) {
-        return (this.shelterID == - 1 || this.shelterID == shelterID);
     }
     public boolean canReleaseBeds(int numBeds, int shelterID) {
-        return (numBedsClaimed >= numBeds && this.shelterID == shelterID);
+        return ((numBedsClaimed >= numBeds) && (this.shelterID == shelterID));
     }
-    public boolean releaseBeds(int numBeds, int shelterID) {
-        if (numBedsClaimed >= numBeds && this.shelterID == shelterID) {
+    public void releaseBeds(int numBeds, int shelterID) {
+        if (canReleaseBeds(numBeds, shelterID)) {
             numBedsClaimed -= numBeds;
             if (numBedsClaimed == 0) {
                 this.shelterID = -1;
             }
-            return true;
-        } else {
-            return false;
         }
     }
     public int getShelterID() {
