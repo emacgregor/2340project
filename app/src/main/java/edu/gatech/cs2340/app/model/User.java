@@ -63,7 +63,7 @@ public class User {
         return ((this.shelterID == -1) || (this.shelterID == shelterID));
     }
     public void claimBeds(int numBeds, int shelterID) {
-        if (canClaimBeds(numBeds)) {
+        if (!canClaimBeds(numBeds)) {
             return;
         }
         this.shelterID = shelterID;
