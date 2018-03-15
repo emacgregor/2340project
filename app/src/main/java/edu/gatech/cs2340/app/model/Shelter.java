@@ -198,7 +198,7 @@ public class Shelter {
         return !(numBeds > remainingCapacity);
     }
     public void claimBeds(int numBeds) {
-        if (!canClaimBeds(numBeds)) {
+        if (canClaimBeds(numBeds)) {
             remainingCapacity -= numBeds;
         }
     }
@@ -207,7 +207,7 @@ public class Shelter {
         return canRelease;
     }
     public void releaseBeds(int numBeds) {
-        if (!canReleaseBeds(numBeds)) {
+        if (canReleaseBeds(numBeds)) {
             remainingCapacity += numBeds;
         }
     }
