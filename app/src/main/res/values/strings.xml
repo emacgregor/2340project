@@ -23,4 +23,12 @@
     <string name="title_shelter_detail">Shelter Detail</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="title_activity_list_view_items">list_view_items</string>
+    <string name="ClaimRelease">Claim or release beds</string>
+    <string name="Claim">Claim</string>
+    <string name="Release">Release</string>
+    <string name="ShelterTag">Shelter :</string>
+    <string name="RestrictionsTag">Restrictions :</string>
+    <string name="FindShelters">Find Shelters</string>
+    <string name="ListShelters">List Shelters</string>
+    <string name="LogOut">Log Out</string>
 </resources>

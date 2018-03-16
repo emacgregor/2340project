@@ -1,11 +1,7 @@
 package edu.gatech.cs2340.app.model;
 
-import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import com.opencsv.CSVReader;
-
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,30 +11,21 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
-import edu.gatech.cs2340.app.controller.MainActivity;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import java.net.*;
 import java.io.OutputStreamWriter;
 import android.net.Uri;
 import java.io.OutputStream;
 import java.io.BufferedWriter;
 
-
-
-
-
-public class Model {
+public final class Model {
     private static final Model _instance = new Model();
     public static Model getInstance() { return _instance; }
     private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
@@ -46,8 +33,6 @@ public class Model {
     private User currentUser;
     private Shelter currentShelter;
     private String failureString;
-
-    private static final String TAG_SUCCESS = "success";
 
     /**
      * singleton pattern!
@@ -71,7 +56,9 @@ public class Model {
 
     public Shelter findItemById(int id) {
         for (Shelter d : shelterDatabase) {
-            if (d.getUniqueKey() == id) return d;
+            if (d.getUniqueKey() == id) {
+                return d;
+            }
         }
         return null;
     }
@@ -126,251 +113,142 @@ public class Model {
         }
         return false;
     }
-    /*
-    public void readSDFile(InputStream is) {
-        if (readSDFile) {
-            return; //lol no thanks
-        }
-        Model model = Model.getInstance();
 
-        //From here we probably should call a model method and pass the InputStream
-        //Wrap it in a BufferedReader so that we get the readLine() method
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-        CSVReader reader = new CSVReader(br);
-        String [] nextLine;
-        try {
-            reader.readNext(); //Throw away first line
-            while ((nextLine = reader.readNext()) != null) {
-                int uniqueKey = Integer.parseInt(nextLine[0]);
-                String shelterName = nextLine[1];
-                ArrayList<Integer> capacity = new ArrayList<>();
-                Scanner sc = new Scanner(nextLine[2]);
-                while (sc.hasNext()) {
-                    while (sc.hasNextInt()) {
-                        capacity.add(sc.nextInt());
-                    }
-                    if (sc.hasNext()) {
-                        sc.next();
-                    }
-                }
-                if (capacity.isEmpty()) {
-                    capacity.add(-1);
-                }
-                String restrictions = nextLine[3];
-                Double latitude = Double.parseDouble(nextLine[4]);
-                Double longitude = Double.parseDouble(nextLine[5]);
-                String address = nextLine[6];
-                String specialNotes = nextLine[7];
-                String phoneNumber = nextLine[8];
+    private static class dbReaderTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... movieIds) {
 
-                model.addShelter(new Shelter(uniqueKey, shelterName, capacity,
-                        restrictions, latitude, longitude, address, specialNotes, phoneNumber));
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .url("http://crossoutcancer.org/db_connect.php")
+                    .build();
+            try {
+                Response response = client.newCall(request).execute();
+
+                JSONArray array = new JSONArray(response.body().string());
+
+                for (int i = 0; i < array.length(); i++) {
+
+                    JSONObject object = array.getJSONObject(i);
+                    int cap = object.getInt("bedCapacity");
+                    ArrayList<Integer> capArray = new ArrayList<>(1);
+                    capArray.add(cap);
+                    Shelter shelter = new Shelter(object.getInt("id"),
+                            object.getString("name"), capArray,
+                            object.getInt("remainingCap"),
+                            object.getString("restrictions"), object.getDouble("longit"),
+                            object.getDouble("lat"), object.getString("address"),
+                            object.getString("specialNotes"),
+                            object.getString("phoneNumber"));
+
+                    Model.getInstance().addShelter(shelter);
+                    Log.d("Shelter", object.getString("name"));
+                }
+
+
+            } catch (IOException|JSONException e) {
+                e.printStackTrace();
             }
-        } catch (IOException e) {
-            Log.e(MainActivity.TAG, "error reading assets", e);
+            return null;
         }
-        readSDFile = true;
-    }*/
-
+    }
     public void getSheltersFromDB() {
         if (readSDFile) {
             return; //lol no thanks
         }
-        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
-            @Override
-            protected Void doInBackground(Integer... movieIds) {
-
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url("http://crossoutcancer.org/db_connect.php")
-                        .build();
-                try {
-                    Response response = client.newCall(request).execute();
-
-                    JSONArray array = new JSONArray(response.body().string());
-
-                    for (int i = 0; i < array.length(); i++) {
-
-                        JSONObject object = array.getJSONObject(i);
-                        int cap = object.getInt("bedCapacity");
-                        ArrayList<Integer> capArray = new ArrayList<>(1);
-                        capArray.add(cap);
-                        Shelter shelter = new Shelter(object.getInt("id"), object.getString("name"), capArray
-                                , object.getInt("remainingCap"), object.getString("restrictions"),
-                                object.getDouble("longit"), object.getDouble("lat"),
-                                object.getString("address"), object.getString("specialNotes"),
-                                object.getString("phoneNumber"));
-
-                        Model.getInstance().addShelter(shelter);
-                        Log.d("Shelter", object.getString("name"));
-                    }
-
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        };
-
-        asyncTask.execute();
+        dbReaderTask dbReader = new dbReaderTask();
+        dbReader.execute();
         readSDFile = true;
     }
 
-    public void updateShelterBeds(AppDatabase db) {
+    private final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
         final String url_update = "http://crossoutcancer.org/updateShelter.php";
-        List<User> userList = db.userDao().getAllUsers();
-        Map<Integer, Integer> map = new HashMap<Integer, Integer>();
-
-        for (User current: userList) {
-            int id = current.getShelterID();
-            int beds = current.getNumBedsClaimed();
-            if (map.containsKey(id)){
-                beds = map.get(id) + beds;
-                map.put(id, beds);
-            } else {
-                map.put(id, beds);
-            }
-
+        final int shelterID;
+        private dbUpdateTask(int shelterID) {
+            this.shelterID = shelterID;
         }
 
-        final Map<Integer, Integer> usermap = map;
-
-        AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
-            /**
-             * Before starting background thread Show Progress Dialog
-             */
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            /**
-             * Saving product
-             */
-            protected Void doInBackground(Integer... integers) {
-
-                for (Map.Entry<Integer, Integer> entry : usermap.entrySet()) {
-                    int sid = entry.getKey();
-                    int beds = entry.getValue();
-
-                    OkHttpClient client = new OkHttpClient();
-
-                    HttpUrl.Builder urlBuilder = HttpUrl.parse(url_update).newBuilder();
-                    urlBuilder.addQueryParameter("id", String.valueOf(sid));
-                    urlBuilder.addQueryParameter("beds", String.valueOf(beds));
-                    //urlBuilder.addQueryParameter("shelterBeds", String.valueOf(shelterBeds));
-                    String url = urlBuilder.build().toString();
-
-
-                    Request request = new Request.Builder()
-                            .url(url)
-                            .build();
-
-                    try {
-                        client.newCall(request).execute();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-
-                }
-                return null;
-            }
-        };
-        asyncTask.execute();
-    }
-    public void updateCurrentShelterBeds(final int shelterID) {
-        final String url_update = "http://crossoutcancer.org/updateShelter.php";
-
-
-        @SuppressLint("StaticFieldLeak") AsyncTask<Integer, Void, Void> asyncTask = new AsyncTask<Integer, Void, Void>() {
-            /**
-             * Before starting background thread Show Progress Dialog
-             */
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-            }
-
-            /**
-             * Saving product
-             */
-            protected Void doInBackground(Integer... integers) {
+        /**
+         * Saving product
+         */
+        @Override
+        protected Void doInBackground(Integer... integers) {
                     /*int sid = entry.getKey();
                     int beds = entry.getValue();*/
-                int sid = shelterID;
-                int remainingCapacity = shelterDatabase.get(shelterID).getRemainingCapacity();
-                int beds = shelterDatabase.get(shelterID).getTotalCapacity() - remainingCapacity;
+            int remainingCapacity = shelterDatabase.get(shelterID).getRemainingCapacity();
+            int beds = shelterDatabase.get(shelterID).getTotalCapacity() - remainingCapacity;
 
-                HttpURLConnection connection = null;
-                OutputStreamWriter request = null;
+            HttpURLConnection connection = null;
+            //OutputStreamWriter request = null;
 
-                try {
-                    URL url = new URL(url_update);
-                    connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoOutput(true);
-                    connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                    connection.setRequestMethod("POST");
+            try {
+                URL url = new URL(url_update);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestMethod("POST");
 
 
-                    Uri.Builder builder = new Uri.Builder()
-                            .appendQueryParameter("id", String.valueOf(shelterID))
-                            .appendQueryParameter("remainingCap", String.valueOf(remainingCapacity))
-                            .appendQueryParameter("bed", String.valueOf(beds));
-                    String query = builder.build().getEncodedQuery();
-                    Log.d("Query", query);
+                Uri.Builder builder = new Uri.Builder()
+                        .appendQueryParameter("id", String.valueOf(shelterID))
+                        .appendQueryParameter("remainingCap", String.valueOf(remainingCapacity))
+                        .appendQueryParameter("bed", String.valueOf(beds));
+                String query = builder.build().getEncodedQuery();
+                Log.d("Query", query);
 
-                    // Open connection for sending data
-                    OutputStream os = connection.getOutputStream();
-                    BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(os, "UTF-8"));
-                    writer.write(query);
-                    writer.flush();
-                    writer.close();
-                    os.close();
-                    connection.connect();
+                // Open connection for sending data
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+                connection.connect();
 
-                } catch (IOException e) {
-                    // Error
-                    Log.d("what happened", "ahhhhhhh");
-                }
-                try {
+            } catch (IOException e) {
+                // Error
+                Log.d("what happened", "ahhhhhhh");
+            }
+            try {
 
-                    int response_code = connection.getResponseCode();
+                assert connection != null;
+                int response_code = connection.getResponseCode();
 
-                    // Check if successful connection made
-                    if (response_code == HttpURLConnection.HTTP_OK) {
+                // Check if successful connection made
+                if (response_code == HttpURLConnection.HTTP_OK) {
 
-                        // Read data sent from server
-                        InputStream input = connection.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                        StringBuilder result = new StringBuilder();
-                        String line;
+                    // Read data sent from server
+                    InputStream input = connection.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder result = new StringBuilder();
+                    String line = reader.readLine();
 
-                        while ((line = reader.readLine()) != null) {
-                            result.append(line);
-                        }
-
-                        // Pass data to onPostExecute method
-                        Log.d("Success", "Success");
-
-                    }else{
-                        Log.d("Fail", "Fail");
-
+                    while (line != null) {
+                        result.append(line);
+                        line = reader.readLine();
                     }
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    Log.d("exception", "exception");
-                }
-                return null;
-            }
+                    // Pass data to onPostExecute method
+                    Log.d("Success", "Success");
 
-        };
-        asyncTask.execute();
+                } else {
+                    Log.d("Fail", "Fail");
+
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.d("exception", "exception");
+            }
+            return null;
+        }
     }
+    private void updateCurrentShelterBeds(final int shelterID) {
+        dbUpdateTask dbUpdater = new dbUpdateTask(shelterID);
+        dbUpdater.execute();
+    }
+
     public void setCurrentUser(User user) {
         currentUser = user;
     }

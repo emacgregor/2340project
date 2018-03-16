@@ -7,7 +7,7 @@
         android:id="@+id/nameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shelter : " />
+        android:text="@string/ShelterTag" />
 
     <TextView
         android:id="@+id/name"
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/nameLabel"
-        android:text="Restrictions: " />
+        android:text="@string/RestrictionsTag" />
     <TextView
         android:id="@+id/restrictions"
         android:layout_width="wrap_content"

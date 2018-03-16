@@ -46,7 +46,8 @@ public class Shelter {
         } else {
             StringBuilder sb = new StringBuilder(capacityString);
             for (int i = 0; i < (capacity.size() - 1); i++) {
-                sb.append(new StringBuilder(capacity.get(i)).append(", "));
+                sb.append(new StringBuilder(capacity.get(i)));
+                sb.append(", ");
             }
             sb.append(capacity.get(capacity.size() - 1));
             capacityString = sb.toString();
@@ -80,89 +81,57 @@ public class Shelter {
                 phoneNumber);
         this.remainingCapacity = remainingCapacity;
     }
+    @SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
     private void makeSearchRestrictionsString() {
         String lcRestrictions = restrictions.toLowerCase();
         if (lcRestrictions.contains("women")) {
             women = true;
-            if(!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", women";
-            } else {
-                searchRestrictions = "Women";
-            }
+            searchRestrictions = addToString("Women", searchRestrictions);
         }
         else if (lcRestrictions.contains("men")) {
             men = true;
-            if(!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", men";
-            } else {
-                searchRestrictions = "Men";
-            }
+            searchRestrictions = addToString("Men", searchRestrictions);
         }
         if (lcRestrictions.contains("non-binary")
                 || lcRestrictions.contains("nonbinary")) {
             nonBinary = true;
-            if(!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", non-binary";
-            } else {
-                searchRestrictions = "Non-binary";
-            }
+            searchRestrictions = addToString("Non-binary", searchRestrictions);
         }
         if (lcRestrictions.contains("families w/ children")
                 || lcRestrictions.contains("families with children")) {
             famChildren = true;
-            if (!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", families with children";
-            } else {
-                searchRestrictions = "Families with children";
-            }
+            searchRestrictions = addToString("Families with children", searchRestrictions);
         }
         if (lcRestrictions.contains("newborn")) {
             famNewborn = true;
-            if (!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", families with newborns";
-            } else {
-                searchRestrictions = "Families with newborns";
-            }
+            searchRestrictions = addToString("Families with newborns", searchRestrictions);
         }
         if (lcRestrictions.contains("famil") && !famChildren && !famNewborn) {
             families = true;
-            if (!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", families";
-            } else {
-                searchRestrictions = "Families";
-            }
+            searchRestrictions = addToString("Families", searchRestrictions);
         }
         if (lcRestrictions.contains("children") && !famChildren) {
             children = true;
-            if(!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", children";
-            } else {
-                searchRestrictions = "Children";
-            }
+            searchRestrictions = addToString("Children", searchRestrictions);
         }
         if (lcRestrictions.contains("young adult")) {
             youngAdults = true;
-            if(!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", young adults";
-            } else {
-                searchRestrictions = "Young adults";
-            }
+            searchRestrictions = addToString("Young adult", searchRestrictions);
         }
         if (lcRestrictions.contains("veteran")) {
             veterans = true;
-            if(!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", veterans";
-            } else {
-                searchRestrictions = "Veterans";
-            }
+            searchRestrictions = addToString("Veteran", searchRestrictions);
         }
         if (lcRestrictions.contains("anyone")) {
             anyone = true;
-            if(!"Unspecified".equals(searchRestrictions)) {
-                searchRestrictions += ", anyone";
-            } else {
-                searchRestrictions = "Anyone";
-            }
+            searchRestrictions = addToString("Anyone", searchRestrictions);
+        }
+    }
+    private String addToString(String people, String searchRestrictions) {
+        if (!"Unspecified".equals(searchRestrictions)) {
+            return searchRestrictions + ", " + people.toLowerCase();
+        } else {
+            return people;
         }
     }
 
@@ -203,8 +172,7 @@ public class Shelter {
         }
     }
     public boolean canReleaseBeds(int numBeds) {
-        boolean canRelease = !((numBeds + remainingCapacity) > totalCapacity);
-        return canRelease;
+        return !((numBeds + remainingCapacity) > totalCapacity);
     }
     public void releaseBeds(int numBeds) {
         if (canReleaseBeds(numBeds)) {

@@ -61,13 +61,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_anchorGravity="center|bottom"
-            android:layout_alignParentBottom="true">
+            android:layout_alignParentBottom="true"
+            tools:ignore="UselessParent">
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Claim or release beds" />
+                android:text="@string/ClaimRelease" />
 
             <Spinner
                 android:id="@+id/spinner3"
@@ -78,13 +79,13 @@
                 android:id="@+id/clmBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Claim" />
+                android:text="@string/Claim" />
 
             <Button
                 android:id="@+id/relBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Release" />
+                android:text="@string/Release" />
         </LinearLayout>
     </RelativeLayout>
 
