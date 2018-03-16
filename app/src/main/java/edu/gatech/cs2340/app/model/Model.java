@@ -25,8 +25,16 @@ import android.net.Uri;
 import java.io.OutputStream;
 import java.io.BufferedWriter;
 
+/**
+ * This is the main logic class of the entire app.
+ */
 public final class Model {
     private static final Model _instance = new Model();
+
+    /**
+     * We work with one static version of the app the entire time.
+     * @return The single instance of model.
+     */
     public static Model getInstance() { return _instance; }
     private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private boolean readSDFile = false;
@@ -43,17 +51,25 @@ public final class Model {
 
     /**
      * Adds a shelter to an the array list of shelters
-     * @param someShelter
+     * @param someShelter This shelter gets added to the shelter database.
      */
     private void addShelter(Shelter someShelter) {
         shelterDatabase.add(someShelter);
     }
 
+    /**
+     * Returns the local database of shelters.
+     * @return The local database of shelters.
+     */
     public ArrayList<Shelter> getShelters() {
         return shelterDatabase;
     }
 
-
+    /**
+     * Finds a shelter based on the id provided.
+     * @param id The id we're looking for.
+     * @return The shelter of the id we found.
+     */
     public Shelter findItemById(int id) {
         for (Shelter d : shelterDatabase) {
             if (d.getUniqueKey() == id) {
@@ -67,6 +83,7 @@ public final class Model {
      * @param username The username of the new user.
      * @param password The password of the new user.
      * @param userType The user type of the new user (admin, user).
+     * @param db The database the user is being added to.
      * @return Whether the user got added (whether that username was already registered.)
      */
     public boolean addUser(String username, String password, String userType, AppDatabase db) {
@@ -82,6 +99,7 @@ public final class Model {
     /**
      * Checks to see if the username was registered.
      * @param username The username we're looking for
+     * @param db The database we're looking for the user in.
      * @return Whether this username is registered.
      */
     public boolean userExists(String username, AppDatabase db) {
@@ -98,6 +116,7 @@ public final class Model {
      * Checks if the username and password match.
      * @param username The username that must be matched.
      * @param password The password that must be matched.
+     * @param db The database the user is being matched in.
      * @return Whether or not the username and password match.
      */
     public boolean checkCredentials(String username, String password, AppDatabase db) {
@@ -133,11 +152,12 @@ public final class Model {
                     int cap = object.getInt("bedCapacity");
                     ArrayList<Integer> capArray = new ArrayList<>(1);
                     capArray.add(cap);
+                    double[] longitudeLatitude = {object.getDouble("longit"), object.getDouble("lat")};
                     Shelter shelter = new Shelter(object.getInt("id"),
                             object.getString("name"), capArray,
                             object.getInt("remainingCap"),
-                            object.getString("restrictions"), object.getDouble("longit"),
-                            object.getDouble("lat"), object.getString("address"),
+                            object.getString("restrictions"), longitudeLatitude,
+                            object.getString("address"),
                             object.getString("specialNotes"),
                             object.getString("phoneNumber"));
 
@@ -152,6 +172,10 @@ public final class Model {
             return null;
         }
     }
+
+    /**
+     * Gets shelters from the online database. See dbReaderTask for more info.
+     */
     public void getSheltersFromDB() {
         if (readSDFile) {
             return; //lol no thanks
@@ -249,12 +273,28 @@ public final class Model {
         dbUpdater.execute();
     }
 
+    /**
+     * Changes the currentUser variable which is the user currently signed in.
+     * @param user The user who will be the new currentUser.
+     */
     public void setCurrentUser(User user) {
         currentUser = user;
     }
+
+    /**
+     * Returns the current signed in user.
+     * @return The currently signed in user.
+     */
     public User getCurrentUser() {
         return  currentUser;
     }
+
+    /**
+     * Provides all the logic for claiming beds with the current user and the provided shelter.
+     * @param numBeds The number of beds that are being claimed.
+     * @param shelterID The shelter that beds are being claimed in.
+     * @return Whether the beds were claimed.
+     */
     public boolean claimBeds(int numBeds, int shelterID) {
         if (currentUser.canClaimBeds(shelterID)
                 && shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
@@ -274,9 +314,21 @@ public final class Model {
             return false;
         }
     }
+
+    /**
+     * This returns the String that provides the reasons why claimBeds or releaseBeds failed.
+     * @return Above described String.
+     */
     public String getFailureString() {
         return failureString;
     }
+
+    /**
+     * Provides all the logic for releasing beds with the current user and the provided shelter.
+     * @param numBeds The number of beds that are being released.
+     * @param shelterID The shelter that beds are being released in.
+     * @return Whether the beds were released.
+     */
     public boolean releaseBeds(int numBeds, int shelterID) {
         if (currentUser.canReleaseBeds(numBeds, shelterID)
                 && shelterDatabase.get(shelterID).canReleaseBeds(numBeds)) {
@@ -298,9 +350,19 @@ public final class Model {
             return false;
         }
     }
+
+    /**
+     * Sets a current shelter variable.
+     * @param newShelter The new current shelter.
+     */
     public void setCurrentShelter(Shelter newShelter) {
         currentShelter = newShelter;
     }
+
+    /**
+     * Returns the current shelter.
+     * @return The current shelter.
+     */
     public Shelter getCurrentShelter() {
         return currentShelter;
     }

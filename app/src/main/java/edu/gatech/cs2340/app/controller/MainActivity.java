@@ -9,6 +9,9 @@ import android.widget.Button;
 
 import edu.gatech.cs2340.app.R;
 
+/**
+ * This is the main screen of the app.
+ */
 public class MainActivity extends AppCompatActivity {
 
     @Override

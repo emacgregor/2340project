@@ -17,6 +17,9 @@ import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Shelter;
 import edu.gatech.cs2340.app.model.ShelterAdapter;
 
+/**
+ * This activity provides the back end of searching.
+ */
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private ShelterAdapter adapter;
