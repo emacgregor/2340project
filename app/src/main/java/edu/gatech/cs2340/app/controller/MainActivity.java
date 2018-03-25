@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
         Button logOutBtn = findViewById(R.id.button);
         Button sheltersBtn = findViewById(R.id.button2);
         Button searchBtn = findViewById(R.id.button3);
+        Button mapBtn = findViewById(R.id.button4);
 
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +47,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent searchScreen = new Intent(MainActivity.this, SearchActivity.class);
                 startActivity(searchScreen);
+            }
+        });
+
+        mapBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent mapScreen = new Intent(MainActivity.this, MapActivity.class);
+                startActivity(mapScreen);
             }
         });
     }

@@ -9,12 +9,11 @@ public class Shelter {
     private final int uniqueKey;
     private final String name;
     private final ArrayList<Integer> capacity;
-    private double[] longitudeLatitude = new double[2];
+    private Location location;
     private final String address;
     private final String specialNotes;
     private final String phoneNumber;
     private String capacityString;
-    private String longLatString;
     private boolean[] allowed = new boolean[10]; // [men, women, nonBinary, families, famChildren,
     // famNewborn, children, youngAdults, veterans, anyone]
     private int totalCapacity = 0;
@@ -28,7 +27,7 @@ public class Shelter {
         this.uniqueKey = uniqueKey;
         this.name = name;
         this.capacity = capacity;
-        this.longitudeLatitude = longitudeLatitude;
+        location = new Location(longitudeLatitude[0], longitudeLatitude[1]);
         this.address = address;
         this.specialNotes = specialNotes;
         this.phoneNumber = phoneNumber;
@@ -44,28 +43,14 @@ public class Shelter {
             sb.append(capacity.get(capacity.size() - 1));
             capacityString = sb.toString();
         }
-        makeLongLat(longitudeLatitude);
         makeSearchRestrictionsString(restrictions);
         for (int i = 0; i < capacity.size(); i++) {
             totalCapacity += capacity.get(i);
         }
         remainingCapacity = totalCapacity;
         shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
-                + remainingCapacity + "\n\n" + restrictions + "\n\n" + longLatString + "\n\n"
+                + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
                 + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
-    }
-
-    private void makeLongLat(double[] longitudeLatitude) {
-        if (longitudeLatitude[0] < 0) {
-            longLatString = "" + longitudeLatitude[0] * -1 + "° W";
-        } else {
-            longLatString = "" + longitudeLatitude[0] + "° E";
-        }
-        if (longitudeLatitude[1] < 0) {
-            longLatString += ", " + longitudeLatitude[1] * -1 + "° S";
-        } else {
-            longLatString += ", " + longitudeLatitude[1] + "° N";
-        }
     }
 
     public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, int remainingCapacity,
@@ -139,9 +124,8 @@ public class Shelter {
     public String getPhoneNumber() { return phoneNumber; }
     public String getCapacityString() { return capacityString; }
     public ArrayList<Integer> getCapacity() { return capacity; }
-    public double[] getLongitudeLatitude() {return longitudeLatitude; }
+    public String getLongitudeLatitudeString() { return location.toString(); }
     public String getNotes() { return specialNotes; }
-    public String getLongLatString() { return longLatString; }
     public String getSearchRestrictions() { return searchRestrictions; }
     public String getShelterInfoString() { return shelterInfoString; }
 

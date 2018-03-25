@@ -31,4 +31,6 @@
     <string name="FindShelters">Find Shelters</string>
     <string name="ListShelters">List Shelters</string>
     <string name="LogOut">Log Out</string>
+    <string name="title_activity_map">MapActivity</string>
+    <string name="Map">View Maps</string>
 </resources>
