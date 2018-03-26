@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.model.Model;
 
 /**
  * This is the main screen of the app.
@@ -37,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
+                Model.getInstance().getSheltersFromDB();
                 startActivity(shelterScreen);
 
             }

@@ -62,10 +62,12 @@ public class ShelterListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
+        Model.getInstance().getSheltersFromDB();
 
         recyclerView = findViewById(R.id.shelter_list);
         assert recyclerView != null;
         setupRecyclerView(recyclerView);
+
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {

@@ -54,7 +54,7 @@ public final class Model {
      * @param someShelter This shelter gets added to the shelter database.
      */
     private void addShelter(Shelter someShelter) {
-        shelterDatabase.add(someShelter);
+            shelterDatabase.add(someShelter);
     }
 
     /**
@@ -62,8 +62,10 @@ public final class Model {
      * @return The local database of shelters.
      */
     public ArrayList<Shelter> getShelters() {
+        getSheltersFromDB();
         return shelterDatabase;
     }
+
 
     /**
      * Finds a shelter based on the id provided.
@@ -145,12 +147,14 @@ public final class Model {
                 Response response = client.newCall(request).execute();
 
                 JSONArray array = new JSONArray(response.body().string());
+                Model.getInstance().shelterDatabase.clear();
 
                 for (int i = 0; i < array.length(); i++) {
 
                     JSONObject object = array.getJSONObject(i);
                     int cap = object.getInt("bedCapacity");
-                    ArrayList<Integer> capArray = new ArrayList<>(1);
+
+                    ArrayList<Integer> capArray = new ArrayList<>();
                     capArray.add(cap);
                     double[] longitudeLatitude = {object.getDouble("longit"), object.getDouble("lat")};
                     Shelter shelter = new Shelter(object.getInt("id"),
@@ -162,7 +166,11 @@ public final class Model {
                             object.getString("phoneNumber"));
 
                     Model.getInstance().addShelter(shelter);
-                    Log.d("Shelter", object.getString("name"));
+                    Shelter thisShelter = Model.getInstance().getShelters().get(i);
+                    Log.d("Shelter", object.getString("remainingCap"));
+                    Log.d("ShelterObject", String.valueOf(thisShelter.getRemainingCapacity()));
+                    Log.d("ShelterObject", thisShelter.getShelterInfoString());
+
                 }
 
 

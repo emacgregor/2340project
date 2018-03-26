@@ -16,7 +16,7 @@ public class Shelter {
     private String capacityString;
     private Restrictions restrictions;
     private int totalCapacity = 0;
-    private int remainingCapacity;
+    private int remainingCapacity = 0;
     private String shelterInfoString;
 
     private Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, String restrictionsStr,
@@ -45,19 +45,22 @@ public class Shelter {
         for (int i = 0; i < capacity.size(); i++) {
             totalCapacity += capacity.get(i);
         }
-        remainingCapacity = totalCapacity;
+        //remainingCapacity = totalCapacity;
         shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
                 + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
                 + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
     }
 
-    public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, int remainingCapacity,
+    public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, int remainingCap,
                    String restrictions, double[] longitudeLatitude, String address,
                    String specialNotes, String phoneNumber) {
 
         this(uniqueKey, name, capacity, restrictions, longitudeLatitude, address, specialNotes,
                 phoneNumber);
-        this.remainingCapacity = remainingCapacity;
+        remainingCapacity = remainingCap;
+        shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
+                + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
+                + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
     }
 
     public String toString() {
@@ -83,6 +86,9 @@ public class Shelter {
     public void claimBeds(int numBeds) {
         if (canClaimBeds(numBeds)) {
             remainingCapacity -= numBeds;
+            shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
+                    + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
+                    + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
         }
     }
     public boolean canReleaseBeds(int numBeds) {
@@ -91,6 +97,9 @@ public class Shelter {
     public void releaseBeds(int numBeds) {
         if (canReleaseBeds(numBeds)) {
             remainingCapacity += numBeds;
+            shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
+                    + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
+                    + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
         }
     }
     public boolean allowsMen() {
