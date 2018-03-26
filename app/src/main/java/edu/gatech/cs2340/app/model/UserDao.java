@@ -9,6 +9,12 @@ import java.util.List;
 @Dao
 public interface UserDao {
 
+    @Query("SELECT numBedsClaimed FROM user WHERE username LIKE :name")
+    User getBeds(String name);
+
+    @Query("SELECT shelterID FROM user WHERE username LIKE :name")
+    User findShelterID(String name);
+
     @Query("SELECT * FROM user WHERE username LIKE :name")
      User findByUsername(String name);
 
@@ -22,4 +28,9 @@ public interface UserDao {
     @Insert
     void insertAll(User... users);
 
+    @Insert
+    void insertBeds(int beds);
+
+    @Insert
+    void insertShelterID(int shelterId);
 }
