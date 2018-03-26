@@ -96,6 +96,9 @@ public class Shelter {
     public boolean allowsMen() {
         return restrictions.allowsMen();
     }
+    public Location getLocation() {
+        return location;
+    }
 }
 
 

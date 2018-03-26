@@ -14,14 +14,17 @@ import java.util.List;
 class DataManager {
     List<DataElement> theData;
 
-    DataManager() {
+    DataManager(ArrayList<Shelter> shelters) {
         theData = new ArrayList<>();
-        makeSomeData();
+        makeSomeData(shelters);
     }
 
-    private void makeSomeData() {
-            addReport(new DataElement("Coke Zero", "Sam's Deli", new Location(33.749, -84.388)));
-            addReport(new DataElement("Pepsi", "Grandma Garage", new Location(33.8, -84.5)));
+    private void makeSomeData(ArrayList<Shelter> shelters) {
+        for (int i = 0; i < shelters.size(); i++) {
+            addReport(new DataElement(shelters.get(i).getName(), shelters.get(i).getAddress(), shelters.get(i).getLocation()));
+        }
+            /*addReport(new DataElement("Coke Zero", "Sam's Deli", new Location(33.749, -84.388)));
+            addReport(new DataElement("Pepsi", "Grandma Garage", new Location(33.8, -84.5)));*/
     }
 
     void addReport(DataElement de) {

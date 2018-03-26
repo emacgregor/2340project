@@ -16,7 +16,7 @@ public class DataServiceFacade {
     private static DataServiceFacade INSTANCE = new DataServiceFacade();
     public static DataServiceFacade getInstance() { return INSTANCE; }
 
-    private DataManager theData = new DataManager();
+    private DataManager theData = new DataManager(Model.getInstance().getShelters());
 
     private DataElement theLastAddedElement;
 
