@@ -79,7 +79,7 @@ public class ShelterAdapter extends BaseAdapter {
                         contains(lowerCaseCharText))) {
                     if ("men".equals(lowerCaseCharText)) {
                         //this is so all the women shelters don't show up when "men" is searched for
-                        if (shelter.getAllowsArray()[0]) {
+                        if (shelter.allowsMen()) {
                             searchList.add(shelter);
                         }
                     } else {

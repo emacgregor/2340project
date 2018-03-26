@@ -33,4 +33,5 @@
     <string name="LogOut">Log Out</string>
     <string name="title_activity_map">MapActivity</string>
     <string name="Map">View Maps</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

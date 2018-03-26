@@ -14,14 +14,12 @@ public class Shelter {
     private final String specialNotes;
     private final String phoneNumber;
     private String capacityString;
-    private boolean[] allowed = new boolean[10]; // [men, women, nonBinary, families, famChildren,
-    // famNewborn, children, youngAdults, veterans, anyone]
+    private Restrictions restrictions;
     private int totalCapacity = 0;
     private int remainingCapacity;
-    private String searchRestrictions = "Unspecified";
     private String shelterInfoString;
 
-    private Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, String restrictions,
+    private Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, String restrictionsStr,
                     double[] longitudeLatitude, String address, String specialNotes,
                     String phoneNumber) {
         this.uniqueKey = uniqueKey;
@@ -43,7 +41,7 @@ public class Shelter {
             sb.append(capacity.get(capacity.size() - 1));
             capacityString = sb.toString();
         }
-        makeSearchRestrictionsString(restrictions);
+        restrictions = new Restrictions(restrictionsStr);
         for (int i = 0; i < capacity.size(); i++) {
             totalCapacity += capacity.get(i);
         }
@@ -61,59 +59,6 @@ public class Shelter {
                 phoneNumber);
         this.remainingCapacity = remainingCapacity;
     }
-    @SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
-    private void makeSearchRestrictionsString(String restrictions) {
-        String lcRestrictions = restrictions.toLowerCase();
-        if (lcRestrictions.contains("women")) {
-            allowed[1] = true;
-            searchRestrictions = addToString("Women", searchRestrictions);
-        }
-        else if (lcRestrictions.contains("men")) {
-            allowed[0] = true;
-            searchRestrictions = addToString("Men", searchRestrictions);
-        }
-        if (lcRestrictions.contains("non-binary")
-                || lcRestrictions.contains("nonbinary")) {
-            allowed[2] = true;
-            searchRestrictions = addToString("Non-binary", searchRestrictions);
-        }
-        if (lcRestrictions.contains("families w/ children")
-                || lcRestrictions.contains("families with children")) {
-            allowed[4] = true;
-            searchRestrictions = addToString("Families with children", searchRestrictions);
-        }
-        if (lcRestrictions.contains("newborn")) {
-            allowed[5] = true;
-            searchRestrictions = addToString("Families with newborns", searchRestrictions);
-        }
-        if (lcRestrictions.contains("famil") && !allowed[4] && !allowed[5]) {
-            allowed[3] = true;
-            searchRestrictions = addToString("Families", searchRestrictions);
-        }
-        if (lcRestrictions.contains("children") && !allowed[4]) {
-            allowed[6] = true;
-            searchRestrictions = addToString("Children", searchRestrictions);
-        }
-        if (lcRestrictions.contains("young adult")) {
-            allowed[7] = true;
-            searchRestrictions = addToString("Young adult", searchRestrictions);
-        }
-        if (lcRestrictions.contains("veteran")) {
-            allowed[8] = true;
-            searchRestrictions = addToString("Veteran", searchRestrictions);
-        }
-        if (lcRestrictions.contains("anyone")) {
-            allowed[9] = true;
-            searchRestrictions = addToString("Anyone", searchRestrictions);
-        }
-    }
-    private String addToString(String people, String searchRestrictions) {
-        if (!"Unspecified".equals(searchRestrictions)) {
-            return searchRestrictions + ", " + people.toLowerCase();
-        } else {
-            return people;
-        }
-    }
 
     public String toString() {
         return name + " " + address;
@@ -126,17 +71,9 @@ public class Shelter {
     public ArrayList<Integer> getCapacity() { return capacity; }
     public String getLongitudeLatitudeString() { return location.toString(); }
     public String getNotes() { return specialNotes; }
-    public String getSearchRestrictions() { return searchRestrictions; }
+    public String getSearchRestrictions() { return restrictions.getSearchRestrictions(); }
     public String getShelterInfoString() { return shelterInfoString; }
 
-    /**
-     * [men, women, nonBinary, families, famChildren, famNewborn, children, youngAdults, veterans,
-     * anyone]
-     * @return The array of people allowed the shelter.
-     */
-    public boolean[] getAllowsArray() {
-        return allowed;
-    }
     public int getTotalCapacity() { return totalCapacity; }
     public int getRemainingCapacity() { return remainingCapacity; }
 
@@ -155,6 +92,9 @@ public class Shelter {
         if (canReleaseBeds(numBeds)) {
             remainingCapacity += numBeds;
         }
+    }
+    public boolean allowsMen() {
+        return restrictions.allowsMen();
     }
 }
 
