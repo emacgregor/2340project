@@ -37,8 +37,8 @@ public class DataServiceFacade {
      * @param desc   textual description of the element
      * @param loc    location of the element
      */
-    public void addDataElement(String name, String desc, Location loc) {
-        DataElement de = new DataElement(name, desc, loc);
+    public void addDataElement(String name, String desc, Location loc, Restrictions res) {
+        DataElement de = new DataElement(name, desc, loc, res);
         theData.addReport(de);
         theLastAddedElement = de;
     }

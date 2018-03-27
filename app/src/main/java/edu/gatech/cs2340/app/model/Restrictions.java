@@ -19,6 +19,19 @@ public class Restrictions {
     public Restrictions(String restrictions) {
         makeSearchRestrictionsString(restrictions);
     }
+    public Restrictions(boolean[] restrictions) {
+        assert (restrictions.length == 9);
+        men = restrictions[0];
+        women = restrictions[1];
+        nonBinary = restrictions[2];
+        family = restrictions[3];
+        famChildren = restrictions[4];
+        famNewborn = restrictions[5];
+        children = restrictions[6];
+        youngAdults = restrictions[7];
+        veterans = restrictions[8];
+        anyone = false;
+    }
     @SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
     private void makeSearchRestrictionsString(String restrictions) {
         String lcRestrictions = restrictions.toLowerCase();
@@ -80,5 +93,44 @@ public class Restrictions {
     }
     public boolean allowsMen() {
         return men;
+    }
+    public boolean allowsWomen() {
+        return women;
+    }
+    public boolean allowsNonbinary() {
+        return nonBinary;
+    }
+    public boolean allowsFamilies() {
+        return family;
+    }
+    public boolean allowsFamiliesWithChildren() {
+        return famChildren;
+    }
+    public boolean allowsFamiliesWithNewborns() {
+        return famNewborn;
+    }
+    public boolean allowsChildren() {
+        return children;
+    }
+    public boolean allowsYoungAdults() {
+        return youngAdults;
+    }
+    public boolean allowsVeterans() {
+        return veterans;
+    }
+    public boolean allowsAnyone() {
+        return anyone;
+    }
+    public boolean hasMatch(Restrictions otherRestrictions) {
+        return ((men && otherRestrictions.allowsMen())
+                || (women && otherRestrictions.allowsWomen())
+                || (nonBinary && otherRestrictions.allowsNonbinary())
+                || (family && otherRestrictions.allowsFamilies())
+                || (famChildren && otherRestrictions.allowsFamiliesWithChildren())
+                || (famNewborn && otherRestrictions.allowsFamiliesWithNewborns())
+                || (children && otherRestrictions.allowsChildren())
+                || (youngAdults && otherRestrictions.allowsYoungAdults())
+                || (veterans && otherRestrictions.allowsVeterans())
+                || anyone || otherRestrictions.allowsAnyone());
     }
 }

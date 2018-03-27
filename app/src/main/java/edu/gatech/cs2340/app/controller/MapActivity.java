@@ -1,5 +1,7 @@
 package edu.gatech.cs2340.app.controller;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,11 +22,13 @@ import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.DataElement;
 import edu.gatech.cs2340.app.model.DataServiceFacade;
 import edu.gatech.cs2340.app.model.Location;
+import edu.gatech.cs2340.app.model.Model;
+import edu.gatech.cs2340.app.model.Restrictions;
 
 /**
  * An activity that heavily borrows from Mr. Waters' example to implement map related things.
  */
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     /** holds the map object returned from Google */
     private GoogleMap mMap;
@@ -53,6 +57,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onMapReady(GoogleMap googleMap) {
         //save the map instance returned from Google
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
 
         //reference to our GRASP Controller interface to the model
         final DataServiceFacade dataService = DataServiceFacade.getInstance();
@@ -71,7 +76,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
                 //add a new item where the touch happened, for non-hardcoded data, we would need
                 //to launch an activity with a form to enter the data.
-                dataService.addDataElement("newly added", "Bobs Place", new Location(latLng.latitude, latLng.longitude));
+                dataService.addDataElement("This is still in development", "lol",
+                        new Location(latLng.latitude, latLng.longitude), new Restrictions(new boolean[9]));
                 Log.d("new pin", latLng.latitude + " " + latLng.longitude);
 
                 // Setting the title for the marker.
@@ -92,14 +98,38 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         //iterate through the list and add a pin for each element in the model
         for (DataElement de : dataList) {
-            LatLng loc = new LatLng(de.getLatitude(), de.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(loc).title(de.getName()).snippet(de.getDescription()));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-            Log.d(de.getName(), de.getLatitude() + " " + de.getLongitude());
+            Model model = Model.getInstance();
+            Restrictions mapRestrictions = model.getMapRestrictions();
+            if (mapRestrictions.hasMatch(de.getRestrictions())) {
+                LatLng loc = new LatLng(de.getLatitude(), de.getLongitude());
+                mMap.addMarker(new MarkerOptions().position(loc).title(de.getName()).snippet(de.getDescription()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+                Log.d(de.getName(), de.getLatitude() + " " + de.getLongitude());
+            } else {
+                Log.d("No match for " + mapRestrictions + de.getRestrictions(), "lol");
+            }
         }
 
         //Use a custom layout for the pin data
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
+    }
+
+    @Override
+    public boolean onMarkerClick(final Marker marker) {
+        Model model = Model.getInstance();
+        int uniqueKey = model.findIdByName(marker.getTitle());
+        if (uniqueKey == -1) {
+            return false;
+        }
+        Context context = this.getApplicationContext();
+        Intent intent = new Intent(context, ShelterDetailActivity.class);
+        intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID,
+                uniqueKey);
+        Log.d("I am here", "lol");
+
+        Model.getInstance().setCurrentShelter(model.findItemById(uniqueKey));
+        context.startActivity(intent);
+        return true;
     }
 
     /**

@@ -71,6 +71,10 @@
             android:name=".controller.MapActivity"
             android:label="@string/title_activity_map"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".controller.MapSearchActivity"
+            android:label="@string/title_activity_map_search"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

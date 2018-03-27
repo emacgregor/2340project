@@ -34,4 +34,15 @@
     <string name="title_activity_map">MapActivity</string>
     <string name="Map">View Maps</string>
     <string name="title_activity_maps">Map</string>
+    <string name="title_activity_map_search">MapSearchActivity</string>
+    <string name="MapLaunch">Launch Map</string>
+    <string name="Men">Men</string>
+    <string name="Women">Women</string>
+    <string name="Nonbinary">Non-binary</string>
+    <string name="Family">Families</string>
+    <string name="FamChildren">Families with children</string>
+    <string name="FamilyNewborn">Families with newborns</string>
+    <string name="Children">Children</string>
+    <string name="YoungAdult">Young adults</string>
+    <string name="Veterans">Veterans</string>
 </resources>

@@ -21,10 +21,11 @@ class DataManager {
 
     private void makeSomeData(ArrayList<Shelter> shelters) {
         for (int i = 0; i < shelters.size(); i++) {
-            addReport(new DataElement(shelters.get(i).getName(), shelters.get(i).getAddress(), shelters.get(i).getLocation()));
+            Shelter shelterItem = shelters.get(i);
+            addReport(new DataElement(shelterItem.getName(), shelterItem.getAddress() + "\n"
+                    + shelterItem.getPhoneNumber(), shelterItem.getLocation(),
+                    shelterItem.getRestrictions()));
         }
-            /*addReport(new DataElement("Coke Zero", "Sam's Deli", new Location(33.749, -84.388)));
-            addReport(new DataElement("Pepsi", "Grandma Garage", new Location(33.8, -84.5)));*/
     }
 
     void addReport(DataElement de) {

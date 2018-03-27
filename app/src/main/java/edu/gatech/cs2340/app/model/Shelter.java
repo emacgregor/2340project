@@ -75,6 +75,7 @@ public class Shelter {
     public String getLongitudeLatitudeString() { return location.toString(); }
     public String getNotes() { return specialNotes; }
     public String getSearchRestrictions() { return restrictions.getSearchRestrictions(); }
+    public Restrictions getRestrictions() { return  restrictions; }
     public String getShelterInfoString() { return shelterInfoString; }
 
     public int getTotalCapacity() { return totalCapacity; }

@@ -41,6 +41,7 @@ public final class Model {
     private User currentUser;
     private Shelter currentShelter;
     private String failureString;
+    private Restrictions mapRestrictions;
 
     /**
      * singleton pattern!
@@ -373,5 +374,20 @@ public final class Model {
      */
     public Shelter getCurrentShelter() {
         return currentShelter;
+    }
+
+    public void setMapRestrictions(Restrictions mapRestrictions) {
+        this.mapRestrictions = mapRestrictions;
+    }
+    public Restrictions getMapRestrictions() {
+        return mapRestrictions;
+    }
+    public int findIdByName(String name) {
+        for (Shelter shelter : shelterDatabase) {
+            if (name.equals(shelter.getName())) {
+                return shelter.getUniqueKey();
+            }
+        }
+        return -1;
     }
 }
