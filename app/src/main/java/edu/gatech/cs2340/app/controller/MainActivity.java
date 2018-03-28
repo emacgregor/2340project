@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent welcomeScreen = new Intent(MainActivity.this, WelcomeScreen.class);
                 startActivity(welcomeScreen);
+                finish();
             }
         });
 
