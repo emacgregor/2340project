@@ -28,7 +28,7 @@ import edu.gatech.cs2340.app.model.Restrictions;
 /**
  * An activity that heavily borrows from Mr. Waters' example to implement map related things.
  */
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener{
 
     /** holds the map object returned from Google */
     private GoogleMap mMap;
@@ -57,7 +57,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         //save the map instance returned from Google
         mMap = googleMap;
-        mMap.setOnMarkerClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
 
         //reference to our GRASP Controller interface to the model
         final DataServiceFacade dataService = DataServiceFacade.getInstance();
@@ -113,13 +113,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         //Use a custom layout for the pin data
         mMap.setInfoWindowAdapter(new CustomInfoWindowAdapter());
     }
-
     @Override
-    public boolean onMarkerClick(final Marker marker) {
+    public void onInfoWindowClick(Marker marker) {
         Model model = Model.getInstance();
         int uniqueKey = model.findIdByName(marker.getTitle());
         if (uniqueKey == -1) {
-            return false;
+            return;
         }
         Context context = this.getApplicationContext();
         Intent intent = new Intent(context, ShelterDetailActivity.class);
@@ -129,7 +128,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         Model.getInstance().setCurrentShelter(model.findItemById(uniqueKey));
         context.startActivity(intent);
-        return true;
+        return;
     }
 
     /**
