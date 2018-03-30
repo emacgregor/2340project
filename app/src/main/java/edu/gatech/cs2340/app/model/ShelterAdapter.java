@@ -48,7 +48,7 @@ public class ShelterAdapter extends BaseAdapter {
         View mView = view;
         if (mView == null) {
             holder = new ViewHolder();
-            mView = inflater.inflate(R.layout.activity_list_view_items, null);
+            mView = inflater.inflate(R.layout.activity_list_view_items, parent, false);
             // Locate the TextViews in listview_item.xml
             holder.name = mView.findViewById(R.id.name);
             holder.restrictions = mView.findViewById(R.id.restrictions);

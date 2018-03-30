@@ -9,12 +9,12 @@ public class Shelter {
     private final int uniqueKey;
     private final String name;
     private final ArrayList<Integer> capacity;
-    private Location location;
+    private final Location location;
     private final String address;
     private final String specialNotes;
     private final String phoneNumber;
     private String capacityString;
-    private Restrictions restrictions;
+    private final Restrictions restrictions;
     private int totalCapacity = 0;
     private int remainingCapacity = 0;
     private String shelterInfoString;

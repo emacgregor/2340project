@@ -8,11 +8,12 @@ package edu.gatech.cs2340.app.model;
 
 public class DataElement {
     private static int Next_ID = 1000;
-    private int _id;
-    private String _name;
-    private String _description;
-    private Location _location;
-    private Restrictions _restrictions;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final int _id;
+    private final String _name;
+    private final String _description;
+    private final Location _location;
+    private final Restrictions _restrictions;
 
     /**
      * Create new element

@@ -1,5 +1,7 @@
 package edu.gatech.cs2340.app.model;
 
+import android.util.Log;
+
 /**
  * Keeps track of everything related to shelter restrictions.
  */
@@ -20,17 +22,21 @@ public class Restrictions {
         makeSearchRestrictionsString(restrictions);
     }
     public Restrictions(boolean[] restrictions) {
-        assert (restrictions.length == 9);
-        men = restrictions[0];
-        women = restrictions[1];
-        nonBinary = restrictions[2];
-        family = restrictions[3];
-        famChildren = restrictions[4];
-        famNewborn = restrictions[5];
-        children = restrictions[6];
-        youngAdults = restrictions[7];
-        veterans = restrictions[8];
-        anyone = false;
+        if (restrictions.length == 9) {
+            men = restrictions[0];
+            women = restrictions[1];
+            nonBinary = restrictions[2];
+            family = restrictions[3];
+            famChildren = restrictions[4];
+            famNewborn = restrictions[5];
+            children = restrictions[6];
+            youngAdults = restrictions[7];
+            veterans = restrictions[8];
+            anyone = false;
+        } else {
+            Log.d("Restrictions: ", "Somebody called Restrictions with an array "
+                    + "that is not 9 length");
+        }
     }
     @SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})
     private void makeSearchRestrictionsString(String restrictions) {

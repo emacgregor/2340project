@@ -1,5 +1,6 @@
 package edu.gatech.cs2340.app.controller;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
@@ -128,7 +129,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         Model.getInstance().setCurrentShelter(model.findItemById(uniqueKey));
         context.startActivity(intent);
-        return;
     }
 
     /**
@@ -141,6 +141,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         /**
          * Make the adapter
          */
+        @SuppressLint("InflateParams")
         CustomInfoWindowAdapter(){
             // hook up the custom layout view in res/custom_map_pin_layout.xml
             myContentsView = getLayoutInflater().inflate(R.layout.custom_map_pin_layout, null);

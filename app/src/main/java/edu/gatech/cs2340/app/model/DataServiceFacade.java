@@ -12,11 +12,11 @@ import java.util.List;
  * Primarily interacts the DataManager model class
  */
 
-public class DataServiceFacade {
-    private static DataServiceFacade INSTANCE = new DataServiceFacade();
+public final class DataServiceFacade {
+    private static final DataServiceFacade INSTANCE = new DataServiceFacade();
     public static DataServiceFacade getInstance() { return INSTANCE; }
 
-    private DataManager theData = new DataManager(Model.getInstance().getShelters());
+    private final DataManager theData = new DataManager(Model.getInstance().getShelters());
 
     private DataElement theLastAddedElement;
 
