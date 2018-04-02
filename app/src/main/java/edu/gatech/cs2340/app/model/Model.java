@@ -142,7 +142,7 @@ public final class Model {
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .url("http://crossoutcancer.org/db_connect.php")
+                    .url("https://2340project.000webhostapp.com/db_connect.php")
                     .build();
             try {
                 Response response = client.newCall(request).execute();
@@ -195,7 +195,7 @@ public final class Model {
     }
 
     private final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
-        final String url_update = "http://crossoutcancer.org/updateShelter.php";
+        final String url_update = "https://2340project.000webhostapp.com/updateShelter.php";
         final int shelterID;
         private dbUpdateTask(int shelterID) {
             this.shelterID = shelterID;
