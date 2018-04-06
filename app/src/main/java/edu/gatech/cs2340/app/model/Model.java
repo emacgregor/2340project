@@ -157,7 +157,8 @@ public final class Model {
 
                     ArrayList<Integer> capArray = new ArrayList<>();
                     capArray.add(cap);
-                    double[] longitudeLatitude = {object.getDouble("longit"), object.getDouble("lat")};
+                    double[] longitudeLatitude = {object.getDouble("longit"),
+                            object.getDouble("lat")};
                     Shelter shelter = new Shelter(object.getInt("id"),
                             object.getString("name"), capArray,
                             object.getInt("remainingCap"),
@@ -376,12 +377,27 @@ public final class Model {
         return currentShelter;
     }
 
+    /**
+     * Sets the mapRestrictions variable (used for checking which shelters belong on map)
+     * @param mapRestrictions The new mapRestrictions.
+     */
     public void setMapRestrictions(Restrictions mapRestrictions) {
         this.mapRestrictions = mapRestrictions;
     }
+
+    /**
+     * Gets the map restrictions (used for checking shelters on map)
+     * @return The map restrictions.
+     */
     public Restrictions getMapRestrictions() {
         return mapRestrictions;
     }
+
+    /**
+     * This function looks through the shelterList for a provided name.
+     * @param name The name being searched for.
+     * @return The shelter with that name.
+     */
     public int findIdByName(String name) {
         for (Shelter shelter : shelterDatabase) {
             if (name.equals(shelter.getName())) {

@@ -19,7 +19,7 @@ class DataManager {
         makeSomeData(shelters);
     }
 
-    private void makeSomeData(ArrayList<Shelter> shelters) {
+    private void makeSomeData(List<Shelter> shelters) {
         for (int i = 0; i < shelters.size(); i++) {
             Shelter shelterItem = shelters.get(i);
             addReport(new DataElement(shelterItem.getName(), shelterItem.getAddress() + "\n"

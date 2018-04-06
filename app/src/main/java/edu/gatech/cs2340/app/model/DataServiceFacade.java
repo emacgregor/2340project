@@ -14,6 +14,11 @@ import java.util.List;
 
 public final class DataServiceFacade {
     private static final DataServiceFacade INSTANCE = new DataServiceFacade();
+
+    /**
+     * Returns the single static instance variable of class DataServiceFacade
+     * @return The static instance variable.
+     */
     public static DataServiceFacade getInstance() { return INSTANCE; }
 
     private final DataManager theData = new DataManager(Model.getInstance().getShelters());
@@ -36,6 +41,7 @@ public final class DataServiceFacade {
      * @param name   the name of the element
      * @param desc   textual description of the element
      * @param loc    location of the element
+     * @param res The people restrictions this data element will have.
      */
     public void addDataElement(String name, String desc, Location loc, Restrictions res) {
         DataElement de = new DataElement(name, desc, loc, res);

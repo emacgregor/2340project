@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import edu.gatech.cs2340.app.R;
@@ -83,7 +85,7 @@ public class ShelterListActivity extends AppCompatActivity {
         private final boolean mTwoPane;
 
         SimpleItemRecyclerViewAdapter(List<Shelter> items, boolean twoPane) {
-            mValues = items;
+            mValues = new ArrayList<>(items);
             //mParentActivity = parent;
             mTwoPane = twoPane;
         }

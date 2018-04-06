@@ -26,8 +26,8 @@
     <string name="ClaimRelease">Claim or release beds</string>
     <string name="Claim">Claim</string>
     <string name="Release">Release</string>
-    <string name="ShelterTag">Shelter :</string>
-    <string name="RestrictionsTag">Restrictions :</string>
+    <string name="ShelterTag">Shelter: </string>
+    <string name="RestrictionsTag">Restrictions: </string>
     <string name="FindShelters">Find Shelters</string>
     <string name="ListShelters">List Shelters</string>
     <string name="LogOut">Log Out</string>

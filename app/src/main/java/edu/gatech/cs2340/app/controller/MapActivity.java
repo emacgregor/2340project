@@ -29,7 +29,8 @@ import edu.gatech.cs2340.app.model.Restrictions;
 /**
  * An activity that heavily borrows from Mr. Waters' example to implement map related things.
  */
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener{
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener{
 
     /** holds the map object returned from Google */
     private GoogleMap mMap;
@@ -78,7 +79,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 //add a new item where the touch happened, for non-hardcoded data, we would need
                 //to launch an activity with a form to enter the data.
                 dataService.addDataElement("This is still in development", "lol",
-                        new Location(latLng.latitude, latLng.longitude), new Restrictions(new boolean[9]));
+                        new Location(latLng.latitude, latLng.longitude),
+                        new Restrictions(new boolean[9]));
                 Log.d("new pin", latLng.latitude + " " + latLng.longitude);
 
                 // Setting the title for the marker.
@@ -103,7 +105,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             Restrictions mapRestrictions = model.getMapRestrictions();
             if (mapRestrictions.hasMatch(de.getRestrictions())) {
                 LatLng loc = new LatLng(de.getLatitude(), de.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(loc).title(de.getName()).snippet(de.getDescription()));
+                mMap.addMarker(new MarkerOptions().position(loc).title(de.getName()).snippet(
+                        de.getDescription()));
                 mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
                 Log.d(de.getName(), de.getLatitude() + " " + de.getLongitude());
             } else {
@@ -160,7 +163,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
         @Override
         public View getInfoWindow(Marker marker) {
-            // TODO Auto-generated method stub
             return null;
         }
 

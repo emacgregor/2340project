@@ -17,10 +17,20 @@ public class Restrictions {
     private boolean youngAdults;
     private boolean veterans;
     private boolean anyone;
-    private String searchRestrictions;
+    private String searchRestrictions = "Unspecified";
+
+    /**
+     * Constructor for restrictions but using string rather than boolean array.
+     * @param restrictions The restrictions in String form.
+     */
     public Restrictions(String restrictions) {
         makeSearchRestrictionsString(restrictions);
     }
+
+    /**
+     * Constructor for class Restrictions. Sets all booleans based on array and builds a String.
+     * @param restrictions Boolean array
+     */
     public Restrictions(boolean[] restrictions) {
         if (restrictions.length == 9) {
             men = restrictions[0];
@@ -33,6 +43,7 @@ public class Restrictions {
             youngAdults = restrictions[7];
             veterans = restrictions[8];
             anyone = false;
+            makeSearchRestrictionsString();
         } else {
             Log.d("Restrictions: ", "Somebody called Restrictions with an array "
                     + "that is not 9 length");
@@ -81,6 +92,42 @@ public class Restrictions {
         }
         if (lcRestrictions.contains("anyone")) {
             anyone = true;
+            searchRestrictions = addToString("Anyone", searchRestrictions);
+        }
+    }
+
+    /**
+     * Called to make string when using second constructor.
+     */
+    private void makeSearchRestrictionsString() {
+        if (women) {
+            searchRestrictions = addToString("Women", searchRestrictions);
+        }
+        else if (men) {
+            searchRestrictions = addToString("Men", searchRestrictions);
+        }
+        if (nonBinary) {
+            searchRestrictions = addToString("Non-binary", searchRestrictions);
+        }
+        if (famChildren) {
+            searchRestrictions = addToString("Families with children", searchRestrictions);
+        }
+        if (famNewborn) {
+            searchRestrictions = addToString("Families with newborns", searchRestrictions);
+        }
+        if (family) {
+            searchRestrictions = addToString("Families", searchRestrictions);
+        }
+        if (children) {
+            searchRestrictions = addToString("Children", searchRestrictions);
+        }
+        if (youngAdults) {
+            searchRestrictions = addToString("Young adult", searchRestrictions);
+        }
+        if (veterans) {
+            searchRestrictions = addToString("Veteran", searchRestrictions);
+        }
+        if (anyone) {
             searchRestrictions = addToString("Anyone", searchRestrictions);
         }
     }

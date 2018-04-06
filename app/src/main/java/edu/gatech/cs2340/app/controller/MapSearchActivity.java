@@ -9,11 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.Checkable;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Restrictions;
 
+/**
+ * This class handles everything to do with providing the restrictions for the map,
+ * which shelters it will show.
+ */
 public class MapSearchActivity extends AppCompatActivity {
 
     @Override
@@ -31,15 +36,15 @@ public class MapSearchActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-        final CheckBox menChk = (CheckBox) findViewById(R.id.checkBox3);
-        final CheckBox womenChk = (CheckBox) findViewById(R.id.checkBox4);
-        final CheckBox nonBChk = (CheckBox) findViewById(R.id.checkBox5);
-        final CheckBox famChk = (CheckBox) findViewById(R.id.checkBox6);
-        final CheckBox famChildChk = (CheckBox) findViewById(R.id.checkBox7);
-        final CheckBox famNewChk = (CheckBox) findViewById(R.id.checkBox8);
-        final CheckBox childChk = (CheckBox) findViewById(R.id.checkBox9);
-        final CheckBox youngAdultChk = (CheckBox) findViewById(R.id.checkBox10);
-        final CheckBox veteranChk = (CheckBox) findViewById(R.id.checkBox11);
+        final Checkable menChk = (CheckBox) findViewById(R.id.checkBox3);
+        final Checkable womenChk = (CheckBox) findViewById(R.id.checkBox4);
+        final Checkable nonBChk = (CheckBox) findViewById(R.id.checkBox5);
+        final Checkable famChk = (CheckBox) findViewById(R.id.checkBox6);
+        final Checkable famChildChk = (CheckBox) findViewById(R.id.checkBox7);
+        final Checkable famNewChk = (CheckBox) findViewById(R.id.checkBox8);
+        final Checkable childChk = (CheckBox) findViewById(R.id.checkBox9);
+        final Checkable youngAdultChk = (CheckBox) findViewById(R.id.checkBox10);
+        final Checkable veteranChk = (CheckBox) findViewById(R.id.checkBox11);
         Button launchBtn = (Button) findViewById(R.id.button5);
         launchBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Model;
@@ -38,7 +39,7 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
                 Model model = Model.getInstance();
-                ArrayList<Shelter> shelters = model.getShelters();
+                List<Shelter> shelters = model.getShelters();
                 model.setCurrentShelter(shelters.get(position));
                 Intent intent = new Intent(v.getContext(), ShelterDetailActivity.class);
                 intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, position);

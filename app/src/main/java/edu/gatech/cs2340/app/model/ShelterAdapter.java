@@ -9,6 +9,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 
 import edu.gatech.cs2340.app.R;
@@ -16,11 +18,11 @@ import edu.gatech.cs2340.app.R;
 public class ShelterAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
-    private final ArrayList<Shelter> shelterList;
-    private ArrayList<Shelter> searchList = null;
+    private final Collection<Shelter> shelterList;
+    private List<Shelter> searchList = null;
 
     public ShelterAdapter(Context context, ArrayList<Shelter> shelterList) {
-        this.shelterList = shelterList;
+        this.shelterList = new ArrayList<>(shelterList);
         this.searchList = new ArrayList<>(shelterList);
         this.inflater = LayoutInflater.from(context);
     }
