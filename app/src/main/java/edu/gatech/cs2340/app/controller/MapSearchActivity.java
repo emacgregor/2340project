@@ -25,10 +25,10 @@ public class MapSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +45,7 @@ public class MapSearchActivity extends AppCompatActivity {
         final Checkable childChk = (CheckBox) findViewById(R.id.checkBox9);
         final Checkable youngAdultChk = (CheckBox) findViewById(R.id.checkBox10);
         final Checkable veteranChk = (CheckBox) findViewById(R.id.checkBox11);
-        Button launchBtn = (Button) findViewById(R.id.button5);
+        Button launchBtn = findViewById(R.id.button5);
         launchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
