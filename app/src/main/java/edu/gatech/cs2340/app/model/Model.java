@@ -195,6 +195,7 @@ public final class Model {
         readSDFile = true;
     }
 
+    @SuppressWarnings("MismatchedQueryAndUpdateOfStringBuilder")
     private final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
         final String url_update = "https://2340project.000webhostapp.com/updateShelter.php";
         final int shelterID;
