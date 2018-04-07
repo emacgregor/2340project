@@ -43,6 +43,7 @@ public class ShelterDetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        assert(getArguments() != null);
         if (getArguments().containsKey(ARG_ITEM_ID)) {
             // Load the dummy content specified by the fragment
             // arguments. In a real-world scenario, use a Loader
@@ -50,6 +51,7 @@ public class ShelterDetailFragment extends Fragment {
             int item_id = getArguments().getInt(ARG_ITEM_ID);
             mItem = Model.getInstance().findItemById(item_id);
             Activity activity = this.getActivity();
+            assert activity != null;
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);
             if (appBarLayout != null) {
                 appBarLayout.setTitle(mItem.getName());

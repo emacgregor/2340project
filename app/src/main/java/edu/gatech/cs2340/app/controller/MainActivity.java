@@ -39,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
-                Model.getInstance().getSheltersFromDB();
+                Model model = Model.getInstance();
+                model.getSheltersFromDB();
                 startActivity(shelterScreen);
 
             }

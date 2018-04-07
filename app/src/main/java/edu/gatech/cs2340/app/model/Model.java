@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -36,7 +37,7 @@ public final class Model {
      * @return The single instance of model.
      */
     public static Model getInstance() { return _instance; }
-    private final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
+    private static final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private boolean readSDFile = false;
     private User currentUser;
     private Shelter currentShelter;
@@ -94,7 +95,8 @@ public final class Model {
             return false;
         }
         User nUser = new User(username, password, userType);
-        db.userDao().insertAll(nUser);
+        UserDao dao = db.userDao();
+        dao.insertAll(nUser);
         setCurrentUser(nUser);
         return true;
     }
@@ -106,7 +108,8 @@ public final class Model {
      * @return Whether this username is registered.
      */
     public boolean userExists(String username, AppDatabase db) {
-        List<String> userNames = db.userDao().getAllUsername();
+        UserDao dao = db.userDao();
+        List<String> userNames = dao.getAllUsername();
         for (String s : userNames) {
             if (username.equals(s)) {
                 return true;
@@ -123,7 +126,8 @@ public final class Model {
      * @return Whether or not the username and password match.
      */
     public boolean checkCredentials(String username, String password, AppDatabase db) {
-        List<User> users = db.userDao().getAllUsers();
+        UserDao dao = db.userDao();
+        List<User> users = dao.getAllUsers();
         for (User user : users) {
             if (username.equals(user.getUsername())) {
                 if (user.checkPassword(password)) {
@@ -140,7 +144,7 @@ public final class Model {
         @Override
         protected Void doInBackground(Integer... movieIds) {
 
-            OkHttpClient client = new OkHttpClient();
+            Call.Factory client = new OkHttpClient();
             Request request = new Request.Builder()
                     .url("https://2340project.000webhostapp.com/db_connect.php")
                     .build();
@@ -148,7 +152,7 @@ public final class Model {
                 Response response = client.newCall(request).execute();
 
                 JSONArray array = new JSONArray(response.body().string());
-                Model.getInstance().shelterDatabase.clear();
+                shelterDatabase.clear();
 
                 for (int i = 0; i < array.length(); i++) {
 
@@ -159,16 +163,16 @@ public final class Model {
                     capArray.add(cap);
                     double[] longitudeLatitude = {object.getDouble("longit"),
                             object.getDouble("lat")};
-                    Shelter shelter = new Shelter(object.getInt("id"),
-                            object.getString("name"), capArray,
-                            object.getInt("remainingCap"),
-                            object.getString("restrictions"), longitudeLatitude,
-                            object.getString("address"),
-                            object.getString("specialNotes"),
-                            object.getString("phoneNumber"));
+                    Shelter shelter = new Shelter(object.getInt("id"), capArray,
+                            object.getInt("remainingCap"), longitudeLatitude,
+                            new ShelterInfo(object.getString("name"),
+                                    object.getString("address"),
+                                    object.getString("specialNotes"),
+                                    object.getString("phoneNumber"),
+                                    object.getString("restrictions")));
 
-                    Model.getInstance().addShelter(shelter);
-                    Shelter thisShelter = Model.getInstance().getShelters().get(i);
+                    _instance.addShelter(shelter);
+                    Shelter thisShelter = shelterDatabase.get(i);
                     Log.d("Shelter", object.getString("remainingCap"));
                     Log.d("ShelterObject", String.valueOf(thisShelter.getRemainingCapacity()));
                     Log.d("ShelterObject", thisShelter.getShelterInfoString());
@@ -196,7 +200,7 @@ public final class Model {
     }
 
     @SuppressWarnings("MismatchedQueryAndUpdateOfStringBuilder")
-    private final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
+    private static final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
         final String url_update = "https://2340project.000webhostapp.com/updateShelter.php";
         final int shelterID;
         private dbUpdateTask(int shelterID) {
@@ -210,8 +214,9 @@ public final class Model {
         protected Void doInBackground(Integer... integers) {
                     /*int sid = entry.getKey();
                     int beds = entry.getValue();*/
-            int remainingCapacity = shelterDatabase.get(shelterID).getRemainingCapacity();
-            int beds = shelterDatabase.get(shelterID).getTotalCapacity() - remainingCapacity;
+            Shelter shelter = shelterDatabase.get(shelterID);
+            int remainingCapacity = shelter.getRemainingCapacity();
+            int beds = shelter.getTotalCapacity() - remainingCapacity;
 
             HttpURLConnection connection = null;
             //OutputStreamWriter request = null;
@@ -223,13 +228,12 @@ public final class Model {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setRequestMethod("POST");
 
-
                 Uri.Builder builder = new Uri.Builder()
                         .appendQueryParameter("id", String.valueOf(shelterID))
                         .appendQueryParameter("remainingCap", String.valueOf(remainingCapacity))
                         .appendQueryParameter("bed", String.valueOf(beds));
                 String query = builder.build().getEncodedQuery();
-                Log.d("Query", query);
+                //Log.d("Query", query);
 
                 // Open connection for sending data
                 OutputStream os = connection.getOutputStream();
@@ -242,39 +246,31 @@ public final class Model {
                 connection.connect();
 
             } catch (IOException e) {
+                e.printStackTrace();
                 // Error
-                Log.d("what happened", "ahhhhhhh");
+                //Log.d("what happened", "ahhhhhhh");
             }
             try {
-
                 assert connection != null;
                 int response_code = connection.getResponseCode();
 
                 // Check if successful connection made
                 if (response_code == HttpURLConnection.HTTP_OK) {
-
                     // Read data sent from server
                     InputStream input = connection.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(input));
                     StringBuilder result = new StringBuilder();
                     String line = reader.readLine();
-
                     while (line != null) {
                         result.append(line);
                         line = reader.readLine();
                     }
-
                     // Pass data to onPostExecute method
-                    Log.d("Success", "Success");
-
-                } else {
-                    Log.d("Fail", "Fail");
-
+                    //Log.d("Success", "Success");
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.d("exception", "exception");
+                //Log.d("exception", "exception");
             }
             return null;
         }
@@ -288,17 +284,19 @@ public final class Model {
      * Changes the currentUser variable which is the user currently signed in.
      * @param user The user who will be the new currentUser.
      */
-    public void setCurrentUser(User user) {
+    private void setCurrentUser(User user) {
         currentUser = user;
     }
 
-    /**
-     * Returns the current signed in user.
-     * @return The currently signed in user.
-     */
-    public User getCurrentUser() {
-        return  currentUser;
-    }
+// --Commented out by Inspection START (4/7/2018 16:56):
+//    /**
+//     * Returns the current signed in user.
+//     * @return The currently signed in user.
+//     */
+//    public User getCurrentUser() {
+//        return  currentUser;
+//    }
+// --Commented out by Inspection STOP (4/7/2018 16:56)
 
     /**
      * Provides all the logic for claiming beds with the current user and the provided shelter.
@@ -307,19 +305,21 @@ public final class Model {
      * @return Whether the beds were claimed.
      */
     public boolean claimBeds(int numBeds, int shelterID) {
+        Shelter shelter = shelterDatabase.get(shelterID);
         if (currentUser.canClaimBeds(shelterID)
-                && shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
+                && shelter.canClaimBeds(numBeds)) {
             currentUser.claimBeds(numBeds, shelterID);
-            shelterDatabase.get(shelterID).claimBeds(numBeds);
+            shelter.claimBeds(numBeds);
             updateCurrentShelterBeds(shelterID);
             return true;
         } else {
             failureString = "You cannot claim these beds.";
             if (!currentUser.canClaimBeds(shelterID)) {
+                Shelter oldShelter = shelterDatabase.get(currentUser.getShelterID());
                 failureString += " You already own beds at "
-                        + shelterDatabase.get(currentUser.getShelterID()).getName() + ".";
+                        + oldShelter.getName() + ".";
             }
-            if (!shelterDatabase.get(shelterID).canClaimBeds(numBeds)) {
+            if (!shelter.canClaimBeds(numBeds)) {
                 failureString += " This shelter does not have that many beds to spare.";
             }
             return false;
@@ -330,7 +330,7 @@ public final class Model {
      * This returns the String that provides the reasons why claimBeds or releaseBeds failed.
      * @return Above described String.
      */
-    public String getFailureString() {
+    public CharSequence getFailureString() {
         return failureString;
     }
 
@@ -341,10 +341,11 @@ public final class Model {
      * @return Whether the beds were released.
      */
     public boolean releaseBeds(int numBeds, int shelterID) {
+        Shelter shelter = shelterDatabase.get(shelterID);
         if (currentUser.canReleaseBeds(numBeds, shelterID)
-                && shelterDatabase.get(shelterID).canReleaseBeds(numBeds)) {
+                && shelter.canReleaseBeds(numBeds)) {
             currentUser.releaseBeds(numBeds, shelterID);
-            shelterDatabase.get(shelterID).releaseBeds(numBeds);
+            shelter.releaseBeds(numBeds);
             updateCurrentShelterBeds(shelterID);
             return true;
         } else {
@@ -352,8 +353,9 @@ public final class Model {
             if (currentUser.getShelterID() == -1) {
                 failureString += " You do not own any beds.";
             } else if (currentUser.getShelterID() != shelterID) {
+                Shelter oldShelter = shelterDatabase.get(currentUser.getShelterID());
                 failureString += " Your beds are from "
-                        + shelterDatabase.get(currentUser.getShelterID()).getName() + ".";
+                        + oldShelter.getName() + ".";
             }
             if (currentUser.getNumBedsClaimed() < numBeds) {
                 failureString += " You do not have this many beds.";

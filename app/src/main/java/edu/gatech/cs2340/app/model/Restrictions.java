@@ -99,6 +99,7 @@ public class Restrictions {
     /**
      * Called to make string when using second constructor.
      */
+    @SuppressWarnings("OverlyComplexMethod")
     private void makeSearchRestrictionsString() {
         if (women) {
             searchRestrictions = addToString("Women", searchRestrictions);
@@ -138,42 +139,110 @@ public class Restrictions {
             return people;
         }
     }
+
+    /**
+     * Returns a string that contains all the info about the restrictions
+     * @return The string that contains all the info about the restrictions
+     */
     public String getSearchRestrictions() {
         return searchRestrictions;
     }
+
+    /**
+     * Calls getSearchRestrictions()
+     * @return searchRestrictions
+     */
     public String toString() {
         return getSearchRestrictions();
     }
+
+    /**
+     * Returns whether the shelter allows men.
+     * @return Whether the shelter allows men.
+     */
     public boolean allowsMen() {
         return men;
     }
-    public boolean allowsWomen() {
+    
+    /**
+     * Returns whether the shelter allows women.
+     * @return Whether the shelter allows women.
+     */
+    private boolean allowsWomen() {
         return women;
     }
-    public boolean allowsNonbinary() {
+
+    /**
+     * Returns whether the shelter allows non-binary people.
+     * @return Whether the shelter allows non-binary people.
+     */
+    private boolean allowsNonbinary() {
         return nonBinary;
     }
-    public boolean allowsFamilies() {
+
+    /**
+     * Returns whether the shelter allows families.
+     * @return Whether the shelter allows families.
+     */
+    private boolean allowsFamilies() {
         return family;
     }
-    public boolean allowsFamiliesWithChildren() {
+
+    /**
+     * Returns whether the shelter allows families with children.
+     * @return Whether the shelter allows families with children.
+     */
+    private boolean allowsFamiliesWithChildren() {
         return famChildren;
     }
-    public boolean allowsFamiliesWithNewborns() {
+
+    /**
+     * Returns whether the shelter allows families with newborns.
+     * @return Whether the shelter allows families with newborns.
+     */
+    private boolean allowsFamiliesWithNewborns() {
         return famNewborn;
     }
-    public boolean allowsChildren() {
+
+    /**
+     * Returns whether the shelter allows children.
+     * @return Whether the shelter allows children.
+     */
+    private boolean allowsChildren() {
         return children;
     }
-    public boolean allowsYoungAdults() {
+
+    /**
+     * Returns whether the shelter allows young adults.
+     * @return Whether the shelter allows young adults.
+     */
+    private boolean allowsYoungAdults() {
         return youngAdults;
     }
-    public boolean allowsVeterans() {
+
+    /**
+     * Returns whether the shelter allows veterans.
+     * @return Whether the shelter allows veterans.
+     */
+    private boolean allowsVeterans() {
         return veterans;
     }
-    public boolean allowsAnyone() {
+
+    /**
+     * Returns whether the shelter allows anyone.
+     * @return Whether the shelter allows anyone.
+     */
+    private boolean allowsAnyone() {
         return anyone;
     }
+
+    /**
+     * Finds whether there is a matching truth value between this restrictions and the param
+     * restrictions
+     * @param otherRestrictions Another Restrictions class we are comparing to.
+     * @return Whether there is a matching truth value.
+     */
+    @SuppressWarnings("OverlyComplexMethod")
     public boolean hasMatch(Restrictions otherRestrictions) {
         return ((men && otherRestrictions.allowsMen())
                 || (women && otherRestrictions.allowsWomen())

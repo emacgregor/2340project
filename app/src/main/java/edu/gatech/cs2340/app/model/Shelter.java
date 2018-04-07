@@ -7,28 +7,27 @@ import java.util.ArrayList;
  */
 public class Shelter {
     private final int uniqueKey;
-    private final String name;
-    private final ArrayList<Integer> capacity;
     private final Location location;
-    private final String address;
-    private final String specialNotes;
-    private final String phoneNumber;
     private String capacityString;
     private final Restrictions restrictions;
     private int totalCapacity = 0;
     private int remainingCapacity = 0;
     private String shelterInfoString;
+    private final ShelterInfo info;
 
-    private Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, String restrictionsStr,
-                    double[] longitudeLatitude, String address, String specialNotes,
-                    String phoneNumber) {
+    /**
+     * Constructor for Shelter but missing remainingCap
+     * @param uniqueKey The shelter's ID number.
+     * @param capacity The shelter's capacity in list form for different types.
+     * @param longitudeLatitude A double array containing longitude and latitude.
+     * @param info Holds information on name, restrictions, phoneNumber, specialNotes, and address.
+     */
+    private Shelter(int uniqueKey, ArrayList<Integer> capacity, double[] longitudeLatitude,
+                    ShelterInfo info) {
         this.uniqueKey = uniqueKey;
-        this.name = name;
-        this.capacity = capacity;
         location = new Location(longitudeLatitude[0], longitudeLatitude[1]);
-        this.address = address;
-        this.specialNotes = specialNotes;
-        this.phoneNumber = phoneNumber;
+        this.info = new ShelterInfo(info);
+
         capacityString = "";
         if (capacity.get(0) == -1) {
             capacityString += "Unspecified";
@@ -41,72 +40,146 @@ public class Shelter {
             sb.append(capacity.get(capacity.size() - 1));
             capacityString = sb.toString();
         }
-        restrictions = new Restrictions(restrictionsStr);
+
+        restrictions = new Restrictions(info.getRestrictions());
+
         for (int i = 0; i < capacity.size(); i++) {
             totalCapacity += capacity.get(i);
         }
-        //remainingCapacity = totalCapacity;
-        shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
-                + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
-                + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
+        remainingCapacity = totalCapacity;
     }
 
-    public Shelter(int uniqueKey, String name, ArrayList<Integer> capacity, int remainingCap,
-                   String restrictions, double[] longitudeLatitude, String address,
-                   String specialNotes, String phoneNumber) {
+    /**
+     * Constructor for Shelter with all unique fields.
+     * @param uniqueKey The shelter's ID number.
+     * @param capacity The shelter's capacity in list form for different types.
+     * @param remainingCap The shelter's remaining capacity.
+     * @param longitudeLatitude A double array containing longitude and latitude.
+     * @param info Holds information on name, restrictions, phoneNumber, specialNotes, and address.
+     */
+    public Shelter(int uniqueKey, ArrayList<Integer> capacity, int remainingCap,
+                   double[] longitudeLatitude, ShelterInfo info) {
 
-        this(uniqueKey, name, capacity, restrictions, longitudeLatitude, address, specialNotes,
-                phoneNumber);
+        this(uniqueKey, capacity, longitudeLatitude, info);
         remainingCapacity = remainingCap;
-        shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
-                + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
-                + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
+        updateShelterInfoString();
     }
 
-    public String toString() {
-        return name + " " + address;
-    }
-    public int getUniqueKey() {return uniqueKey; }
-    public String getName() { return name; }
-    public String getAddress() { return address; }
-    public String getPhoneNumber() { return phoneNumber; }
-    public String getCapacityString() { return capacityString; }
-    public ArrayList<Integer> getCapacity() { return capacity; }
-    public String getLongitudeLatitudeString() { return location.toString(); }
-    public String getNotes() { return specialNotes; }
-    public String getSearchRestrictions() { return restrictions.getSearchRestrictions(); }
-    public Restrictions getRestrictions() { return  restrictions; }
-    public String getShelterInfoString() { return shelterInfoString; }
 
-    public int getTotalCapacity() { return totalCapacity; }
-    public int getRemainingCapacity() { return remainingCapacity; }
-
+    /**
+     * Says whether numBeds can be claimed
+     * @param numBeds Number of beds
+     * @return Whether numBeds can be claimed
+     */
     public boolean canClaimBeds(int numBeds) {
         return !(numBeds > remainingCapacity);
     }
+
+    /**
+     * Claims numBeds beds.
+     * @param numBeds the number of beds being claimed.
+     */
     public void claimBeds(int numBeds) {
         if (canClaimBeds(numBeds)) {
             remainingCapacity -= numBeds;
-            shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
-                    + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
-                    + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
+            updateShelterInfoString();
         }
     }
+
+    /**
+     * Says whether numBeds can be released
+     * @param numBeds Number of beds
+     * @return Whether numBeds can be released
+     */
     public boolean canReleaseBeds(int numBeds) {
         return !((numBeds + remainingCapacity) > totalCapacity);
     }
+
+    /**
+     * Releases numBeds beds.
+     * @param numBeds beds being released.
+     */
     public void releaseBeds(int numBeds) {
         if (canReleaseBeds(numBeds)) {
             remainingCapacity += numBeds;
-            shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
-                    + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
-                    + address + "\n\n" + phoneNumber + "\n\nNote: " + specialNotes;
+            updateShelterInfoString();
         }
     }
-    public boolean allowsMen() {
-        return restrictions.allowsMen();
+
+    /**
+     * Makes a data element with shelter details for class data manager.
+     * @return The new data element.
+     */
+    public DataElement makeDataElement() {
+        return new DataElement(getName(), getAddress() + "\n" + getPhoneNumber(),
+                getLocation(), getRestrictions());
     }
-    public Location getLocation() {
+    private void updateShelterInfoString() {
+        shelterInfoString = "Capacity: " + capacityString +"\n\nRemaining beds: "
+                + remainingCapacity + "\n\n" + restrictions + "\n\n" + location + "\n\n"
+                + getAddress() + "\n\n" + getPhoneNumber() + "\n\nNote: " + getNotes();
+    }
+
+    public String toString() {
+        return info.getName() + " " + info.getAddress();
+    }
+
+    /**
+     * Getter for unique key.
+     * @return uniqueKey
+     */
+    public int getUniqueKey() {return uniqueKey; }
+    /**
+     * Getter for name.
+     * @return name
+     */
+    public String getName() { return info.getName(); }
+    /**
+     * Getter for address
+     * @return address
+     */
+    private String getAddress() { return info.getAddress(); }
+    /**
+     * Getter for phone number
+     * @return phoneNumber
+     */
+    private String getPhoneNumber() { return info.getPhoneNumber(); }
+    /**
+     * Getter for notes
+     * @return notes
+     */
+    private String getNotes() { return info.getSpecialNotes(); }
+    /**
+     * Getter for searchRestrictions string.
+     * @return searchRestrictions
+     */
+    public String getSearchRestrictions() { return restrictions.getSearchRestrictions(); }
+    /**
+     * Getter for restrictions as a whole
+     * @return restrictions
+     */
+    public Restrictions getRestrictions() { return  restrictions; }
+    /**
+     * Getter for shelter info as a string.
+     * @return shelterInfoString
+     */
+    public String getShelterInfoString() { return shelterInfoString; }
+
+    /**
+     * Getter for total capacity.
+     * @return totalCapacity
+     */
+    public int getTotalCapacity() { return totalCapacity; }
+    /**
+     * Getter for remaining capacity
+     * @return remainingCapacity
+     */
+    public int getRemainingCapacity() { return remainingCapacity; }
+    /**
+     * Returns this shelter's location object.
+     * @return location
+     */
+    private Location getLocation() {
         return location;
     }
 }

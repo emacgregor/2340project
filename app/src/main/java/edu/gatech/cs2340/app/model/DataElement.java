@@ -1,15 +1,10 @@
 package edu.gatech.cs2340.app.model;
 
 /**
- * Created by robertwaters on 3/13/18.
- * Information Holder
- * Primary responsibility is to maintain all the data about a single thing
+ * Data element field heavily borrowed from Professor Waters's example.
  */
 
 public class DataElement {
-    private static int Next_ID = 1000;
-    @SuppressWarnings("FieldCanBeLocal")
-    private final int _id;
     private final String _name;
     private final String _description;
     private final Location _location;
@@ -26,7 +21,6 @@ public class DataElement {
         _name = name;
         _description = desc;
         _location = location;
-        _id = Next_ID++;
         _restrictions = restrictions;
     }
 
@@ -63,6 +57,10 @@ public class DataElement {
      */
     public double getLongitude() { return _location.getLongitude(); }
 
+    /**
+     * Returns restrictions belonging to this data element.
+     * @return The Restrictions
+     */
     public Restrictions getRestrictions() {
         return _restrictions;
     }

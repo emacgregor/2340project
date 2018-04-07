@@ -129,10 +129,6 @@ public class RegistrationScreen extends AppCompatActivity {
             mUsernameView.setError(getString(R.string.error_field_required));
             focusView = mUsernameView;
             cancel = true;
-        } else if (!isUsernameValid(username)) {
-            mUsernameView.setError("Invalid username.");
-            focusView = mUsernameView;
-            cancel = true;
         }
 
         if (cancel) {
@@ -151,12 +147,9 @@ public class RegistrationScreen extends AppCompatActivity {
         Intent welcomeScreen =  new Intent(RegistrationScreen.this, WelcomeScreen.class);
         startActivity(welcomeScreen);
     }
-    private boolean isUsernameValid(String username) {
-        return true;
-    }
 
-    private boolean isPasswordValid(String password) {
-        return true;
+    private boolean isPasswordValid(CharSequence password) {
+        return password.length() > 6;
     }
 
     /**

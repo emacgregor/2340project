@@ -6,6 +6,7 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
+@SuppressWarnings("unused")
 @Dao
 public interface UserDao {
 

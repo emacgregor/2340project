@@ -10,6 +10,9 @@ import android.widget.Button;
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Model;
 
+/**
+ * Controller for the welcome screen activity.
+ */
 public class WelcomeScreen extends AppCompatActivity {
 
     @Override

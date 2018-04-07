@@ -35,10 +35,12 @@ public abstract class AppDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    /**
-     * Destroys the instance of AppDatabase
-     */
-    public static void destroyInstance() {
-        INSTANCE = null;
-    }
+// --Commented out by Inspection START (4/7/2018 16:56):
+//    /**
+//     * Destroys the instance of AppDatabase
+//     */
+//    public static void destroyInstance() {
+//        INSTANCE = null;
+//    }
+// --Commented out by Inspection STOP (4/7/2018 16:56)
 }

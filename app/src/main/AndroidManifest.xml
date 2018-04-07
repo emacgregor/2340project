@@ -74,7 +74,7 @@
         <activity
             android:name=".controller.MapSearchActivity"
             android:label="@string/title_activity_map_search"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

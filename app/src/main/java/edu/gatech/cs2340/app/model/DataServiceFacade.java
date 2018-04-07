@@ -3,7 +3,7 @@ package edu.gatech.cs2340.app.model;
 import java.util.List;
 
 /**
- * Created by robertwaters on 3/13/18.
+ * Heavily borrowed from Professor Waters's example.
  *
  * This is a Controller for UI elements that need access to the data
  *

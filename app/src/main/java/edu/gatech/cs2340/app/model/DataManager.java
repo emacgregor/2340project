@@ -4,17 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by robertwaters on 3/13/18.
- *
- * Structurer
+ * Data manager heavily borrowed from Professor Waters's example.
  *
  * primary responsibility is to manage a group of DataElements
  */
 
 class DataManager {
-    List<DataElement> theData;
+    private final List<DataElement> theData;
 
-    DataManager(ArrayList<Shelter> shelters) {
+    DataManager(List<Shelter> shelters) {
         theData = new ArrayList<>();
         makeSomeData(shelters);
     }
@@ -22,9 +20,7 @@ class DataManager {
     private void makeSomeData(List<Shelter> shelters) {
         for (int i = 0; i < shelters.size(); i++) {
             Shelter shelterItem = shelters.get(i);
-            addReport(new DataElement(shelterItem.getName(), shelterItem.getAddress() + "\n"
-                    + shelterItem.getPhoneNumber(), shelterItem.getLocation(),
-                    shelterItem.getRestrictions()));
+            addReport(shelterItem.makeDataElement());
         }
     }
 

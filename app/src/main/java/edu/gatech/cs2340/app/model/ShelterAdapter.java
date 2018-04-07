@@ -15,12 +15,20 @@ import java.util.Locale;
 
 import edu.gatech.cs2340.app.R;
 
+/**
+ * This class implements searching the shelter list.
+ */
 public class ShelterAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
     private final Collection<Shelter> shelterList;
     private List<Shelter> searchList = null;
 
+    /**
+     * Constructor for shelterAdapter which takes previous context and the shelterList.
+     * @param context Previous context.
+     * @param shelterList List of shelters.
+     */
     public ShelterAdapter(Context context, ArrayList<Shelter> shelterList) {
         this.shelterList = new ArrayList<>(shelterList);
         this.searchList = new ArrayList<>(shelterList);
@@ -64,7 +72,12 @@ public class ShelterAdapter extends BaseAdapter {
         holder.restrictions.setText(shelter.getSearchRestrictions());
         return mView;
     }
-    public void filterByName(String charText) {
+
+    /**
+     * Does all work on finding all shelters that fit specified search.
+     * @param charText What has been searched for.
+     */
+    public void filter(String charText) {
         String lowerCaseCharText = charText.toLowerCase(Locale.getDefault());
         searchList.clear();
         if (lowerCaseCharText.isEmpty()) {
@@ -81,7 +94,8 @@ public class ShelterAdapter extends BaseAdapter {
                         contains(lowerCaseCharText))) {
                     if ("men".equals(lowerCaseCharText)) {
                         //this is so all the women shelters don't show up when "men" is searched for
-                        if (shelter.allowsMen()) {
+                        Restrictions restrictions = shelter.getRestrictions();
+                        if (restrictions.allowsMen()) {
                             searchList.add(shelter);
                         }
                     } else {
