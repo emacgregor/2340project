@@ -194,7 +194,7 @@ public class RegistrationScreen extends AppCompatActivity {
      * the user.
      */
     @SuppressWarnings("CyclicClassDependency")
-    public static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final WeakReference<RegistrationScreen> activityReference;
         private final String mUsername;

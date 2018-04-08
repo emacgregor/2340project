@@ -22,7 +22,7 @@ public class ShelterAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
     private final Collection<Shelter> shelterList;
-    private List<Shelter> searchList = null;
+    private List<Shelter> searchList;
 
     /**
      * Constructor for shelterAdapter which takes previous context and the shelterList.
@@ -34,7 +34,7 @@ public class ShelterAdapter extends BaseAdapter {
         this.searchList = new ArrayList<>(shelterList);
         this.inflater = LayoutInflater.from(context);
     }
-    public class ViewHolder {
+    class ViewHolder {
         TextView name;
         TextView restrictions;
     }
