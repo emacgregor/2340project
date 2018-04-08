@@ -76,8 +76,8 @@ public class User {
      */
     public void claimBeds(int numBeds, int shelterID) {
         if (!canClaimBeds(shelterID)) {
-            Model.updateFailureString(" You already own beds at " +
-                    Model.getNameByID(getShelterID()) + ".");
+            ShelterDatabase.updateFailureString(" You already own beds at " +
+                    ShelterDatabase.getNameByID(getShelterID()) + ".");
             return;
         }
         this.shelterID = shelterID;
@@ -109,12 +109,13 @@ public class User {
             if (getShelterID() == -1) {
                 moreFailure = " You do not own any beds.";
             } else if (getShelterID() != shelterID) {
-                moreFailure = " Your beds are from " + Model.getNameByID(getShelterID()) + ".";
+                moreFailure = " Your beds are from "
+                        + ShelterDatabase.getNameByID(getShelterID()) + ".";
             }
             if (getNumBedsClaimed() < numBeds) {
                 moreFailure += " You do not have this many beds.";
             }
-            Model.updateFailureString(moreFailure);
+            ShelterDatabase.updateFailureString(moreFailure);
         }
     }
 

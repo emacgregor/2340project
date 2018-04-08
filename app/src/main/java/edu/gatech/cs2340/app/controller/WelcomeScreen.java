@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.gatech.cs2340.app.R;
-import edu.gatech.cs2340.app.model.Model;
+import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
  * Controller for the welcome screen activity.
@@ -41,7 +41,7 @@ public class WelcomeScreen extends AppCompatActivity {
                 startActivity(registrationScreen);
             }
         });
-        Model.getSheltersFromDB();
+        ShelterDatabase.getSheltersFromDB();
     }
 
 }

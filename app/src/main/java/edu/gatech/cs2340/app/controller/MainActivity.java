@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.gatech.cs2340.app.R;
-import edu.gatech.cs2340.app.model.Model;
+import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
  * This is the main screen of the app.
@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent shelterScreen = new Intent(MainActivity.this, ShelterListActivity.class);
-                Model.getSheltersFromDB();
+                ShelterDatabase.getSheltersFromDB();
                 startActivity(shelterScreen);
 
             }

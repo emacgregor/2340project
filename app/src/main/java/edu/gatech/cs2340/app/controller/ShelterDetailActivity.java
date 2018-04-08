@@ -15,7 +15,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 
 import edu.gatech.cs2340.app.R;
-import edu.gatech.cs2340.app.model.Model;
+import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
  * An activity representing a single Shelter detail screen. This
@@ -68,8 +68,8 @@ public class ShelterDetailActivity extends AppCompatActivity {
         }
 
         final Spinner bedSpinner = findViewById(R.id.spinner3);
-        Integer[] bedNums = new Integer[Model.getCurrentTotalCapacity()];
-        for (int i = 0; i < Model.getCurrentTotalCapacity(); i++) {
+        Integer[] bedNums = new Integer[ShelterDatabase.getCurrentTotalCapacity()];
+        for (int i = 0; i < ShelterDatabase.getCurrentTotalCapacity(); i++) {
             bedNums[i] = i + 1;
         }
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this,
@@ -81,7 +81,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
         claimButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Model.claimBeds((int)bedSpinner.getSelectedItem())) {
+                if (ShelterDatabase.claimBeds((int)bedSpinner.getSelectedItem())) {
                     Intent mainClass =  new Intent(ShelterDetailActivity.this,
                             MainActivity.class);
                     startActivity(mainClass);
@@ -97,7 +97,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
         releaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Model.releaseBeds((int)bedSpinner.getSelectedItem())) {
+                if (ShelterDatabase.releaseBeds((int)bedSpinner.getSelectedItem())) {
                     Intent mainClass =  new Intent(ShelterDetailActivity.this,
                             MainActivity.class);
                     startActivity(mainClass);
@@ -127,6 +127,6 @@ public class ShelterDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
     private CharSequence getFailureString() {
-        return Model.getFailureString();
+        return ShelterDatabase.getFailureString();
     }
 }

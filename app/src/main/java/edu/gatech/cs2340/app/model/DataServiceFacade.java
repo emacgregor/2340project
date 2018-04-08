@@ -24,7 +24,7 @@ public final class DataServiceFacade {
 //    public static DataServiceFacade getInstance() { return INSTANCE; }
 // --Commented out by Inspection STOP (4/8/2018 15:18)
 
-    private static final DataManager theData = new DataManager(Model.getShelters());
+    private static final DataManager theData = new DataManager(ShelterDatabase.getShelters());
 
     //private DataElement theLastAddedElement;
 

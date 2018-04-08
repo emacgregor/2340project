@@ -86,7 +86,8 @@ public class Shelter {
             remainingCapacity -= numBeds;
             updateShelterInfoString();
         } else {
-            Model.updateFailureString(" This shelter does not have that many beds to spare.");
+            ShelterDatabase.updateFailureString(
+                    " This shelter does not have that many beds to spare.");
         }
     }
 

@@ -19,7 +19,7 @@ import java.util.List;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Shelter;
-import edu.gatech.cs2340.app.model.Model;
+import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
  * An activity representing a list of Shelters. This activity
@@ -56,7 +56,7 @@ public class ShelterListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        Model.getSheltersFromDB();
+        ShelterDatabase.getSheltersFromDB();
 
         recyclerView = findViewById(R.id.shelter_list);
         assert recyclerView != null;
@@ -65,7 +65,7 @@ public class ShelterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Model.getShelters(),
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(ShelterDatabase.getShelters(),
                 mTwoPane));
     }
 
@@ -126,7 +126,7 @@ public class ShelterListActivity extends AppCompatActivity {
                         intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID,
                                 uniqueKey);
 
-                        Model.setCurrentShelter(holder.mItem);
+                        ShelterDatabase.setCurrentShelter(holder.mItem);
                         context.startActivity(intent);
                     }
                 }

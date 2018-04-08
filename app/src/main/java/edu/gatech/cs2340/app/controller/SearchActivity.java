@@ -13,9 +13,9 @@ import android.widget.SearchView;
 import java.util.ArrayList;
 
 import edu.gatech.cs2340.app.R;
-import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Shelter;
 import edu.gatech.cs2340.app.model.ShelterAdapter;
+import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
  * This activity provides the back end of searching.
@@ -31,13 +31,13 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         setContentView(R.layout.activity_search);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        ArrayList<Shelter> shelterList = Model.getShelters();
+        ArrayList<Shelter> shelterList = ShelterDatabase.getShelters();
         ListView searchList = findViewById(R.id.listview);
 
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {
-                Model.setCurrentShelter(position);
+                ShelterDatabase.setCurrentShelter(position);
                 Intent intent = new Intent(v.getContext(), ShelterDetailActivity.class);
                 intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID, position);
                 Context viewContext = v.getContext();

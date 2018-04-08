@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import edu.gatech.cs2340.app.R;
-import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Shelter;
+import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
  * A fragment representing a single Shelter detail screen.
@@ -50,7 +50,7 @@ public class ShelterDetailFragment extends Fragment {
             // arguments. In a real-world scenario, use a Loader
             // to load content from a content provider.
             int item_id = bundle.getInt(ARG_ITEM_ID);
-            mItem = Model.findItemById(item_id);
+            mItem = ShelterDatabase.findItemById(item_id);
             Activity activity = this.getActivity();
             assert activity != null;
             CollapsingToolbarLayout appBarLayout = activity.findViewById(R.id.toolbar_layout);

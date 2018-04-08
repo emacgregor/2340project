@@ -22,6 +22,7 @@ import edu.gatech.cs2340.app.model.DataElement;
 import edu.gatech.cs2340.app.model.DataServiceFacade;
 import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Restrictions;
+import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
  * An activity that heavily borrows from Mr. Waters' example to implement map related things.
@@ -111,7 +112,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
     @Override
     public void onInfoWindowClick(Marker marker) {
-        int uniqueKey = Model.findIdByName(marker.getTitle());
+        int uniqueKey = ShelterDatabase.findIdByName(marker.getTitle());
         if (uniqueKey == -1) {
             return;
         }
@@ -120,7 +121,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID,
                 uniqueKey);
 
-        Model.setCurrentShelter(uniqueKey);
+        ShelterDatabase.setCurrentShelter(uniqueKey);
         context.startActivity(intent);
     }
 
