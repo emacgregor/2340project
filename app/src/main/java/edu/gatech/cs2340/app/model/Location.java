@@ -4,7 +4,7 @@ package edu.gatech.cs2340.app.model;
  * Holds information about longitude and latitude.
  */
 
-public class Location {
+class Location {
     private final double longitude;
     private final double latitude;
     private String longLatString;

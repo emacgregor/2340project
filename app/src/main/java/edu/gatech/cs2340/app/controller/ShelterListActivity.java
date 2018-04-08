@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,15 +48,6 @@ public class ShelterListActivity extends AppCompatActivity {
         toolbar.setTitle(getTitle());
         //adapter = new ShelterAdapter(this, shelters);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         if (findViewById(R.id.shelter_detail_container) != null) {
             // The detail container view will be present only in the
             // large-screen layouts (res/values-w900dp).
@@ -64,7 +55,7 @@ public class ShelterListActivity extends AppCompatActivity {
             // activity should be in two-pane mode.
             mTwoPane = true;
         }
-        Model.getInstance().getSheltersFromDB();
+        Model.getSheltersFromDB();
 
         recyclerView = findViewById(R.id.shelter_list);
         assert recyclerView != null;
@@ -73,7 +64,7 @@ public class ShelterListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Model.getInstance().getShelters(),
+        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(Model.getShelters(),
                 mTwoPane));
     }
 
@@ -93,16 +84,19 @@ public class ShelterListActivity extends AppCompatActivity {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.shelter_list_content, parent, false);
+            LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            View view = layoutInflater.inflate(R.layout.shelter_list_content, parent, false);
+            /*View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.shelter_list_content, parent, false);*/
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
             holder.mItem = mValues.get(position);
-            holder.mIdView.setText(String.valueOf(mValues.get(position).getUniqueKey()));
-            holder.mContentView.setText(mValues.get(position).getName());
+            final int uniqueKey = holder.mItem.getUniqueKey();
+            holder.mIdView.setText(String.valueOf(uniqueKey));
+            holder.mContentView.setText(holder.mItem.getName());
 
             holder.itemView.setTag(mValues.get(position));
             holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -111,19 +105,26 @@ public class ShelterListActivity extends AppCompatActivity {
                     if (mTwoPane) {
                         Bundle arguments = new Bundle();
                         arguments.putInt(ShelterDetailFragment.ARG_ITEM_ID,
-                                holder.mItem.getUniqueKey());
+                                uniqueKey);
                         ShelterDetailFragment fragment = new ShelterDetailFragment();
                         fragment.setArguments(arguments);
-                        getSupportFragmentManager().beginTransaction()
+
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction fragmentTransaction
+                                = fragmentManager.beginTransaction();
+                        fragmentTransaction
+                                = fragmentTransaction.add(R.id.shelter_detail_container, fragment);
+                        fragmentTransaction.commit();
+                        /*getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.shelter_detail_container, fragment)
-                                .commit();
+                                .commit();*/
                     } else {
                         Context context = v.getContext();
                         Intent intent = new Intent(context, ShelterDetailActivity.class);
                         intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID,
-                                holder.mItem.getUniqueKey());
+                                uniqueKey);
 
-                        Model.getInstance().setCurrentShelter(holder.mItem);
+                        Model.setCurrentShelter(holder.mItem);
                         context.startActivity(intent);
                     }
                 }

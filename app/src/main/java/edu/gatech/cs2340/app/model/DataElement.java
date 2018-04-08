@@ -1,5 +1,10 @@
 package edu.gatech.cs2340.app.model;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 /**
  * Data element field heavily borrowed from Professor Waters's example.
  */
@@ -65,4 +70,19 @@ public class DataElement {
         return _restrictions;
     }
 
+    /**
+     * Updates the map for this data element.
+     * @param mMap The map to be updated
+     * @return The updated map
+     */
+    public GoogleMap updateMap(GoogleMap mMap) {
+        LatLng loc = new LatLng(getLatitude(), getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions = markerOptions.position(loc);
+        markerOptions = markerOptions.title(getName());
+        markerOptions = markerOptions.snippet(getDescription());
+        mMap.addMarker(markerOptions);
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
+        return mMap;
+    }
 }

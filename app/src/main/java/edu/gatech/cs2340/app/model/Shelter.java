@@ -1,6 +1,7 @@
 package edu.gatech.cs2340.app.model;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Represents everything important happening with Shelters.
@@ -153,12 +154,12 @@ public class Shelter {
      * Getter for searchRestrictions string.
      * @return searchRestrictions
      */
-    public String getSearchRestrictions() { return restrictions.getSearchRestrictions(); }
+    public CharSequence getSearchRestrictions() { return restrictions.getSearchRestrictions(); }
     /**
      * Getter for restrictions as a whole
      * @return restrictions
      */
-    public Restrictions getRestrictions() { return  restrictions; }
+    private Restrictions getRestrictions() { return  restrictions; }
     /**
      * Getter for shelter info as a string.
      * @return shelterInfoString
@@ -181,6 +182,22 @@ public class Shelter {
      */
     private Location getLocation() {
         return location;
+    }
+
+    /**
+     * Returns whether this shelter allows men.
+     * @return whether this shelter allows men.
+     */
+    public boolean allowsMen() {
+        return restrictions.allowsMen();
+    }
+
+    /**
+     * Returns a string that contains all to do with searching
+     * @return
+     */
+    public String getSearchTerms() {
+        return (getSearchRestrictions() +  " " + getName()).toLowerCase(Locale.getDefault());
     }
 }
 

@@ -3,6 +3,8 @@ package edu.gatech.cs2340.app.controller;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +16,6 @@ import android.widget.Spinner;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.Model;
-import edu.gatech.cs2340.app.model.Shelter;
 
 /**
  * An activity representing a single Shelter detail screen. This
@@ -24,6 +25,7 @@ import edu.gatech.cs2340.app.model.Shelter;
  */
 public class ShelterDetailActivity extends AppCompatActivity {
 
+    @SuppressWarnings("FeatureEnvy")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,20 +52,23 @@ public class ShelterDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
+            Intent intent = getIntent();
             arguments.putInt(ShelterDetailFragment.ARG_ITEM_ID,
-                    getIntent().getIntExtra(ShelterDetailFragment.ARG_ITEM_ID, 1000));
+                    intent.getIntExtra(ShelterDetailFragment.ARG_ITEM_ID, 1000));
             ShelterDetailFragment fragment = new ShelterDetailFragment();
             fragment.setArguments(arguments);
-            getSupportFragmentManager().beginTransaction()
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction = fragmentTransaction.add(R.id.shelter_detail_container, fragment);
+            fragmentTransaction.commit();
+            /*fragmentManager.beginTransaction()
                     .add(R.id.shelter_detail_container, fragment)
-                    .commit();
+                    .commit();*/
         }
 
-        Model model = Model.getInstance();
-        final Shelter mItem = model.getCurrentShelter();
         final Spinner bedSpinner = findViewById(R.id.spinner3);
-        Integer[] bedNums = new Integer[mItem.getTotalCapacity()];
-        for (int i = 0; i < mItem.getTotalCapacity(); i++) {
+        Integer[] bedNums = new Integer[Model.getCurrentTotalCapacity()];
+        for (int i = 0; i < Model.getCurrentTotalCapacity(); i++) {
             bedNums[i] = i + 1;
         }
         ArrayAdapter<Integer> adapter = new ArrayAdapter<>(this,
@@ -75,15 +80,13 @@ public class ShelterDetailActivity extends AppCompatActivity {
         claimButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Model model = Model.getInstance();
-                if (model.claimBeds((int)bedSpinner.getSelectedItem(),
-                        mItem.getUniqueKey())) {
+                if (Model.claimBeds((int)bedSpinner.getSelectedItem())) {
                     Intent mainClass =  new Intent(ShelterDetailActivity.this,
                             MainActivity.class);
                     startActivity(mainClass);
                 } else {
                     Snackbar waitBar = Snackbar.make(findViewById(R.id.shelter_detail_container),
-                            model.getFailureString(),
+                            getFailureString(),
                             Snackbar.LENGTH_SHORT);
                     waitBar.show();
                 }
@@ -93,15 +96,13 @@ public class ShelterDetailActivity extends AppCompatActivity {
         releaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Model model = Model.getInstance();
-                if (model.releaseBeds((int)bedSpinner.getSelectedItem(),
-                        mItem.getUniqueKey())) {
+                if (Model.releaseBeds((int)bedSpinner.getSelectedItem())) {
                     Intent mainClass =  new Intent(ShelterDetailActivity.this,
                             MainActivity.class);
                     startActivity(mainClass);
                 } else {
                     Snackbar waitBar = Snackbar.make(findViewById(R.id.shelter_detail_container),
-                            model.getFailureString(),
+                            getFailureString(),
                             Snackbar.LENGTH_SHORT);
                     waitBar.show();
                 }
@@ -123,5 +124,8 @@ public class ShelterDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private CharSequence getFailureString() {
+        return Model.getFailureString();
     }
 }

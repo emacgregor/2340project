@@ -84,18 +84,11 @@ public class ShelterAdapter extends BaseAdapter {
             searchList.addAll(shelterList);
         } else {
             for (Shelter shelter : shelterList) {
-                String shelterName = shelter.getName();
-                String shelterRestrictions = shelter.getSearchRestrictions();
-                String lowerCaseShelterName = shelterName.toLowerCase(Locale.getDefault());
-                String lowerCaseShelterRestrictions
-                        = shelterRestrictions.toLowerCase(Locale.getDefault());
-                if ((lowerCaseShelterName.contains(lowerCaseCharText)
-                        || lowerCaseShelterRestrictions.
-                        contains(lowerCaseCharText))) {
+                String searchTerms = shelter.getSearchTerms();
+                if (searchTerms.contains(lowerCaseCharText)) {
                     if ("men".equals(lowerCaseCharText)) {
                         //this is so all the women shelters don't show up when "men" is searched for
-                        Restrictions restrictions = shelter.getRestrictions();
-                        if (restrictions.allowsMen()) {
+                        if (shelter.allowsMen()) {
                             searchList.add(shelter);
                         }
                     } else {

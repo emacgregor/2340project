@@ -20,6 +20,7 @@ import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import java.io.OutputStreamWriter;
 import android.net.Uri;
@@ -29,20 +30,14 @@ import java.io.BufferedWriter;
 /**
  * This is the main logic class of the entire app.
  */
+@SuppressWarnings("UtilityClass")
 public final class Model {
-    private static final Model _instance = new Model();
-
-    /**
-     * We work with one static version of the app the entire time.
-     * @return The single instance of model.
-     */
-    public static Model getInstance() { return _instance; }
     private static final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
-    private boolean readSDFile = false;
-    private User currentUser;
-    private Shelter currentShelter;
-    private String failureString;
-    private Restrictions mapRestrictions;
+    private static boolean readSDFile = false;
+    private static User currentUser;
+    private static Shelter currentShelter;
+    private static String failureString;
+    private static Restrictions mapRestrictions;
 
     /**
      * singleton pattern!
@@ -55,7 +50,7 @@ public final class Model {
      * Adds a shelter to an the array list of shelters
      * @param someShelter This shelter gets added to the shelter database.
      */
-    private void addShelter(Shelter someShelter) {
+    private static void addShelter(Shelter someShelter) {
             shelterDatabase.add(someShelter);
     }
 
@@ -63,7 +58,7 @@ public final class Model {
      * Returns the local database of shelters.
      * @return The local database of shelters.
      */
-    public ArrayList<Shelter> getShelters() {
+    public static ArrayList<Shelter> getShelters() {
         getSheltersFromDB();
         return shelterDatabase;
     }
@@ -74,7 +69,7 @@ public final class Model {
      * @param id The id we're looking for.
      * @return The shelter of the id we found.
      */
-    public Shelter findItemById(int id) {
+    public static Shelter findItemById(int id) {
         for (Shelter d : shelterDatabase) {
             if (d.getUniqueKey() == id) {
                 return d;
@@ -90,13 +85,13 @@ public final class Model {
      * @param db The database the user is being added to.
      * @return Whether the user got added (whether that username was already registered.)
      */
-    public boolean addUser(String username, String password, String userType, AppDatabase db) {
+    public static boolean addUser(String username, String password, String userType,
+                                  AppDatabase db) {
         if (userExists(username, db)) {
             return false;
         }
         User nUser = new User(username, password, userType);
-        UserDao dao = db.userDao();
-        dao.insertAll(nUser);
+        db.insertAll(nUser);
         setCurrentUser(nUser);
         return true;
     }
@@ -107,9 +102,8 @@ public final class Model {
      * @param db The database we're looking for the user in.
      * @return Whether this username is registered.
      */
-    public boolean userExists(String username, AppDatabase db) {
-        UserDao dao = db.userDao();
-        List<String> userNames = dao.getAllUsername();
+    public static boolean userExists(String username, AppDatabase db) {
+        List<String> userNames = db.getAllUsername();
         for (String s : userNames) {
             if (username.equals(s)) {
                 return true;
@@ -125,9 +119,8 @@ public final class Model {
      * @param db The database the user is being matched in.
      * @return Whether or not the username and password match.
      */
-    public boolean checkCredentials(String username, String password, AppDatabase db) {
-        UserDao dao = db.userDao();
-        List<User> users = dao.getAllUsers();
+    public static boolean checkCredentials(String username, String password, AppDatabase db) {
+        List<User> users = db.getAllUsers();
         for (User user : users) {
             if (username.equals(user.getUsername())) {
                 if (user.checkPassword(password)) {
@@ -145,13 +138,16 @@ public final class Model {
         protected Void doInBackground(Integer... movieIds) {
 
             Call.Factory client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .url("https://2340project.000webhostapp.com/db_connect.php")
-                    .build();
-            try {
-                Response response = client.newCall(request).execute();
+            Request.Builder builder = new Request.Builder();
+            builder = builder.url("https://2340project.000webhostapp.com/db_connect.php");
+            Request request = builder.build();
 
-                JSONArray array = new JSONArray(response.body().string());
+            try {
+                Call call = client.newCall(request);
+                Response response = call.execute();
+
+                ResponseBody responseBody = response.body();
+                JSONArray array = new JSONArray(responseBody.string());
                 shelterDatabase.clear();
 
                 for (int i = 0; i < array.length(); i++) {
@@ -171,7 +167,7 @@ public final class Model {
                                     object.getString("phoneNumber"),
                                     object.getString("restrictions")));
 
-                    _instance.addShelter(shelter);
+                    addShelter(shelter);
                     Shelter thisShelter = shelterDatabase.get(i);
                     Log.d("Shelter", object.getString("remainingCap"));
                     Log.d("ShelterObject", String.valueOf(thisShelter.getRemainingCapacity()));
@@ -190,7 +186,7 @@ public final class Model {
     /**
      * Gets shelters from the online database. See dbReaderTask for more info.
      */
-    public void getSheltersFromDB() {
+    public static void getSheltersFromDB() {
         if (readSDFile) {
             return; //lol no thanks
         }
@@ -210,16 +206,14 @@ public final class Model {
         /**
          * Saving product
          */
+        @SuppressWarnings("OverlyLongMethod")
         @Override
         protected Void doInBackground(Integer... integers) {
-                    /*int sid = entry.getKey();
-                    int beds = entry.getValue();*/
             Shelter shelter = shelterDatabase.get(shelterID);
             int remainingCapacity = shelter.getRemainingCapacity();
             int beds = shelter.getTotalCapacity() - remainingCapacity;
 
             HttpURLConnection connection = null;
-            //OutputStreamWriter request = null;
 
             try {
                 URL url = new URL(url_update);
@@ -228,11 +222,17 @@ public final class Model {
                 connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
                 connection.setRequestMethod("POST");
 
-                Uri.Builder builder = new Uri.Builder()
+                Uri.Builder builder = new Uri.Builder();
+                builder = builder.appendQueryParameter("id", String.valueOf(shelterID));
+                builder = builder.appendQueryParameter("remainingCap",
+                        String.valueOf(remainingCapacity));
+                builder = builder.appendQueryParameter("bed", String.valueOf(beds));
+                /*Uri.Builder builder = new Uri.Builder()
                         .appendQueryParameter("id", String.valueOf(shelterID))
                         .appendQueryParameter("remainingCap", String.valueOf(remainingCapacity))
-                        .appendQueryParameter("bed", String.valueOf(beds));
-                String query = builder.build().getEncodedQuery();
+                        .appendQueryParameter("bed", String.valueOf(beds));*/
+                Uri uri = builder.build();
+                String query = uri.getEncodedQuery();
                 //Log.d("Query", query);
 
                 // Open connection for sending data
@@ -275,7 +275,7 @@ public final class Model {
             return null;
         }
     }
-    private void updateCurrentShelterBeds(final int shelterID) {
+    private static void updateCurrentShelterBeds(final int shelterID) {
         dbUpdateTask dbUpdater = new dbUpdateTask(shelterID);
         dbUpdater.execute();
     }
@@ -284,7 +284,7 @@ public final class Model {
      * Changes the currentUser variable which is the user currently signed in.
      * @param user The user who will be the new currentUser.
      */
-    private void setCurrentUser(User user) {
+    private static void setCurrentUser(User user) {
         currentUser = user;
     }
 
@@ -304,7 +304,7 @@ public final class Model {
      * @param shelterID The shelter that beds are being claimed in.
      * @return Whether the beds were claimed.
      */
-    public boolean claimBeds(int numBeds, int shelterID) {
+    private static boolean claimBeds(int numBeds, int shelterID) {
         Shelter shelter = shelterDatabase.get(shelterID);
         if (currentUser.canClaimBeds(shelterID)
                 && shelter.canClaimBeds(numBeds)) {
@@ -325,12 +325,20 @@ public final class Model {
             return false;
         }
     }
+    /**
+     * Overloaded for claiming beds
+     * @param numBeds The number of beds that are being claimed.
+     * @return Whether the beds were claimed.
+     */
+    public static boolean claimBeds(int numBeds) {
+        return claimBeds(numBeds, getCurrentKey());
+    }
 
     /**
      * This returns the String that provides the reasons why claimBeds or releaseBeds failed.
      * @return Above described String.
      */
-    public CharSequence getFailureString() {
+    public static CharSequence getFailureString() {
         return failureString;
     }
 
@@ -340,7 +348,7 @@ public final class Model {
      * @param shelterID The shelter that beds are being released in.
      * @return Whether the beds were released.
      */
-    public boolean releaseBeds(int numBeds, int shelterID) {
+    private static boolean releaseBeds(int numBeds, int shelterID) {
         Shelter shelter = shelterDatabase.get(shelterID);
         if (currentUser.canReleaseBeds(numBeds, shelterID)
                 && shelter.canReleaseBeds(numBeds)) {
@@ -365,34 +373,53 @@ public final class Model {
     }
 
     /**
+     * Overloaded for releasing beds
+     * @param numBeds number of beds being released
+     * @return whether the beds were released
+     */
+    public static boolean releaseBeds(int numBeds) {
+        return releaseBeds(numBeds, getCurrentKey());
+    }
+
+    /**
      * Sets a current shelter variable.
      * @param newShelter The new current shelter.
      */
-    public void setCurrentShelter(Shelter newShelter) {
+    public static void setCurrentShelter(Shelter newShelter) {
         currentShelter = newShelter;
     }
 
     /**
-     * Returns the current shelter.
-     * @return The current shelter.
+     * Sets a current shelter variable.
+     * @param position The position of the new current shelter in the shelter database
      */
-    public Shelter getCurrentShelter() {
-        return currentShelter;
+    public static void setCurrentShelter(int position) {
+        currentShelter = shelterDatabase.get(position);
     }
+
+// --Commented out by Inspection START (4/8/2018 15:18):
+//    /**
+//     * Returns the current shelter.
+//     * @return The current shelter.
+//     */
+//    public static Shelter getCurrentShelter() {
+//        return currentShelter;
+//    }
+// --Commented out by Inspection STOP (4/8/2018 15:18)
 
     /**
      * Sets the mapRestrictions variable (used for checking which shelters belong on map)
-     * @param mapRestrictions The new mapRestrictions.
+     * @param mRestrictions The new mapRestrictions.
      */
-    public void setMapRestrictions(Restrictions mapRestrictions) {
-        this.mapRestrictions = mapRestrictions;
+    public static void setMapRestrictions(Restrictions mRestrictions) {
+        mapRestrictions = mRestrictions;
     }
 
     /**
      * Gets the map restrictions (used for checking shelters on map)
      * @return The map restrictions.
      */
-    public Restrictions getMapRestrictions() {
+    public static Restrictions getMapRestrictions() {
         return mapRestrictions;
     }
 
@@ -401,12 +428,38 @@ public final class Model {
      * @param name The name being searched for.
      * @return The shelter with that name.
      */
-    public int findIdByName(String name) {
+    public static int findIdByName(String name) {
         for (Shelter shelter : shelterDatabase) {
             if (name.equals(shelter.getName())) {
                 return shelter.getUniqueKey();
             }
         }
         return -1;
+    }
+
+    /**
+     * Finds whether two Restrictions have a match
+     * @param r1 First Restrictions
+     * @param r2 Second Restrictions
+     * @return Whether there was a match
+     */
+    public static boolean hasMatch(Restrictions r1, Restrictions r2) {
+        return r1.hasMatch(r2);
+    }
+
+    /**
+     * Gets the key of the current shelter.
+     * @return The currentShelter key
+     */
+    private static int getCurrentKey() {
+        return currentShelter.getUniqueKey();
+    }
+
+    /**
+     * Gets the total capacity of the current shelter.
+     * @return The currentShelter total capacity.
+     */
+    public static int getCurrentTotalCapacity() {
+        return currentShelter.getTotalCapacity();
     }
 }

@@ -19,6 +19,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewPropertyAnimator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -156,8 +157,10 @@ public class LoginScreen extends AppCompatActivity {
         int shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime);
 
         mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+        ViewPropertyAnimator animator = mLoginFormView.animate();
+        animator = animator.setDuration(shortAnimTime);
+        animator = animator.alpha(show? 0 : 1);
+        animator.setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
@@ -165,8 +168,10 @@ public class LoginScreen extends AppCompatActivity {
         });
 
         mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+        ViewPropertyAnimator animator1 = mProgressView.animate();
+        animator1 = animator1.setDuration(shortAnimTime);
+        animator1 = animator1.alpha(show? 1 : 0);
+        animator1.setListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
@@ -199,9 +204,8 @@ public class LoginScreen extends AppCompatActivity {
                 return false;
             }
 
-            Model model = Model.getInstance();
-            userFound = model.userExists(mUsername, db);
-            return model.checkCredentials(mUsername, mPassword, db);
+            userFound = Model.userExists(mUsername, db);
+            return Model.checkCredentials(mUsername, mPassword, db);
         }
 
         @Override

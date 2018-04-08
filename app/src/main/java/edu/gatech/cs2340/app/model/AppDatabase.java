@@ -6,9 +6,12 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 import android.support.annotation.Nullable;
 
+import java.util.List;
+
 /**
  * This is the database that holds all the users.
  */
+@SuppressWarnings("LawOfDemeter")
 @Database(entities = {User.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -43,4 +46,16 @@ public abstract class AppDatabase extends RoomDatabase {
 //        INSTANCE = null;
 //    }
 // --Commented out by Inspection STOP (4/7/2018 16:56)
+    void insertAll(User nUser) {
+        UserDao userDao = userDao();
+        userDao.insertAll(nUser);
+    }
+    List<String> getAllUsername() {
+        UserDao userDao = userDao();
+        return userDao.getAllUsername();
+    }
+    List<User> getAllUsers() {
+        UserDao userDao = userDao();
+        return  userDao.getAllUsers();
+    }
 }

@@ -5,24 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
 
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.DataElement;
 import edu.gatech.cs2340.app.model.DataServiceFacade;
-import edu.gatech.cs2340.app.model.Location;
 import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Restrictions;
 
@@ -33,15 +30,18 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener{
 
     /** holds the map object returned from Google */
-    private GoogleMap mMap;
+    //private GoogleMap mMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        SupportMapFragment mapFragment = (SupportMapFragment)
+                supportFragmentManager.findFragmentById(R.id.map);
+        /*SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);*/
         mapFragment.getMapAsync(this);
     }
 
@@ -56,15 +56,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
      * installed Google Play services and returned to the app.
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(GoogleMap mMap) {
         //save the map instance returned from Google
-        mMap = googleMap;
         mMap.setOnInfoWindowClickListener(this);
 
-        //reference to our GRASP Controller interface to the model
-        final DataServiceFacade dataService = DataServiceFacade.getInstance();
-
         // Setting a click event handler for the map
+        /*
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
@@ -95,22 +92,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 mMap.addMarker(markerOptions);
             }
         });
+        */
 
         //get the data to display
-        List<DataElement> dataList = dataService.getData();
+        List<DataElement> dataList = DataServiceFacade.getData();
 
         //iterate through the list and add a pin for each element in the model
         for (DataElement de : dataList) {
-            Model model = Model.getInstance();
-            Restrictions mapRestrictions = model.getMapRestrictions();
-            if (mapRestrictions.hasMatch(de.getRestrictions())) {
-                LatLng loc = new LatLng(de.getLatitude(), de.getLongitude());
-                mMap.addMarker(new MarkerOptions().position(loc).title(de.getName()).snippet(
-                        de.getDescription()));
-                mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-                Log.d(de.getName(), de.getLatitude() + " " + de.getLongitude());
-            } else {
-                Log.d("No match for " + mapRestrictions + de.getRestrictions(), "lol");
+            Restrictions mapRestrictions = Model.getMapRestrictions();
+            if (Model.hasMatch(mapRestrictions, de.getRestrictions())) {
+                mMap = de.updateMap(mMap);
             }
         }
 
@@ -119,8 +110,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
     @Override
     public void onInfoWindowClick(Marker marker) {
-        Model model = Model.getInstance();
-        int uniqueKey = model.findIdByName(marker.getTitle());
+        int uniqueKey = Model.findIdByName(marker.getTitle());
         if (uniqueKey == -1) {
             return;
         }
@@ -128,9 +118,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         Intent intent = new Intent(context, ShelterDetailActivity.class);
         intent.putExtra(ShelterDetailFragment.ARG_ITEM_ID,
                 uniqueKey);
-        Log.d("I am here", "lol");
 
-        Model.getInstance().setCurrentShelter(model.findItemById(uniqueKey));
+        Model.setCurrentShelter(uniqueKey);
         context.startActivity(intent);
     }
 
@@ -147,7 +136,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         @SuppressLint("InflateParams")
         CustomInfoWindowAdapter(){
             // hook up the custom layout view in res/custom_map_pin_layout.xml
-            myContentsView = getLayoutInflater().inflate(R.layout.custom_map_pin_layout, null);
+            LayoutInflater layoutInflater = getLayoutInflater();
+            myContentsView = layoutInflater.inflate(R.layout.custom_map_pin_layout, null);
         }
 
         @Override

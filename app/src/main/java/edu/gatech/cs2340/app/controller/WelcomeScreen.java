@@ -40,9 +40,7 @@ public class WelcomeScreen extends AppCompatActivity {
                 startActivity(registrationScreen);
             }
         });
-        //Model.getInstance().readSDFile(getResources().openRawResource(R.raw.homelessdb));
-        Model model = Model.getInstance();
-        model.getSheltersFromDB();
+        Model.getSheltersFromDB();
     }
 
 }
