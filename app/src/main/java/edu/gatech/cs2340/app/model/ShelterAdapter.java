@@ -22,7 +22,7 @@ public class ShelterAdapter extends BaseAdapter {
 
     private final LayoutInflater inflater;
     private final Collection<Shelter> shelterList;
-    private final List<Shelter> searchList;
+    private  List<Shelter> searchList;
 
     /**
      * Constructor for shelterAdapter which takes previous context and the shelterList.
