@@ -123,7 +123,7 @@ public class User {
      * Return the shelterID of the shelter the user has claimed beds at
      * @return shelterID
      */
-    private int getShelterID() {
+    public int getShelterID() {
         return shelterID;
     }
 
@@ -131,7 +131,7 @@ public class User {
      * Gets number of beds the user has claimed.
      * @return numBedsClaimed
      */
-    private int getNumBedsClaimed() {
+    public int getNumBedsClaimed() {
         return numBedsClaimed;
     }
 
