@@ -29,6 +29,7 @@ import edu.gatech.cs2340.app.model.Model;
  * item details. On tablets, the activity presents the list of items and
  * item details side-by-side using two vertical panes.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class ShelterListActivity extends AppCompatActivity {
 
     /**
@@ -68,6 +69,7 @@ public class ShelterListActivity extends AppCompatActivity {
                 mTwoPane));
     }
 
+    @SuppressWarnings("CyclicClassDependency")
     public class SimpleItemRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
 

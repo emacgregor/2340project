@@ -26,6 +26,7 @@ import edu.gatech.cs2340.app.model.Restrictions;
 /**
  * An activity that heavily borrows from Mr. Waters' example to implement map related things.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnInfoWindowClickListener{
 
@@ -101,7 +102,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         for (DataElement de : dataList) {
             Restrictions mapRestrictions = Model.getMapRestrictions();
             if (Model.hasMatch(mapRestrictions, de.getRestrictions())) {
-                mMap = de.updateMap(mMap);
+                de.updateMap(mMap);
             }
         }
 

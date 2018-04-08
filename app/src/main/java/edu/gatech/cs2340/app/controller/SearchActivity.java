@@ -20,6 +20,7 @@ import edu.gatech.cs2340.app.model.ShelterAdapter;
 /**
  * This activity provides the back end of searching.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class SearchActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     private ShelterAdapter adapter;

@@ -13,6 +13,7 @@ import edu.gatech.cs2340.app.model.Model;
 /**
  * This is the main screen of the app.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class MainActivity extends AppCompatActivity {
 
     @Override

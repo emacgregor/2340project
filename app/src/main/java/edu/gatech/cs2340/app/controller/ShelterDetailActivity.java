@@ -23,6 +23,7 @@ import edu.gatech.cs2340.app.model.Model;
  * item details are presented side-by-side with a list of items
  * in a {@link ShelterListActivity}.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class ShelterDetailActivity extends AppCompatActivity {
 
     @SuppressWarnings("FeatureEnvy")

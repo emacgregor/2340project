@@ -6,6 +6,7 @@ import java.util.Locale;
 /**
  * Represents everything important happening with Shelters.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class Shelter {
     private final int uniqueKey;
     private final Location location;
@@ -84,6 +85,8 @@ public class Shelter {
         if (canClaimBeds(numBeds)) {
             remainingCapacity -= numBeds;
             updateShelterInfoString();
+        } else {
+            Model.updateFailureString(" This shelter does not have that many beds to spare.");
         }
     }
 
@@ -194,7 +197,7 @@ public class Shelter {
 
     /**
      * Returns a string that contains all to do with searching
-     * @return
+     * @return The name and search restrictions concatenated and lower cased.
      */
     public String getSearchTerms() {
         return (getSearchRestrictions() +  " " + getName()).toLowerCase(Locale.getDefault());

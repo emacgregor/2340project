@@ -25,6 +25,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.AppDatabase;
 import edu.gatech.cs2340.app.model.Model;
@@ -32,6 +34,7 @@ import edu.gatech.cs2340.app.model.Model;
 /**
  * A login screen that offers login via username/password.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class RegistrationScreen extends AppCompatActivity {
 
     /**
@@ -140,7 +143,7 @@ public class RegistrationScreen extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
+            mAuthTask = new UserLoginTask(username, password, this);
             mAuthTask.execute((Void) null);
         }
     }
@@ -190,18 +193,22 @@ public class RegistrationScreen extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    @SuppressWarnings("CyclicClassDependency")
+    public static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        private final WeakReference<RegistrationScreen> activityReference;
         private final String mUsername;
         private final String mPassword;
 
-        UserLoginTask(String username, String password) {
+        UserLoginTask(String username, String password, RegistrationScreen context) {
             mUsername = username;
             mPassword = password;
+            activityReference = new WeakReference<>(context);
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            final RegistrationScreen registrationScreen = activityReference.get();
             final int WAIT_TIME = 2;
             try {
                 // Simulate network access.
@@ -210,27 +217,32 @@ public class RegistrationScreen extends AppCompatActivity {
                 return false;
             }
 
-            return Model.addUser(mUsername, mPassword, (String) adminSpinner.getSelectedItem(), db);
+            return Model.addUser(mUsername, mPassword,
+                    (String) registrationScreen.adminSpinner.getSelectedItem(),
+                    registrationScreen.db);
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
+            final RegistrationScreen registrationScreen = activityReference.get();
+            registrationScreen.mAuthTask = null;
+            registrationScreen.showProgress(false);
 
             if (success) {
-                Intent mainClass =  new Intent(RegistrationScreen.this, MainActivity.class);
-                startActivity(mainClass);
+                Intent mainClass =  new Intent(registrationScreen.getApplicationContext(),
+                        MainActivity.class);
+                registrationScreen.startActivity(mainClass);
             } else {
-                mUsernameView.setError("Username is already registered.");
-                mUsernameView.requestFocus();
+                registrationScreen.mUsernameView.setError("Username is already registered.");
+                registrationScreen.mUsernameView.requestFocus();
             }
         }
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+            final RegistrationScreen registrationScreen = activityReference.get();
+            registrationScreen.mAuthTask = null;
+            registrationScreen.showProgress(false);
         }
     }
 }

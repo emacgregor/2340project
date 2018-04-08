@@ -13,6 +13,7 @@ import edu.gatech.cs2340.app.model.Model;
 /**
  * Controller for the welcome screen activity.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class WelcomeScreen extends AppCompatActivity {
 
     @Override

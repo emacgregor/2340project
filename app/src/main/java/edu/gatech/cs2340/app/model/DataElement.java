@@ -42,25 +42,25 @@ public class DataElement {
      * Returns data element name.
      * @return The name
      */
-    public String getName() { return _name;}
+    private String getName() { return _name;}
 
     /**
      * Returns data element description
      * @return The description
      */
-    public String getDescription() {  return _description; }
+    private String getDescription() {  return _description; }
 
     /**
      * Returns data element latitude
      * @return The latitude
      */
-    public double getLatitude() { return _location.getLatitude(); }
+    private double getLatitude() { return _location.getLatitude(); }
 
     /**
      * Returns data element longitude.
      * @return The longitude
      */
-    public double getLongitude() { return _location.getLongitude(); }
+    private double getLongitude() { return _location.getLongitude(); }
 
     /**
      * Returns restrictions belonging to this data element.
@@ -73,9 +73,8 @@ public class DataElement {
     /**
      * Updates the map for this data element.
      * @param mMap The map to be updated
-     * @return The updated map
      */
-    public GoogleMap updateMap(GoogleMap mMap) {
+    public void updateMap(GoogleMap mMap) {
         LatLng loc = new LatLng(getLatitude(), getLongitude());
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions = markerOptions.position(loc);
@@ -83,6 +82,5 @@ public class DataElement {
         markerOptions = markerOptions.snippet(getDescription());
         mMap.addMarker(markerOptions);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(loc));
-        return mMap;
     }
 }

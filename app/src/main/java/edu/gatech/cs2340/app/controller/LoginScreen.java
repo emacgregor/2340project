@@ -26,6 +26,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
+
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.AppDatabase;
 import edu.gatech.cs2340.app.model.Model;
@@ -33,6 +35,7 @@ import edu.gatech.cs2340.app.model.Model;
 /**
  * A login screen that offers login via username/password.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class LoginScreen extends AppCompatActivity {
 
     /**
@@ -129,7 +132,7 @@ public class LoginScreen extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(username, password);
+            mAuthTask = new UserLoginTask(username, password, this);
             mAuthTask.execute((Void) null);
         }
     }
@@ -183,15 +186,18 @@ public class LoginScreen extends AppCompatActivity {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    private class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    @SuppressWarnings("CyclicClassDependency")
+    private static class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
+        private final WeakReference<LoginScreen> activityReference;
         private final String mUsername;
         private final String mPassword;
         private boolean userFound = false;
 
-        UserLoginTask(String username, String password) {
+        UserLoginTask(String username, String password, LoginScreen context) {
             mUsername = username;
             mPassword = password;
+            activityReference = new WeakReference<>(context);
         }
 
         @Override
@@ -204,17 +210,19 @@ public class LoginScreen extends AppCompatActivity {
                 return false;
             }
 
-            userFound = Model.userExists(mUsername, db);
-            return Model.checkCredentials(mUsername, mPassword, db);
+            LoginScreen loginScreen = activityReference.get();
+            userFound = Model.userExists(mUsername, loginScreen.db);
+            return Model.checkCredentials(mUsername, mPassword, loginScreen.db);
         }
 
         @Override
         protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
+            final LoginScreen loginScreen = activityReference.get();
+            loginScreen.mAuthTask = null;
+            loginScreen.showProgress(false);
 
-            if (lockedOut) {
-                Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+            if (loginScreen.lockedOut) {
+                Snackbar waitBar = Snackbar.make(loginScreen.findViewById(R.id.username_login_form),
                         "You are locked out.",
                         Snackbar.LENGTH_SHORT);
                 waitBar.show();
@@ -222,21 +230,23 @@ public class LoginScreen extends AppCompatActivity {
             }
 
             if (success) {
-                Intent mainClass =  new Intent(LoginScreen.this, MainActivity.class);
-                startActivity(mainClass);
+                Intent mainClass =  new Intent(loginScreen.getApplicationContext(),
+                        MainActivity.class);
+                loginScreen.startActivity(mainClass);
             } else {
                 if (userFound) {
-                    mPasswordView.setError(getString(R.string.error_incorrect_password));
-                    mPasswordView.requestFocus();
+                    loginScreen.mPasswordView.setError(
+                            loginScreen.getString(R.string.error_incorrect_password));
+                    loginScreen.mPasswordView.requestFocus();
                 } else {
-                    mUsernameView.setError("This username is not registered");
-                    mUsernameView.requestFocus();
+                    loginScreen.mUsernameView.setError("This username is not registered");
+                    loginScreen.mUsernameView.requestFocus();
                 }
-                wrongAttempts++;
-                Log.d("I am here", "" + wrongAttempts);
-                if(wrongAttempts > 2) {
-                    wrongAttempts = 0;
-                    lockedOut = true;
+                loginScreen.wrongAttempts++;
+                Log.d("I am here", "" + loginScreen.wrongAttempts);
+                if(loginScreen.wrongAttempts > 2) {
+                    loginScreen.wrongAttempts = 0;
+                    loginScreen.lockedOut = true;
                     final int NUM_SECONDS_LOCKED_OUT = 60;
                     final int NOTIFICATION_INTERVAL = 10;
                     CountDownTimer lockoutTimer = new CountDownTimer(
@@ -246,7 +256,8 @@ public class LoginScreen extends AppCompatActivity {
 
                         @Override
                         public void onTick(long l) {
-                            Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+                            Snackbar waitBar = Snackbar.make(
+                                    loginScreen.findViewById(R.id.username_login_form),
                                     "You are locked out for " + secondsLeft + " seconds.",
                                     Snackbar.LENGTH_SHORT);
                             secondsLeft -= 10;
@@ -255,11 +266,12 @@ public class LoginScreen extends AppCompatActivity {
 
                         @Override
                         public void onFinish() {
-                            Snackbar waitBar = Snackbar.make(findViewById(R.id.username_login_form),
+                            Snackbar waitBar = Snackbar.make(
+                                    loginScreen.findViewById(R.id.username_login_form),
                                     "You are no longer locked out.",
                                     Snackbar.LENGTH_SHORT);
                             waitBar.show();
-                            lockedOut = false;
+                            loginScreen.lockedOut = false;
                         }
                     };
                     lockoutTimer.start();
@@ -269,8 +281,9 @@ public class LoginScreen extends AppCompatActivity {
 
         @Override
         protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
+            final LoginScreen loginScreen = activityReference.get();
+            loginScreen.mAuthTask = null;
+            loginScreen.showProgress(false);
         }
     }
     @Override

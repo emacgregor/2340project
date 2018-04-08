@@ -6,7 +6,7 @@ import android.arch.persistence.room.Query;
 
 import java.util.List;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "CyclicClassDependency"})
 @Dao
 public interface UserDao {
 

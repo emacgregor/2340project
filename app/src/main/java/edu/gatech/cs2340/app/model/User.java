@@ -8,6 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
  * Holds all information about users in a database.
  */
 
+@SuppressWarnings("CyclicClassDependency")
 @Entity
 public class User {
 
@@ -74,7 +75,9 @@ public class User {
      * @param shelterID Shelter they are being claimed at.
      */
     public void claimBeds(int numBeds, int shelterID) {
-        if (!canClaimBeds(numBeds)) {
+        if (!canClaimBeds(shelterID)) {
+            Model.updateFailureString(" You already own beds at " +
+                    Model.getNameByID(getShelterID()) + ".");
             return;
         }
         this.shelterID = shelterID;
@@ -101,6 +104,17 @@ public class User {
             if (numBedsClaimed == 0) {
                 this.shelterID = -1;
             }
+        } else {
+            String moreFailure = "";
+            if (getShelterID() == -1) {
+                moreFailure = " You do not own any beds.";
+            } else if (getShelterID() != shelterID) {
+                moreFailure = " Your beds are from " + Model.getNameByID(getShelterID()) + ".";
+            }
+            if (getNumBedsClaimed() < numBeds) {
+                moreFailure += " You do not have this many beds.";
+            }
+            Model.updateFailureString(moreFailure);
         }
     }
 
@@ -108,7 +122,7 @@ public class User {
      * Return the shelterID of the shelter the user has claimed beds at
      * @return shelterID
      */
-    public int getShelterID() {
+    private int getShelterID() {
         return shelterID;
     }
 
@@ -116,7 +130,7 @@ public class User {
      * Gets number of beds the user has claimed.
      * @return numBedsClaimed
      */
-    public int getNumBedsClaimed() {
+    private int getNumBedsClaimed() {
         return numBedsClaimed;
     }
 

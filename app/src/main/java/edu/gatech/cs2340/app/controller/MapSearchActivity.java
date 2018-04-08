@@ -17,6 +17,7 @@ import edu.gatech.cs2340.app.model.Restrictions;
  * This class handles everything to do with providing the restrictions for the map,
  * which shelters it will show.
  */
+@SuppressWarnings("CyclicClassDependency")
 public class MapSearchActivity extends AppCompatActivity {
 
     @Override

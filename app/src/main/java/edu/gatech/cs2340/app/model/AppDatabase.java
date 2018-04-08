@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * This is the database that holds all the users.
  */
-@SuppressWarnings("LawOfDemeter")
+@SuppressWarnings({"LawOfDemeter", "CyclicClassDependency"})
 @Database(entities = {User.class}, version = 1, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
 

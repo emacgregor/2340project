@@ -30,7 +30,7 @@ import java.io.BufferedWriter;
 /**
  * This is the main logic class of the entire app.
  */
-@SuppressWarnings("UtilityClass")
+@SuppressWarnings({"UtilityClass", "CyclicClassDependency"})
 public final class Model {
     private static final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private static boolean readSDFile = false;
@@ -133,6 +133,7 @@ public final class Model {
         return false;
     }
 
+    @SuppressWarnings("CyclicClassDependency")
     private static class dbReaderTask extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... movieIds) {
@@ -195,7 +196,7 @@ public final class Model {
         readSDFile = true;
     }
 
-    @SuppressWarnings("MismatchedQueryAndUpdateOfStringBuilder")
+    @SuppressWarnings({"MismatchedQueryAndUpdateOfStringBuilder", "CyclicClassDependency"})
     private static final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
         final String url_update = "https://2340project.000webhostapp.com/updateShelter.php";
         final int shelterID;
@@ -305,6 +306,7 @@ public final class Model {
      * @return Whether the beds were claimed.
      */
     private static boolean claimBeds(int numBeds, int shelterID) {
+        failureString = "You cannot claim these beds.";
         Shelter shelter = shelterDatabase.get(shelterID);
         if (currentUser.canClaimBeds(shelterID)
                 && shelter.canClaimBeds(numBeds)) {
@@ -312,18 +314,8 @@ public final class Model {
             shelter.claimBeds(numBeds);
             updateCurrentShelterBeds(shelterID);
             return true;
-        } else {
-            failureString = "You cannot claim these beds.";
-            if (!currentUser.canClaimBeds(shelterID)) {
-                Shelter oldShelter = shelterDatabase.get(currentUser.getShelterID());
-                failureString += " You already own beds at "
-                        + oldShelter.getName() + ".";
-            }
-            if (!shelter.canClaimBeds(numBeds)) {
-                failureString += " This shelter does not have that many beds to spare.";
-            }
-            return false;
         }
+        return false;
     }
     /**
      * Overloaded for claiming beds
@@ -349,6 +341,7 @@ public final class Model {
      * @return Whether the beds were released.
      */
     private static boolean releaseBeds(int numBeds, int shelterID) {
+        failureString = "You cannot release beds at this shelter:";
         Shelter shelter = shelterDatabase.get(shelterID);
         if (currentUser.canReleaseBeds(numBeds, shelterID)
                 && shelter.canReleaseBeds(numBeds)) {
@@ -357,17 +350,6 @@ public final class Model {
             updateCurrentShelterBeds(shelterID);
             return true;
         } else {
-            failureString = "You cannot release beds at this shelter:";
-            if (currentUser.getShelterID() == -1) {
-                failureString += " You do not own any beds.";
-            } else if (currentUser.getShelterID() != shelterID) {
-                Shelter oldShelter = shelterDatabase.get(currentUser.getShelterID());
-                failureString += " Your beds are from "
-                        + oldShelter.getName() + ".";
-            }
-            if (currentUser.getNumBedsClaimed() < numBeds) {
-                failureString += " You do not have this many beds.";
-            }
             return false;
         }
     }
@@ -461,5 +443,23 @@ public final class Model {
      */
     public static int getCurrentTotalCapacity() {
         return currentShelter.getTotalCapacity();
+    }
+
+    /**
+     * Updates failureString from outside class.
+     * @param moreFailure What will be appended.
+     */
+    public static void updateFailureString(String moreFailure) {
+        failureString += moreFailure;
+    }
+
+    /**
+     * Finds a shelter name by a given key.
+     * @param uniqueKey The key
+     * @return The name
+     */
+    public static String getNameByID(int uniqueKey) {
+        Shelter shelter = shelterDatabase.get(uniqueKey);
+        return shelter.getName();
     }
 }
