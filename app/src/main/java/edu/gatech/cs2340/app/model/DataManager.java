@@ -1,6 +1,7 @@
 package edu.gatech.cs2340.app.model;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -29,7 +30,7 @@ class DataManager {
     }
 
 
-    List<DataElement> getData() { return theData; }
+    List<DataElement> getData() { return Collections.unmodifiableList(theData); }
 
 
 

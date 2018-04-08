@@ -18,6 +18,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -48,9 +50,9 @@ public class ShelterDatabase {
      * Returns the local database of shelters.
      * @return The local database of shelters.
      */
-    public static ArrayList<Shelter> getShelters() {
+    public static List<Shelter> getShelters() {
         getSheltersFromDB();
-        return shelterDatabase;
+        return Collections.unmodifiableList(shelterDatabase);
     }
 
 
