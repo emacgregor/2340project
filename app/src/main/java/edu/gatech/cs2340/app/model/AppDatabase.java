@@ -29,6 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
      * @param context The context of the app as a whole.
      * @return The app's database.
      */
+    @SuppressWarnings("NonThreadSafeLazyInitialization")
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
             Builder<AppDatabase> instanceBuilder = Room.databaseBuilder(
