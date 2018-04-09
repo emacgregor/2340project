@@ -71,7 +71,8 @@ public class EthanTest {
 
         Assert.assertEquals(0, user.getNumBedsClaimed());
         Assert.assertEquals(0, user.getShelterID());
-        Assert.assertTrue(" You do not have this many beds.".equals(ShelterDatabase.getFailureString()));
+        Assert.assertTrue(" You do not have this many beds."
+                          .equals(ShelterDatabase.getFailureString()));
     }
     @Test
     public void testUserReleaseZeroBedsWithZeroBeds() {
@@ -99,7 +100,8 @@ public class EthanTest {
 
         Assert.assertEquals(100, user.getNumBedsClaimed());
         Assert.assertEquals(0, user.getShelterID());
-        Assert.assertTrue(" You do not have this many beds.".equals(ShelterDatabase.getFailureString()));
+        Assert.assertTrue(" You do not have this many beds."
+                          .equals(ShelterDatabase.getFailureString()));
     }
     @Test
     public void testUserReleaseAtWrongShelter() {
@@ -147,6 +149,7 @@ public class EthanTest {
         Assert.assertEquals(100, user.getNumBedsClaimed());
         Assert.assertEquals(1, user.getShelterID());
         Assert.assertTrue((" Your beds are from "
-                + null + "." + " You do not have this many beds.").equals(ShelterDatabase.getFailureString()));
+                + null + "." + " You do not have this many beds.")
+                .equals(ShelterDatabase.getFailureString()));
     }
 }

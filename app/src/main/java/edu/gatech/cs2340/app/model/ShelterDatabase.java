@@ -265,8 +265,6 @@ public class ShelterDatabase {
 
             } catch (IOException e) {
                 e.printStackTrace();
-                // Error
-                //Log.d("what happened", "ahhhhhhh");
             }
             try {
                 assert connection != null;

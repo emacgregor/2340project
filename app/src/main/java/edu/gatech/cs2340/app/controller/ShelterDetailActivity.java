@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
-import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -111,7 +110,8 @@ public class ShelterDetailActivity extends AppCompatActivity {
         });
     }
 
-    @Override
+
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -125,7 +125,7 @@ public class ShelterDetailActivity extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
+    } */
     private CharSequence getFailureString() {
         return ShelterDatabase.getFailureString();
     }
