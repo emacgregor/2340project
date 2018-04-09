@@ -34,7 +34,7 @@ public class ShelterDatabase {
     private static boolean readSDFile = false;
     private static final ArrayList<Shelter> shelterDatabase = new ArrayList<>();
     private static Shelter currentShelter;
-    private static String failureString;
+    private static String failureString = "";
 
     /**
      * Adds a shelter to an the array list of shelters
@@ -194,8 +194,12 @@ public class ShelterDatabase {
      * @return The name
      */
     public static String getNameByID(int uniqueKey) {
-        Shelter shelter = shelterDatabase.get(uniqueKey);
-        return shelter.getName();
+        if ((uniqueKey < shelterDatabase.size()) && (uniqueKey > -1)) {
+            Shelter shelter = shelterDatabase.get(uniqueKey);
+            return shelter.getName();
+        } else {
+            return null;
+        }
     }
     /**
      * Gets shelters from the online database. See dbReaderTask for more info.
@@ -356,5 +360,12 @@ public class ShelterDatabase {
             }
         }
         return -1;
+    }
+
+    /**
+     * This exists solely for testing purposes
+     */
+    public static void clearFailureString() {
+        failureString = "";
     }
 }
