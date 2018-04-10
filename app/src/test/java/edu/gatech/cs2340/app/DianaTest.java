@@ -15,7 +15,7 @@ import edu.gatech.cs2340.app.model.ShelterInfo;
  * Created by diana on 4/9/18.
  * JUnit Tests
  */
-
+@SuppressWarnings("JavaDoc")
 public class DianaTest {
 
     @Test
