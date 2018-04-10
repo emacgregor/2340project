@@ -4,7 +4,7 @@ package edu.gatech.cs2340.app.model;
  * Contains important String information for passing Shelters.
  */
 
-class ShelterInfo {
+public class ShelterInfo {
     private final String name;
     private final String address;
     private final String specialNotes;
