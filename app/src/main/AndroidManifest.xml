@@ -78,6 +78,10 @@
         <activity
             android:name=".controller.BanActivity"
             android:label="@string/title_activity_ban"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".controller.CreateShelterActivity"
+            android:label="@string/title_activity_create_shelter"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

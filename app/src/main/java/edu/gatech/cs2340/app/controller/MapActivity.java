@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ import java.util.List;
 import edu.gatech.cs2340.app.R;
 import edu.gatech.cs2340.app.model.DataElement;
 import edu.gatech.cs2340.app.model.DataServiceFacade;
+import edu.gatech.cs2340.app.model.MLocation;
 import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.Restrictions;
 import edu.gatech.cs2340.app.model.ShelterDatabase;
@@ -91,41 +93,22 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMap.setOnInfoWindowClickListener(this);
 
         // Setting a click event handler for the map
-        /*
+
+        //get the data to display
+        List<DataElement> dataList = DataServiceFacade.getData();
+
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
             @Override
             public void onMapClick(LatLng latLng) {
-
-                // Creating a marker
-                MarkerOptions markerOptions = new MarkerOptions();
-
-                // Setting the position for the marker
-                markerOptions.position(latLng);
-
-                //add a new item where the touch happened, for non-hardcoded data, we would need
-                //to launch an activity with a form to enter the data.
-                dataService.addDataElement("This is still in development", "lol",
-                        new Location(latLng.latitude, latLng.longitude),
-                        new Restrictions(new boolean[9]));
-                Log.d("new pin", latLng.latitude + " " + latLng.longitude);
-
-                // Setting the title for the marker.
-                // This will be displayed on taping the marker
-                markerOptions.title(dataService.getLastElementAdded().getName());
-                markerOptions.snippet(dataService.getLastElementAdded().getDescription());
-
-                // Animating to the touched position
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
-
-                // Placing a marker on the touched position
-                mMap.addMarker(markerOptions);
+                if (Model.currentUserAdmin()) {
+                    Model.setLongLat(new double[]{latLng.latitude, latLng.longitude});
+                    Intent createShelterScreen = new Intent(MapActivity.this, CreateShelterActivity.class);
+                    startActivity(createShelterScreen);
+                    finish();
+                }
             }
         });
-        */
-
-        //get the data to display
-        List<DataElement> dataList = DataServiceFacade.getData();
 
         //iterate through the list and add a pin for each element in the model
         for (DataElement de : dataList) {
@@ -145,11 +128,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
-                //Location Permission already granted
+                //MLocation Permission already granted
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
             } else {
-                //Request Location Permission
+                //Request MLocation Permission
                 checkLocationPermission();
             }
         }
@@ -261,8 +244,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,11));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng,11));
 
+    }
+    private void makeLocation() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            buildGoogleApiClient();
+            mMap.setMyLocationEnabled(true);
+        }
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -278,8 +269,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
                 new AlertDialog.Builder(this)
-                        .setTitle("Location Permission Needed")
-                        .setMessage("This app needs the Location permission, please accept to use location functionality")
+                        .setTitle("MLocation Permission Needed")
+                        .setMessage("This app needs the MLocation permission, please accept to use location functionality")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
@@ -287,6 +278,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                                 ActivityCompat.requestPermissions(MapActivity.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                         MY_PERMISSIONS_REQUEST_LOCATION );
+                                makeLocation();
                             }
                         })
                         .create()

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="edu.gatech.cs2340.app.controller.CreateShelterActivity"
+    tools:showIn="@layout/activity_create_shelter"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin">
+
+    <ScrollView
+        android:id="@+id/shelter_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="16dp">
+
+        <LinearLayout
+            android:id="@+id/shelter_info_form"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Shelter Info:" />
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/shelterName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name"
+                    android:maxLines="1"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <AutoCompleteTextView
+                    android:id="@+id/address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Address"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Description"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="Phone Number"
+                    android:singleLine="true" />
+
+            </android.support.design.widget.TextInputLayout>
+
+            <EditText
+                android:id="@+id/capacityInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="Capacity"
+                android:inputType="number" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Latitude and Longtitude" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/latitudeInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Latitude"
+                    android:inputType="numberDecimal" />
+
+                <EditText
+                    android:id="@+id/longitudeInput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:hint="Longitude"
+                    android:inputType="numberDecimal" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Restrictions" />
+
+            <CheckBox
+                android:id="@+id/menBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Men" />
+
+            <CheckBox
+                android:id="@+id/womenBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Women" />
+
+            <CheckBox
+                android:id="@+id/nonbinaryBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Nonbinary" />
+
+            <CheckBox
+                android:id="@+id/familyBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Family" />
+
+            <CheckBox
+                android:id="@+id/famChildBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/FamChildren" />
+
+            <CheckBox
+                android:id="@+id/famNewbornBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/FamilyNewborn" />
+
+            <CheckBox
+                android:id="@+id/childrenBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Children" />
+
+            <CheckBox
+                android:id="@+id/youngBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/YoungAdult" />
+
+            <CheckBox
+                android:id="@+id/veteranBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/Veterans" />
+
+            <CheckBox
+                android:id="@+id/anyoneBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Anyone" />
+
+            <Button
+                android:id="@+id/confirm_button"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Confirm Info"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/cancel_button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@android:string/cancel" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</android.support.constraint.ConstraintLayout>

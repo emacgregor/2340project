@@ -40,8 +40,12 @@ public class ShelterDatabase {
      * Adds a shelter to an the array list of shelters
      * @param someShelter This shelter gets added to the shelter database.
      */
-    private static void addShelter(Shelter someShelter) {
+    public static void addShelter(Shelter someShelter) {
         shelterDatabase.add(someShelter);
+        /*dbUpdateTask dbUpdater = new dbUpdateTask(someShelter.getUniqueKey());
+        dbUpdater.execute();*/
+
+        //Add new shelter here.
     }
 
     /**
@@ -326,8 +330,8 @@ public class ShelterDatabase {
                             object.getInt("remainingCap"), longitudeLatitude,
                             new ShelterInfo(object.getString("name"),
                                     object.getString("address"),
-                                    object.getString("specialNotes"),
                                     object.getString("phoneNumber"),
+                                    object.getString("specialNotes"),
                                     object.getString("restrictions")));
 
                     ShelterDatabase.addShelter(shelter);
@@ -365,5 +369,8 @@ public class ShelterDatabase {
      */
     public static void clearFailureString() {
         failureString = "";
+    }
+    public static int getNewUniqueKey() {
+        return shelterDatabase.size();
     }
 }

@@ -4,17 +4,17 @@ package edu.gatech.cs2340.app.model;
  * Holds information about longitude and latitude.
  */
 
-class Location {
+public class MLocation {
     private final double longitude;
     private final double latitude;
     private String longLatString;
 
     /**
-     * Constructor for class Location
+     * Constructor for class MLocation
      * @param latitude The latitude of the place
      * @param longitude The longitude of the place
      */
-    public Location(double latitude, double longitude) {
+    public MLocation(double latitude, double longitude) {
         this.longitude = longitude;
         this.latitude = latitude;
         makeLongLat();

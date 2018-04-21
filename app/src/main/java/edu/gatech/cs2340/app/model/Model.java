@@ -9,6 +9,7 @@ import java.util.List;
 public final class Model {
     private static User currentUser;
     private static Restrictions mapRestrictions;
+    private static double[] longLat;
 
     /**
      * singleton pattern!
@@ -151,5 +152,14 @@ public final class Model {
      */
     public static void currentUserReleaseBeds(int numBeds, int shelterID) {
        currentUser.releaseBeds(numBeds, shelterID);
+    }
+    public static double[] getLongLat() {
+        return longLat;
+    }
+    public static void setLongLat(double[] longLati) {
+        longLat = longLati;
+    }
+    public static boolean currentUserAdmin() {
+        return currentUser.getAdmin();
     }
 }

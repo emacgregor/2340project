@@ -44,9 +44,21 @@ public class Restrictions {
             veterans = restrictions[8];
             anyone = false;
             makeSearchRestrictionsString();
+        } else if (restrictions.length == 10) {
+            men = restrictions[0];
+            women = restrictions[1];
+            nonBinary = restrictions[2];
+            family = restrictions[3];
+            famChildren = restrictions[4];
+            famNewborn = restrictions[5];
+            children = restrictions[6];
+            youngAdults = restrictions[7];
+            veterans = restrictions[8];
+            anyone = restrictions[9];
+            makeSearchRestrictionsString();
         } else {
             Log.d("Restrictions: ", "Somebody called Restrictions with an array "
-                    + "that is not 9 length");
+                    + "that is not 9 or 10 in length");
         }
     }
     @SuppressWarnings({"OverlyLongMethod", "OverlyComplexMethod"})

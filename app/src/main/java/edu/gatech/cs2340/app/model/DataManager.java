@@ -24,7 +24,7 @@ class DataManager {
         }
     }
 
-    private void addReport(DataElement de) {
+    public void addReport(DataElement de) {
         theData.add(de);
     }
 

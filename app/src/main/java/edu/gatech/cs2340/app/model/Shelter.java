@@ -9,7 +9,7 @@ import java.util.Locale;
 @SuppressWarnings({"CyclicClassDependency", "ClassWithTooManyDependents"})
 public class Shelter {
     private final int uniqueKey;
-    private final Location location;
+    private final MLocation location;
     private String capacityString;
     private final Restrictions restrictions;
     private int totalCapacity = 0;
@@ -27,7 +27,7 @@ public class Shelter {
     private Shelter(int uniqueKey, ArrayList<Integer> capacity, double[] longitudeLatitude,
                     ShelterInfo info) {
         this.uniqueKey = uniqueKey;
-        location = new Location(longitudeLatitude[0], longitudeLatitude[1]);
+        location = new MLocation(longitudeLatitude[0], longitudeLatitude[1]);
         this.info = new ShelterInfo(info);
 
         capacityString = "";
@@ -44,6 +44,32 @@ public class Shelter {
         }
 
         restrictions = new Restrictions(info.getRestrictions());
+
+        for (int i = 0; i < capacity.size(); i++) {
+            totalCapacity += capacity.get(i);
+        }
+        remainingCapacity = totalCapacity;
+    }
+    public Shelter(int uniqueKey, ArrayList<Integer> capacity, double[] longitudeLatitude,
+                    ShelterInfo info, Restrictions restrictions) {
+        this.uniqueKey = uniqueKey;
+        location = new MLocation(longitudeLatitude[0], longitudeLatitude[1]);
+        this.info = new ShelterInfo(info);
+
+        capacityString = "";
+        if (capacity.get(0) == -1) {
+            capacityString += "Unspecified";
+        } else {
+            StringBuilder sb = new StringBuilder(capacityString);
+            for (int i = 0; i < (capacity.size() - 1); i++) {
+                sb.append(new StringBuilder(capacity.get(i)));
+                sb.append(", ");
+            }
+            sb.append(capacity.get(capacity.size() - 1));
+            capacityString = sb.toString();
+        }
+
+        this.restrictions = restrictions;
 
         for (int i = 0; i < capacity.size(); i++) {
             totalCapacity += capacity.get(i);
@@ -184,7 +210,7 @@ public class Shelter {
      * Returns this shelter's location object.
      * @return location
      */
-    private Location getLocation() {
+    private MLocation getLocation() {
         return location;
     }
 

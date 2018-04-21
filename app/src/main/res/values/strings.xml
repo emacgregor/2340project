@@ -51,4 +51,5 @@
     <string name="ban">Ban</string>
     <string name="unban">Unban</string>
     <string name="back">Back</string>
+    <string name="title_activity_create_shelter">CreateShelterActivity</string>
 </resources>

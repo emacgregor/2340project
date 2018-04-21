@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class DataElement {
     private final String _name;
     private final String _description;
-    private final Location _location;
+    private final MLocation _location;
     private final Restrictions _restrictions;
 
     /**
@@ -22,7 +22,7 @@ public class DataElement {
      * @param location  the location of the element
      * @param restrictions Provides the restrictions for this data element.
      */
-    public DataElement(String name, String desc, Location location, Restrictions restrictions) {
+    public DataElement(String name, String desc, MLocation location, Restrictions restrictions) {
         _name = name;
         _description = desc;
         _location = location;
@@ -42,13 +42,13 @@ public class DataElement {
      * Returns data element name.
      * @return The name
      */
-    private String getName() { return _name;}
+    public String getName() { return _name;}
 
     /**
      * Returns data element description
      * @return The description
      */
-    private String getDescription() {  return _description; }
+    public String getDescription() {  return _description; }
 
     /**
      * Returns data element latitude

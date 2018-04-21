@@ -26,7 +26,7 @@ public final class DataServiceFacade {
 
     private static final DataManager theData = new DataManager(ShelterDatabase.getShelters());
 
-    //private DataElement theLastAddedElement;
+    private static DataElement theLastAddedElement;
 
 
     private DataServiceFacade() {
@@ -40,26 +40,26 @@ public final class DataServiceFacade {
     public static List<DataElement> getData() { return theData.getData();}
 
     /*
-      Add a new data element to the model
-      @param name   the name of the element
+     * Add a new data element to the model
+     * @param name   the name of the element
      * @param desc   textual description of the element
      * @param loc    location of the element
      * @param res The people restrictions this data element will have.
      */
-    /*
-    public void addDataElement(String name, String desc, Location loc, Restrictions res) {
+    public static void addDataElement(String name, String desc, MLocation loc, Restrictions res) {
         DataElement de = new DataElement(name, desc, loc, res);
         theData.addReport(de);
         theLastAddedElement = de;
-    }*/
+    }
 
     /*
       Return the last element added.  This method is mainly to support UI
       @return the last element added to the model.
      */
-    /*
-    public DataElement getLastElementAdded() {
+    public static DataElement getLastElementAdded() {
         return theLastAddedElement;
     }
-    */
+    public static String getLastElementName() { return  theLastAddedElement.getName(); }
+    public static String getLastElementDescription() { return theLastAddedElement.getDescription(); }
+
 }
