@@ -62,7 +62,7 @@ public final class Model {
     public static boolean checkCredentials(String username, String password, AppDatabase db) {
         List<User> users = db.getAllUsers();
         for (User user : users) {
-            if (username.equals(user.getUsername())) {
+            if (username.equals(user.getUsername()) && user.isBanned() != 1) {
                 if (user.checkPassword(password)) {
                     setCurrentUser(user);
                     return true;

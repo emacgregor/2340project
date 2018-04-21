@@ -31,7 +31,7 @@ public class User {
     private int numBedsClaimed;
 
     @ColumnInfo(name = "isBanned")
-    private boolean isBanned;
+    private int isBanned;
 
     /**
      * Constructor that takes in information regarding the user details.
@@ -46,7 +46,7 @@ public class User {
         this.isAdmin = "Admin".equals(userType);
         this.shelterID = -1;
         this.numBedsClaimed = 0;
-        this.isBanned = false;
+        this.isBanned = 0;
     }
 
     /**
@@ -238,11 +238,11 @@ public class User {
         isAdmin = admin;
     }
 
-    public boolean isBanned() {
+    public int isBanned() {
         return isBanned;
     }
 
-    public void setBanned(boolean banned) {
-        isBanned = banned;
+    public void setIsBanned(int isBanned) {
+        this.isBanned = isBanned;
     }
 }
