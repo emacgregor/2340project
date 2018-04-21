@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Model.currentUserIsAdmin()) {
+                if (Model.currentUserAdmin()) {
                     Intent banScreen = new Intent(MainActivity.this, BanActivity.class);
                     startActivity(banScreen);
                 }
