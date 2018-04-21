@@ -49,16 +49,14 @@ public class BanActivity extends AppCompatActivity {
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mainScreen = new Intent(BanActivity.this, MainActivity.class);
-                startActivity(mainScreen);
+                banUser();
             }
         });
 
         unBBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent mainScreen = new Intent(BanActivity.this, MainActivity.class);
-                startActivity(mainScreen);
+                unBanUser();
             }
         });
 
@@ -109,4 +107,29 @@ public class BanActivity extends AppCompatActivity {
 
     }
 
+    private void unBanUser() {
+
+        UsernameView.setError(null);
+        Editable usernameText = UsernameView.getText();
+        String username = usernameText.toString();
+
+        boolean cancel = false;
+        View focusView = null;
+
+        // Check for a valid username address.
+        if (TextUtils.isEmpty(username)) {
+            UsernameView.setError(getString(R.string.error_field_required));
+            focusView = UsernameView;
+            cancel = true;
+        }
+
+        if (cancel) {
+            // There was an error; don't attempt login and focus the first
+            // form field with an error.
+            focusView.requestFocus();
+        } else {
+            db.userDao().unBanUser(username);
+        }
+
+    }
 }

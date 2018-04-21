@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 
 import edu.gatech.cs2340.app.R;
+import edu.gatech.cs2340.app.model.Model;
 import edu.gatech.cs2340.app.model.ShelterDatabase;
 
 /**
@@ -66,8 +67,10 @@ public class MainActivity extends AppCompatActivity {
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent banScreen = new Intent(MainActivity.this, BanActivity.class);
-                startActivity(banScreen);
+                if (Model.currentUserIsAdmin()) {
+                    Intent banScreen = new Intent(MainActivity.this, BanActivity.class);
+                    startActivity(banScreen);
+                }
             }
         });
     }

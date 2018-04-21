@@ -152,4 +152,8 @@ public final class Model {
     public static void currentUserReleaseBeds(int numBeds, int shelterID) {
        currentUser.releaseBeds(numBeds, shelterID);
     }
+
+    public static boolean currentUserIsAdmin() {
+        return currentUser.getAdmin();
+    }
 }
