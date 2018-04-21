@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Button sheltersBtn = findViewById(R.id.button2);
         Button searchBtn = findViewById(R.id.button3);
         Button mapBtn = findViewById(R.id.button4);
+        Button banBtn = findViewById(R.id.button6);
 
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +60,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent mapSearchScreen = new Intent(MainActivity.this, MapSearchActivity.class);
                 startActivity(mapSearchScreen);
+            }
+        });
+
+        banBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent banScreen = new Intent(MainActivity.this, BanActivity.class);
+                startActivity(banScreen);
             }
         });
     }
