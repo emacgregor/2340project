@@ -135,10 +135,10 @@ public class Restrictions {
             searchRestrictions = addToString("Children", searchRestrictions);
         }
         if (youngAdults) {
-            searchRestrictions = addToString("Young adult", searchRestrictions);
+            searchRestrictions = addToString("Young adults", searchRestrictions);
         }
         if (veterans) {
-            searchRestrictions = addToString("Veteran", searchRestrictions);
+            searchRestrictions = addToString("Veterans", searchRestrictions);
         }
         if (anyone) {
             searchRestrictions = addToString("Anyone", searchRestrictions);

@@ -444,7 +444,7 @@ public class ShelterDatabase {
                                     object.getString("specialNotes"),
                                     object.getString("restrictions")));
 
-                    ShelterDatabase.addShelter(shelter);
+                    shelterDatabase.add(shelter);
                     Shelter thisShelter = shelterDatabase.get(i);
                     Log.d("Shelter", object.getString("remainingCap"));
                     Log.d("ShelterObject", String.valueOf(thisShelter.getRemainingCapacity()));
