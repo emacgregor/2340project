@@ -239,7 +239,7 @@ public class ShelterDatabase {
 
     @SuppressWarnings({"MismatchedQueryAndUpdateOfStringBuilder", "CyclicClassDependency"})
     private static final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
-        final String url_update = "https://2340project.000webhostapp.com/updateShelter.php";
+        final String url_update = "https://2340project2.000webhostapp.com/updateShelter.php";
         final int shelterID;
 
         private dbUpdateTask(int shelterID) {
@@ -323,7 +323,7 @@ public class ShelterDatabase {
     }
 
     private static final class dbAddTask extends AsyncTask<Integer, Void, Void> {
-        final String url_update = "https://2340project.000webhostapp.com/addShelter.php";
+        final String url_update = "https://2340project2.000webhostapp.com/addShelter.php";
         final int shelterID;
 
         private dbAddTask(int shelterID) {
@@ -414,7 +414,7 @@ public class ShelterDatabase {
 
             Call.Factory client = new OkHttpClient();
             Request.Builder builder = new Request.Builder();
-            builder = builder.url("https://2340project.000webhostapp.com/db_connect.php");
+            builder = builder.url("https://2340project2.000webhostapp.com/db_connect.php");
             Request request = builder.build();
 
             try {
