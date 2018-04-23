@@ -27,6 +27,8 @@ public class MapSearchActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ((AppCompatActivity)this).getSupportActionBar().setTitle("Shelter Map Search");
+
         final Checkable menChk = (CheckBox) findViewById(R.id.checkBox3);
         final Checkable womenChk = (CheckBox) findViewById(R.id.checkBox4);
         final Checkable nonBChk = (CheckBox) findViewById(R.id.checkBox5);

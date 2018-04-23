@@ -46,15 +46,7 @@ public class BanActivity extends AppCompatActivity {
         Button banBtn = findViewById(R.id.button19);
         Button unBBtn = findViewById(R.id.button20);
         Button backBtn = findViewById(R.id.button21);
-        FloatingActionButton fab = findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        ((AppCompatActivity)this).getSupportActionBar().setTitle("Ban or Unban");
 
         banBtn.setOnClickListener(new View.OnClickListener() {
             @Override

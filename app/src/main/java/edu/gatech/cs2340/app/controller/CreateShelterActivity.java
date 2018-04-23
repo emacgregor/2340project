@@ -31,14 +31,9 @@ public class CreateShelterActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+        ((AppCompatActivity)this).getSupportActionBar().setTitle("Create a Shelter");
+
         final EditText nameText = (EditText) findViewById(R.id.shelterName);
         final EditText addressText = (EditText) findViewById(R.id.address);
         final EditText descriptionText = (EditText) findViewById(R.id.description);

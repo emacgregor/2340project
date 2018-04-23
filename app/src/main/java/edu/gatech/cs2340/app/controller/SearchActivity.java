@@ -34,6 +34,8 @@ public class SearchActivity extends AppCompatActivity implements SearchView.OnQu
         ArrayList<Shelter> shelterList = ShelterDatabase.getShelters();
         ListView searchList = findViewById(R.id.listview);
 
+        ((AppCompatActivity)this).getSupportActionBar().setTitle("Shelter Search");
+
         searchList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> arg0, View v, int position, long arg3) {

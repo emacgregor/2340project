@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
         Button searchBtn = findViewById(R.id.button3);
         Button mapBtn = findViewById(R.id.button4);
         Button banBtn = findViewById(R.id.button6);
+        ((AppCompatActivity)this).getSupportActionBar().setTitle("Home");
 
         logOutBtn.setOnClickListener(new View.OnClickListener() {
             @Override

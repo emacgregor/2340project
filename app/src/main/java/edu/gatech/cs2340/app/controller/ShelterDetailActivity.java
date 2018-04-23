@@ -33,6 +33,8 @@ public class ShelterDetailActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.detail_toolbar);
         setSupportActionBar(toolbar);
 
+        ((AppCompatActivity)this).getSupportActionBar().setTitle("Shelter Details");
+
         // Show the Up button in the action bar.
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

@@ -25,6 +25,8 @@ public class WelcomeScreen extends AppCompatActivity {
         Button loginBtn = findViewById(R.id.log_in_btn);
         Button regBtn = findViewById(R.id.reg_btn);
 
+        ((AppCompatActivity)this).getSupportActionBar().setTitle("Welcome!");
+
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
