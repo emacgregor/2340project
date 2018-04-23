@@ -340,6 +340,7 @@ public class ShelterDatabase {
             int remainingCapacity = shelter.getRemainingCapacity();
             int beds = shelter.getTotalCapacity() - remainingCapacity;
             String name = shelter.getName();
+            int capacity = shelter.getTotalCapacity();
             double lat = shelter.getLocation().getLatitude();
             double longit = shelter.getLocation().getLongitude();
             String restrictions = shelter.getRestrictions().getSearchRestrictions();
@@ -359,6 +360,7 @@ public class ShelterDatabase {
                 builder = builder.appendQueryParameter("remainingCap",
                         String.valueOf(remainingCapacity));
                 builder = builder.appendQueryParameter("bed", String.valueOf(beds));
+                builder = builder.appendQueryParameter("capacity", String.valueOf(capacity));
                 builder = builder.appendQueryParameter("name", name);
                 builder = builder.appendQueryParameter("lat", String.valueOf(lat));
                 builder = builder.appendQueryParameter("longit", String.valueOf(longit));
