@@ -1,12 +1,12 @@
 package edu.gatech.cs2340.app;
 
 
-import junit.framework.Assert;
+        import junit.framework.Assert;
 
-import org.junit.Test;
+        import org.junit.Test;
 
-import edu.gatech.cs2340.app.model.ShelterDatabase;
-import edu.gatech.cs2340.app.model.User;
+        import edu.gatech.cs2340.app.model.ShelterDatabase;
+        import edu.gatech.cs2340.app.model.User;
 
 /**
  * JUnit tests

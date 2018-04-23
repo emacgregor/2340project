@@ -162,4 +162,24 @@ public final class Model {
     public static boolean currentUserAdmin() {
         return currentUser.getAdmin();
     }
+
+    public static boolean banUser(String username, AppDatabase db) {
+        User bUser = db.userDao().findByUsername(username);
+        if (bUser == null) {
+            return false;
+        } else {
+            db.userDao().banUser(username);
+            return true;
+        }
+    }
+
+    public static boolean unBanUser(String username, AppDatabase db) {
+        User bUser = db.userDao().findByUsername(username);
+        if (bUser == null) {
+            return false;
+        } else {
+            db.userDao().unBanUser(username);
+            return true;
+        }
+    }
 }

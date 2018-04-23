@@ -6,7 +6,7 @@ import java.util.Locale;
 /**
  * Represents everything important happening with Shelters.
  */
-@SuppressWarnings({"CyclicClassDependency", "ClassWithTooManyDependents"})
+@SuppressWarnings("CyclicClassDependency")
 public class Shelter {
     private final int uniqueKey;
     private final MLocation location;
