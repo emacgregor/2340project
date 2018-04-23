@@ -38,6 +38,7 @@ public class ShelterDatabase {
 
     /**
      * Adds a shelter to an the array list of shelters
+     *
      * @param someShelter This shelter gets added to the shelter database.
      */
     public static void addShelter(Shelter someShelter) {
@@ -46,10 +47,13 @@ public class ShelterDatabase {
         dbUpdater.execute();*/
 
         //Add new shelter here.
+        dbAddTask dbUpdater = new dbAddTask(someShelter.getUniqueKey());
+        dbUpdater.execute();
     }
 
     /**
      * Returns the local database of shelters.
+     *
      * @return The local database of shelters.
      */
     public static ArrayList<Shelter> getShelters() {
@@ -60,6 +64,7 @@ public class ShelterDatabase {
 
     /**
      * Finds a shelter based on the id provided.
+     *
      * @param id The id we're looking for.
      * @return The shelter of the id we found.
      */
@@ -89,9 +94,11 @@ public class ShelterDatabase {
 //        return shelterDatabase.get(index);
 //    }
 // --Commented out by Inspection STOP (4/8/2018 17:23)
+
     /**
      * Provides all the logic for claiming beds with the current user and the provided shelter.
-     * @param numBeds The number of beds that are being claimed.
+     *
+     * @param numBeds   The number of beds that are being claimed.
      * @param shelterID The shelter that beds are being claimed in.
      * @return Whether the beds were claimed.
      */
@@ -107,8 +114,10 @@ public class ShelterDatabase {
         }
         return false;
     }
+
     /**
      * Overloaded for claiming beds
+     *
      * @param numBeds The number of beds that are being claimed.
      * @return Whether the beds were claimed.
      */
@@ -118,6 +127,7 @@ public class ShelterDatabase {
 
     /**
      * This returns the String that provides the reasons why claimBeds or releaseBeds failed.
+     *
      * @return Above described String.
      */
     public static CharSequence getFailureString() {
@@ -126,7 +136,8 @@ public class ShelterDatabase {
 
     /**
      * Provides all the logic for releasing beds with the current user and the provided shelter.
-     * @param numBeds The number of beds that are being released.
+     *
+     * @param numBeds   The number of beds that are being released.
      * @param shelterID The shelter that beds are being released in.
      * @return Whether the beds were released.
      */
@@ -146,6 +157,7 @@ public class ShelterDatabase {
 
     /**
      * Overloaded for releasing beds
+     *
      * @param numBeds number of beds being released
      * @return whether the beds were released
      */
@@ -155,6 +167,7 @@ public class ShelterDatabase {
 
     /**
      * Sets a current shelter variable.
+     *
      * @param newShelter The new current shelter.
      */
     public static void setCurrentShelter(Shelter newShelter) {
@@ -163,13 +176,16 @@ public class ShelterDatabase {
 
     /**
      * Sets a current shelter variable.
+     *
      * @param position The position of the new current shelter in the shelter database
      */
     public static void setCurrentShelter(int position) {
         currentShelter = shelterDatabase.get(position);
     }
+
     /**
      * Gets the key of the current shelter.
+     *
      * @return The currentShelter key
      */
     private static int getCurrentKey() {
@@ -178,6 +194,7 @@ public class ShelterDatabase {
 
     /**
      * Gets the total capacity of the current shelter.
+     *
      * @return The currentShelter total capacity.
      */
     public static int getCurrentTotalCapacity() {
@@ -186,6 +203,7 @@ public class ShelterDatabase {
 
     /**
      * Updates failureString from outside class.
+     *
      * @param moreFailure What will be appended.
      */
     public static void updateFailureString(String moreFailure) {
@@ -194,6 +212,7 @@ public class ShelterDatabase {
 
     /**
      * Finds a shelter name by a given key.
+     *
      * @param uniqueKey The key
      * @return The name
      */
@@ -205,6 +224,7 @@ public class ShelterDatabase {
             return null;
         }
     }
+
     /**
      * Gets shelters from the online database. See dbReaderTask for more info.
      */
@@ -221,6 +241,7 @@ public class ShelterDatabase {
     private static final class dbUpdateTask extends AsyncTask<Integer, Void, Void> {
         final String url_update = "https://2340project.000webhostapp.com/updateShelter.php";
         final int shelterID;
+
         private dbUpdateTask(int shelterID) {
             this.shelterID = shelterID;
         }
@@ -295,10 +316,97 @@ public class ShelterDatabase {
             return null;
         }
     }
+
     private static void updateCurrentShelterBeds(final int shelterID) {
         dbUpdateTask dbUpdater = new dbUpdateTask(shelterID);
         dbUpdater.execute();
     }
+
+    private static final class dbAddTask extends AsyncTask<Integer, Void, Void> {
+        final String url_update = "https://2340project.000webhostapp.com/addShelter.php";
+        final int shelterID;
+
+        private dbAddTask(int shelterID) {
+            this.shelterID = shelterID;
+        }
+
+        /**
+         * Saving product
+         */
+        @SuppressWarnings("OverlyLongMethod")
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            Shelter shelter = shelterDatabase.get(shelterID);
+            int remainingCapacity = shelter.getRemainingCapacity();
+            int beds = shelter.getTotalCapacity() - remainingCapacity;
+            String name = shelter.getName();
+            double lat = shelter.getLocation().getLatitude();
+            double longit = shelter.getLocation().getLongitude();
+            String restrictions = shelter.getRestrictions().getSearchRestrictions();
+            String specialNotes = shelter.getNotes();
+            String phoneNumber = shelter.getPhoneNumber();
+            String address = shelter.getAddress();
+            HttpURLConnection connection = null;
+            try {
+                URL url = new URL(url_update);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                connection.setRequestMethod("POST");
+
+                Uri.Builder builder = new Uri.Builder();
+                builder = builder.appendQueryParameter("id", String.valueOf(shelterID));
+                builder = builder.appendQueryParameter("remainingCap",
+                        String.valueOf(remainingCapacity));
+                builder = builder.appendQueryParameter("bed", String.valueOf(beds));
+                builder = builder.appendQueryParameter("name", name);
+                builder = builder.appendQueryParameter("lat", String.valueOf(lat));
+                builder = builder.appendQueryParameter("longit", String.valueOf(longit));
+                builder = builder.appendQueryParameter("restrictions", restrictions);
+                builder = builder.appendQueryParameter("specialNotes", specialNotes);
+                builder = builder.appendQueryParameter("phoneNumber", phoneNumber);
+                builder = builder.appendQueryParameter("address", address);
+
+                Uri uri = builder.build();
+                String query = uri.getEncodedQuery();
+
+                // Open connection for sending data
+                OutputStream os = connection.getOutputStream();
+                BufferedWriter writer = new BufferedWriter(
+                        new OutputStreamWriter(os, "UTF-8"));
+                writer.write(query);
+                writer.flush();
+                writer.close();
+                os.close();
+                connection.connect();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                assert connection != null;
+                int response_code = connection.getResponseCode();
+
+                // Check if successful connection made
+                if (response_code == HttpURLConnection.HTTP_OK) {
+                    // Read data sent from server
+                    InputStream input = connection.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                    StringBuilder result = new StringBuilder();
+                    String line = reader.readLine();
+                    while (line != null) {
+                        result.append(line);
+                        line = reader.readLine();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+
     @SuppressWarnings("CyclicClassDependency")
     private static class dbReaderTask extends AsyncTask<Integer, Void, Void> {
         @Override

@@ -169,17 +169,17 @@ public class Shelter {
      * Getter for address
      * @return address
      */
-    private String getAddress() { return info.getAddress(); }
+    public String getAddress() { return info.getAddress(); }
     /**
      * Getter for phone number
      * @return phoneNumber
      */
-    private String getPhoneNumber() { return info.getPhoneNumber(); }
+    public String getPhoneNumber() { return info.getPhoneNumber(); }
     /**
      * Getter for notes
      * @return notes
      */
-    private String getNotes() { return info.getSpecialNotes(); }
+    public String getNotes() { return info.getSpecialNotes(); }
     /**
      * Getter for searchRestrictions string.
      * @return searchRestrictions
@@ -189,7 +189,7 @@ public class Shelter {
      * Getter for restrictions as a whole
      * @return restrictions
      */
-    private Restrictions getRestrictions() { return  restrictions; }
+    public Restrictions getRestrictions() { return  restrictions; }
     /**
      * Getter for shelter info as a string.
      * @return shelterInfoString
@@ -210,7 +210,7 @@ public class Shelter {
      * Returns this shelter's location object.
      * @return location
      */
-    private MLocation getLocation() {
+    public MLocation getLocation() {
         return location;
     }
 
