@@ -125,6 +125,7 @@ public class BanActivity extends AppCompatActivity {
         private final String bUsername;
         private final int bOpCode;
         private final AppDatabase bDB;
+        private int banResult = -1;
 
         UserBanTask(String username, int opCode, AppDatabase db, BanActivity context) {
             bUsername = username;
@@ -144,9 +145,11 @@ public class BanActivity extends AppCompatActivity {
             }
 
             if (bOpCode == 1) {
-                return Model.banUser(bUsername, bDB);
+                banResult = Model.banUser(bUsername, bDB);
+                return banResult == 0;
             } else {
-                return Model.unBanUser(bUsername, bDB);
+                banResult = Model.unBanUser(bUsername, bDB);
+                return banResult == 0;
             }
         }
 
@@ -160,7 +163,15 @@ public class BanActivity extends AppCompatActivity {
                         MainActivity.class);
                 banActivity.startActivity(mainClass);
             } else {
-                banActivity.UsernameView.setError("This user is not banned.");
+                if (banResult == 1) {
+                    banActivity.UsernameView.setError("This user does not exist.");
+                } else if (banResult == 2){
+                    banActivity.UsernameView.setError("You cannot ban yourself!");
+                } else if (banResult == 3) {
+                    banActivity.UsernameView.setError("This user is already banned.");
+                } else if (banResult == 4) {
+                    banActivity.UsernameView.setError("This user is not banned so they cannot be unbanned.");
+                }
                 banActivity.UsernameView.requestFocus();
             }
         }

@@ -60,18 +60,23 @@ public final class Model {
      * @param db The database the user is being matched in.
      * @return Whether or not the username and password match.
      */
-    public static boolean checkCredentials(String username, String password, AppDatabase db) {
+    public static int checkCredentials(String username, String password, AppDatabase db) {
         List<User> users = db.getAllUsers();
         for (User user : users) {
-            if (username.equals(user.getUsername()) && user.isBanned() != 1) {
-                if (user.checkPassword(password)) {
-                    setCurrentUser(user);
-                    return true;
+            if (username.equals(user.getUsername())) {
+                if (user.isBanned() != 1) {
+                    if (user.checkPassword(password)) {
+                        setCurrentUser(user);
+                        return 0;
+                    } else {
+                        return 1;
+                    }
+                } else {
+                    return 2;
                 }
-                return false;
             }
         }
-        return false;
+        return 3;
     }
 
     /**
@@ -163,23 +168,29 @@ public final class Model {
         return currentUser.getAdmin();
     }
 
-    public static boolean banUser(String username, AppDatabase db) {
+    public static int banUser(String username, AppDatabase db) {
         User bUser = db.userDao().findByUsername(username);
         if (bUser == null) {
-            return false;
+            return 1;
+        } else if (bUser.isBanned() == 1) {
+            return 3;
+        } else if (username.equals(currentUser.getUsername())) {
+            return 2;
         } else {
             db.userDao().banUser(username);
-            return true;
+            return 0;
         }
     }
 
-    public static boolean unBanUser(String username, AppDatabase db) {
+    public static int unBanUser(String username, AppDatabase db) {
         User bUser = db.userDao().findByUsername(username);
         if (bUser == null) {
-            return false;
+            return 1;
+        } else if (bUser.isBanned() == 0) {
+            return 4;
         } else {
             db.userDao().unBanUser(username);
-            return true;
+            return 0;
         }
     }
 }

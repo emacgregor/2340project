@@ -2,6 +2,7 @@ package edu.gatech.cs2340.app.controller;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -70,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
                 if (Model.currentUserAdmin()) {
                     Intent banScreen = new Intent(MainActivity.this, BanActivity.class);
                     startActivity(banScreen);
+                } else {
+                    Snackbar.make(view,
+                            "Only admins may ban and unban",
+                            Snackbar.LENGTH_SHORT).show();
                 }
             }
         });

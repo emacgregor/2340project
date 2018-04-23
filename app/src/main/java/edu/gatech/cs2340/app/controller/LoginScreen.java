@@ -192,7 +192,7 @@ public class LoginScreen extends AppCompatActivity {
         private final WeakReference<LoginScreen> activityReference;
         private final String mUsername;
         private final String mPassword;
-        private boolean userFound = false;
+        private int credentialResult = -1;
 
         UserLoginTask(String username, String password, LoginScreen context) {
             mUsername = username;
@@ -211,8 +211,10 @@ public class LoginScreen extends AppCompatActivity {
             }
 
             LoginScreen loginScreen = activityReference.get();
-            userFound = Model.userExists(mUsername, loginScreen.db);
-            return Model.checkCredentials(mUsername, mPassword, loginScreen.db);
+            //userFound = Model.userExists(mUsername, loginScreen.db);
+            credentialResult = Model.checkCredentials(mUsername, mPassword, loginScreen.db);
+            //return Model.checkCredentials(mUsername, mPassword, loginScreen.db);
+            return credentialResult == 0;
         }
 
         @Override
@@ -234,10 +236,13 @@ public class LoginScreen extends AppCompatActivity {
                         MainActivity.class);
                 loginScreen.startActivity(mainClass);
             } else {
-                if (userFound) {
+                if (credentialResult == 1) {
                     loginScreen.mPasswordView.setError(
                             loginScreen.getString(R.string.error_incorrect_password));
                     loginScreen.mPasswordView.requestFocus();
+                } else if (credentialResult == 2) {
+                    loginScreen.mUsernameView.setError("This user is banned");
+                    loginScreen.mUsernameView.requestFocus();
                 } else {
                     loginScreen.mUsernameView.setError("This username is not registered");
                     loginScreen.mUsernameView.requestFocus();
